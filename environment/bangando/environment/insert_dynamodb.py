@@ -2,7 +2,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 
 
-def query_Users(UserNama):
+def query_Users(UserName):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Users')
     response = table.query(

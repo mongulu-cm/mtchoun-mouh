@@ -7,24 +7,23 @@ ImageName="244.jpg"
 MY_Name="NGO LOGSEN Charlotte"
 
 
-def  insert_dynamodb(UserName):
+def  insert_dynamodb(User):
     dynamodb = boto3.resource('dynamodb')
     table =dynamodb.Table('Users')
     table.put_item(
         Item={
-            'UserName':UserName
+            'UserName':User
         }
     )
 
-
-def query_Users(UserName):
+def Query_Users(UserName):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Users')
     response = table.query(
         KeyConditionExpression=Key('UserName').eq(UserName)
     )
     return response['Items']
-    
+
 
 def main():
     textract = boto3.client('textract')
@@ -63,12 +62,15 @@ def main():
     for line in lines:
         #print(line[1])
         if "."  in line[1] :
-            UserName = line[1].split(".")[1]
-           # print(UserName)
+            UserName = line[1].split(". ")[1]
+            #print(UserName)
             insert_dynamodb(UserName)
-        if MY_Name in line[1]:
-            print ("votre passeport est sorti, des bisous")
+        
             
             
-print(query_Users(MY_Name))           
+Query_reponse=Query_Users(MY_Name)  
+if len(Query_reponse)==0:
+    print(" votre passeport n'est pas sorti")
+else:
+    print("votre passeport est sorti")
 main()
