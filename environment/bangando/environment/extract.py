@@ -1,10 +1,81 @@
 
 import boto3
 from boto3.dynamodb.conditions import Key
+from botocore.exceptions import ClientError
+import subprocess
+
 
 s3BucketName="djansang2"
 ImageName="244.jpg"
 MY_Name="NGO LOGSEN Charlotte"
+MY_User_mail= "tagnetchanafabiolacorinne@gmail.com "
+
+
+     
+
+def verifying_recipient_mail(RECIPIENT):
+    subprocess.run(["aws","ses","verify-email-identity","--email-address", RECIPIENT])
+    
+    
+    
+    
+def amazone_ses_mail(RECIPIENT):
+    SENDER = "Sender Name <tagnefabiola97@gmail.com>"
+    AWS_REGION = "us-east-1"
+    SUBJECT = "consulat_du_CAMEROUN (SDK for Python)"
+    BODY_TEXT = ("Votre passeporte est sortie  (Python)\r\n"
+             "This email was sent with Amazon SES using the "
+             "AWS SDK for Python (Boto)."
+            )
+    BODY_HTML = """<html>
+          <head></head>
+                <body>
+                  <h1>Amazon SES Test (SDK for Python)</h1>
+                  <p>This email was sent with
+                    <a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the
+                    <a href='https://aws.amazon.com/sdk-for-python/'>
+                      AWS SDK for Python (Boto)</a>.</p>
+                </body>
+                </html>
+                            """         
+                            
+    CHARSET = "UTF-8"
+    client = boto3.client('ses',region_name=AWS_REGION)
+    try:
+    
+        response = client.send_email(
+            Destination={
+                'ToAddresses': [
+                    RECIPIENT,
+                ],
+            },
+            Message={
+                'Body': {
+                    'Html': {
+                        'Charset': CHARSET,
+                        'Data': BODY_HTML,
+                    },
+                    'Text': {
+                        'Charset': CHARSET,
+                        'Data': BODY_TEXT,
+                    },
+                },
+                'Subject': {
+                    'Charset': CHARSET,
+                    'Data': SUBJECT,
+                },
+            },
+            Source=SENDER,
+            # If you are not using a configuration set, comment or delete the
+            # following line
+            #ConfigurationSetName=CONFIGURATION_SET,
+        )
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        print("Email sent! Message ID:"),
+        print(response['MessageId'])
+
 
 
 def  insert_dynamodb(User):
@@ -72,5 +143,6 @@ Query_reponse=Query_Users(MY_Name)
 if len(Query_reponse)==0:
     print(" votre passeport n'est pas sorti")
 else:
-    print("votre passeport est sorti")
+    verifying_recipient_mail(MY_User_mail)
+    amazone_ses_mail(MY_User_mail)
 main()
