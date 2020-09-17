@@ -1,5 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
+import subprocess
 
 # Replace sender@example.com with your "From" address.
 # This address must be verified with Amazon SES.
@@ -7,7 +8,7 @@ SENDER = "Sender Name <tagnefabiola97@gmail.com>"
 
 # Replace recipient@example.com with a "To" address. If your account 
 # is still in the sandbox, this address must be verified.
-RECIPIENT = "behanzin777@gmail.com"
+RECIPIENT = "Behanzin777@gmail.com"
 
 # Specify a configuration set. If you do not want to use a configuration
 # set, comment the following variable, and the 
@@ -20,8 +21,10 @@ AWS_REGION = "us-east-1"
 # The subject line for the email.
 SUBJECT = "Amazon SES Test (SDK for Python)"
 
+subprocess.run(["aws","ses","verify-email-identity","--email-address", RECIPIENT])
+
 # The email body for recipients with non-HTML email clients.
-BODY_TEXT = ("Amazon SES Test (Python)\r\n"
+BODY_TEXT = ("tchana te fais des bisous  (Python)\r\n"
              "This email was sent with Amazon SES using the "
              "AWS SDK for Python (Boto)."
             )
