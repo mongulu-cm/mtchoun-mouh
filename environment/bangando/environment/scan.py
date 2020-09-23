@@ -1,27 +1,12 @@
-
 import boto3
 from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
-import subprocess
-
-
-s3BucketName="djansang2"
-ImageName="244.jpg"
+from registre import get_RegisterName
 
 
 
 
-MY_Name="NGO LOGSEN Charlotte"
-MY_User_mail= "tagnetchanafabiolacorinne@gmail.com "
-
-     
-
-def verifying_recipient_mail(RECIPIENT):
-    subprocess.run(["aws","ses","verify-email-identity","--email-address", RECIPIENT])
-    
-    
-    
-    
 def amazone_ses_mail(RECIPIENT):
     SENDER = "Sender Name <tagnefabiola97@gmail.com>"
     AWS_REGION = "us-east-1"
@@ -79,7 +64,7 @@ def amazone_ses_mail(RECIPIENT):
         print("Email sent! Message ID:"),
         print(response['MessageId'])
 
-
+     
 
 def  insert_dynamodb(User):
     dynamodb = boto3.resource('dynamodb')
@@ -90,16 +75,20 @@ def  insert_dynamodb(User):
         }
     )
 
-def Query_Users(UserName):
+
+def Scan_Users(UserName):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('Users')
-    response = table.query(
-        KeyConditionExpression=Key('UserName').eq(UserName)
+    response = table.scan(
+        FilterExpression=Attr('UserName').eq(UserName)
     )
     return response['Items']
+    
+   
+    
 
 
-def main():
+def Extract_Users(s3BucketName,ImageName):
     textract = boto3.client('textract')
     reponse=textract.detect_document_text(
         Document ={
@@ -139,16 +128,18 @@ def main():
             UserName = line[1].split(". ")[1]
             #print(UserName)
             insert_dynamodb(UserName)
-        
             
- 
+Extract_Users("djansang2","244.jpg")
 
+Index_Register=get_RegisterName()
 
- 
-Query_reponse=Query_Users(MY_Name)  
-if len(Query_reponse)==0:
-    print(" votre passeport n'est pas sorti")
-else:
-    verifying_recipient_mail(MY_User_mail)
-    amazone_ses_mail(MY_User_mail)
-main()
+for i in Index_Register:
+    #print(i)
+    Name=i[0]
+    Email=i[1]
+    Scan_reponse=Scan_Users(Name)  
+    if len(Scan_reponse)==0:
+        print(" votre passeport n'est pas sorti")
+    else:
+        amazone_ses_mail(Email)
+
