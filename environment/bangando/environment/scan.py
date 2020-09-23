@@ -4,8 +4,15 @@ from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
 from registre import get_RegisterName
 
-
-
+def Delete_Backup(D_Name):
+    primary_column_Name='Name'
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('Register')
+    response = table.delete_item(
+        Key={
+            primary_column_Name:D_Name
+        }
+    )
 
 def amazone_ses_mail(RECIPIENT):
     SENDER = "Sender Name <tagnefabiola97@gmail.com>"
@@ -142,4 +149,5 @@ for i in Index_Register:
         print(" votre passeport n'est pas sorti")
     else:
         amazone_ses_mail(Email)
+        Delete_Backup(Name)
 

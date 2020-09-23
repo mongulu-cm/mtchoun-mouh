@@ -23,7 +23,7 @@ def get_RegisterName():
     lst = []
     for i in response['Items']:
         lst.append([ i['Name'],i['EMail'] ])
-    print(lst)
+    #print(lst)
     return lst 
 
 
