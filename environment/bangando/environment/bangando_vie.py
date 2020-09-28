@@ -36,10 +36,15 @@ def main():
     code_source_html=get_source_code("https://www.consulacam-marseille.fr/index.php?p=consulat-cameroun-passeports")
     tags=filter(code_source_html)
     srcs= [x.get("src") for x in tags if "communique" in x.get("src")] ## we select link with word communiqué 
+    Link=[]
     for src in srcs :
         src.split("..")
         link_image_initial=src.split("..")[1]
         real_link="https://www.consulacam-marseille.fr"+link_image_initial
-        dowload_image(real_link)
+        if real_link not in Link:
+            Link.append(real_link)
+            dowload_image(real_link)
+    print(Link)
+    
 main()
    
