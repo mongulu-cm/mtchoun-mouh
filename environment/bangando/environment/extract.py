@@ -137,7 +137,7 @@ def main():
         #print(line[1])
         if "."  in line[1] :
             UserName = line[1].split(". ")[1]
-            #print(UserName)
+            print(UserName)
             insert_dynamodb(UserName)
         
             
@@ -147,7 +147,7 @@ def main():
  
 Query_reponse=Query_Users(MY_Name)  
 if len(Query_reponse)==0:
-    print(" votre passeport n'est pas sorti")
+   print(" votre passeport n'est pas sorti")
 else:
     verifying_recipient_mail(MY_User_mail)
     amazone_ses_mail(MY_User_mail)
