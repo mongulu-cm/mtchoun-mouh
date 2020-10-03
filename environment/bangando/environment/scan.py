@@ -1,8 +1,21 @@
 import boto3
 from boto3.dynamodb.conditions import Key
-from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
 from registre import get_RegisterName
+from boto3.dynamodb.conditions import Attr
+from boto3 import client
+
+
+def Images_in_Bucket(Bucket_Name):
+    s3 = client('s3') 
+    Image_List=[]
+    for key in s3.list_objects(Bucket=Bucket_Name)['Contents']:
+        Image_List.append(key['Key'])
+    for i in Image_List:
+        Extract_Users(Bucket_Name,i)
+    return Image_List
+    
+
 
 def Delete_Backup(D_Name):
     primary_column_Name='Name'
@@ -129,24 +142,42 @@ def Extract_Users(s3BucketName,ImageName):
                 lines.append([len(columns)-1, item["Text"]])
     
     lines.sort(key=lambda x: x[0])
-    for line in lines:
-        #print(line[1])
-        if "."  in line[1] :
-            UserName = line[1].split(". ")[1]
-            #print(UserName)
-            insert_dynamodb(UserName)
+    
+    
+    # TODO: Create a custom iterator: https://www.programiz.com/python-programming/iterator
+    iter_lines = iter(lines)
+    while True:
+        try:
+            # get the next item
+            line = next(iter_lines)
+            Username = ""
+            if not " " in line[1]:
+                line = next(iter_lines)
+                UserName = line[1]
+                
+            else:
+                if "."  in line[1] :
+                    UserName = line[1].split(". ")[1]
             
-Extract_Users("djansang2","244.jpg")
+            if UserName != "":
+                insert_dynamodb(UserName)
+                #print(UserName)
+                
+        except StopIteration:
+            break
+            
 
+Images_in_Bucket("djansang")
+
+    
 Index_Register=get_RegisterName()
-
 for i in Index_Register:
-    #print(i)
+    print(i)
     Name=i[0]
     Email=i[1]
     Scan_reponse=Scan_Users(Name)  
     if len(Scan_reponse)==0:
-        print(" votre passeport n'est pas sorti")
+       print(" votre passeport n'est pas sorti")
     else:
         amazone_ses_mail(Email)
         Delete_Backup(Name)
