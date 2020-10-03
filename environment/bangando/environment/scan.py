@@ -11,9 +11,9 @@ def Images_in_Bucket(Bucket_Name):
     Image_List=[]
     for key in s3.list_objects(Bucket=Bucket_Name)['Contents']:
         Image_List.append(key['Key'])
-    for i in Image_List:
-        Extract_Users(Bucket_Name,i)
+    
     return Image_List
+    
     
 
 
@@ -109,6 +109,7 @@ def Scan_Users(UserName):
 
 
 def Extract_Users(s3BucketName,ImageName):
+    print("-------> Image name: "+ImageName)
     textract = boto3.client('textract')
     reponse=textract.detect_document_text(
         Document ={
@@ -143,42 +144,51 @@ def Extract_Users(s3BucketName,ImageName):
     
     lines.sort(key=lambda x: x[0])
     
+    for line in lines:
+        print(line[1])
     
+
     # TODO: Create a custom iterator: https://www.programiz.com/python-programming/iterator
     iter_lines = iter(lines)
     while True:
         try:
             # get the next item
             line = next(iter_lines)
-            Username = ""
+            UserName = ""
             if not " " in line[1]:
+                print ( "prev line:"+line[1])
                 line = next(iter_lines)
+                print ( "next line:"+line[1])
                 UserName = line[1]
                 
             else:
                 if "."  in line[1] :
                     UserName = line[1].split(". ")[1]
             
+            #print(line)
             if UserName != "":
-                insert_dynamodb(UserName)
-                #print(UserName)
+                #insert_dynamodb(UserName)
+                print(UserName)
                 
         except StopIteration:
             break
             
 
-Images_in_Bucket("djansang")
+Image_List=Images_in_Bucket("djansang")
+for i in Image_List:
+    print (i)
+    Extract_Users("djansang",i)
 
     
-Index_Register=get_RegisterName()
-for i in Index_Register:
-    print(i)
-    Name=i[0]
-    Email=i[1]
-    Scan_reponse=Scan_Users(Name)  
-    if len(Scan_reponse)==0:
-       print(" votre passeport n'est pas sorti")
-    else:
-        amazone_ses_mail(Email)
-        Delete_Backup(Name)
+# Index_Register=get_RegisterName()
+# for i in Index_Register:
+#     print(i)
+#     Name=i[0]
+#     Email=i[1]
+#     Scan_reponse=Scan_Users(Name)  
+#     if len(Scan_reponse)==0:
+#       print(" votre passeport n'est pas sorti")
+#     else:
+#         amazone_ses_mail(Email)
+#         Delete_Backup(Name)
 

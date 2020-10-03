@@ -32,7 +32,7 @@ def verifying_Register_mail(E_Mail):
     subprocess.run(["aws","ses","verify-email-identity","--email-address", E_Mail])
 
 insert_dynamodb_registered(argv[1],argv[2])
-verifying_Register_mail(argv[2])
+#verifying_Register_mail(argv[2])
 
     
     
