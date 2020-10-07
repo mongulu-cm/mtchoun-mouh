@@ -7,11 +7,13 @@ import sys
 import boto3
 from bs4 import BeautifulSoup  as soup
 from boto3.dynamodb.conditions import Attr
+import os
 
 
 def S3_bucket_pictures(Picture_image):
     s3 = boto3.resource('s3')
     s3.Object('djansang',Picture_image ).put(Body=open(Picture_image, 'rb'))
+    os.remove(Picture_image)
     
     
 def dowload_image(url):
@@ -66,8 +68,7 @@ def main():
         src.split("..")
         link_image_initial=src.split("..")[1]
         real_link="https://www.consulacam-marseille.fr"+link_image_initial
-        #Scan_reponse_link=Scan_Link(real_link)  
-        Scan_reponse_link=[]
+        Scan_reponse_link=Scan_Link(real_link)
         if len(Scan_reponse_link)==0:
             print(" new link: "+real_link)
             insert_link(real_link)
