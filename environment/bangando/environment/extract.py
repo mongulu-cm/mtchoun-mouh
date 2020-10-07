@@ -131,6 +131,8 @@ def main():
             if not column_found:
                 columns.append({'left':item["Geometry"]["BoundingBox"]["Left"], 'right':item["Geometry"]["BoundingBox"]["Left"] + item["Geometry"]["BoundingBox"]["Width"]})
                 lines.append([len(columns)-1, item["Text"]])
+          elif item["BlockType"] == "TABLE":
+              print("table")
     
     lines.sort(key=lambda x: x[0])
     for line in lines:
