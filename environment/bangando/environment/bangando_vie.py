@@ -16,7 +16,7 @@ def S3_bucket_pictures(Picture_image):
     
 def dowload_image(url):
 ###  this function allows you to download the images  by providing the parameter url 
-    name=random.randrange(1,1000)
+    name=url.split("/")[-1]
     real_image=str(name)+".jpg"    #image in jpg version 
     urllib.request.urlretrieve( url, real_image)
     return real_image
@@ -66,13 +66,14 @@ def main():
         src.split("..")
         link_image_initial=src.split("..")[1]
         real_link="https://www.consulacam-marseille.fr"+link_image_initial
-        Scan_reponse_link=Scan_Link(real_link)  
+        #Scan_reponse_link=Scan_Link(real_link)  
+        Scan_reponse_link=[]
         if len(Scan_reponse_link)==0:
             print(" new link: "+real_link)
             insert_link(real_link)
             S3_bucket_pictures(dowload_image(real_link))
         else :
-            print (" you have none new link")
+            print ("This link is not a new one")
    
     
 main()
