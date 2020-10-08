@@ -69,7 +69,7 @@ def main():
         link_image_initial=src.split("..")[1]
         real_link="https://www.consulacam-marseille.fr"+link_image_initial
         Scan_reponse_link=Scan_Link(real_link)  
-        Scan_reponse_link=[]
+        #Scan_reponse_link=[]
         if len(Scan_reponse_link)==0:
             print(" new link: "+real_link)
             insert_link(real_link)
