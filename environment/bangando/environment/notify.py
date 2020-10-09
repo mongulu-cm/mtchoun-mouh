@@ -15,7 +15,7 @@ def Scan_Users(UserName):
 def amazone_ses_mail(RECIPIENT):
     SENDER = "Sender Name <tagnefabiola97@gmail.com>"
     AWS_REGION = "us-east-1"
-    SUBJECT = "consulat_du_CAMEROUN"
+    SUBJECT = "Passeport disponible"
     BODY_TEXT = ("Votre passeport est sortie  (Python)\r\n"
              "This email was sent with Amazon SES using the "
              "AWS SDK for Python (Boto)."
