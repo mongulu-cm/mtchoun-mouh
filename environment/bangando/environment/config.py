@@ -11,3 +11,7 @@ bucket_name="djansang"
 Table_Users='Users'
 Table_Links='Link_table'
 Table_Registers='Register'
+
+#consulat
+passport_page="https://www.consulacam-marseille.fr/index.php?p=consulat-cameroun-passeports"
+url_image_path="https://www.consulacam-marseille.fr/images/"

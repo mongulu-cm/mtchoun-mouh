@@ -8,7 +8,7 @@ import boto3
 from bs4 import BeautifulSoup  as soup
 from boto3.dynamodb.conditions import Attr
 import os
-from  config import bucket_name,Table_Links
+from  config import bucket_name,Table_Links,passport_page
 
 
 
@@ -63,7 +63,7 @@ def Scan_Link(link_image):
     return response['Items']
     
 def main():
-    code_source_html=get_source_code("https://www.consulacam-marseille.fr/index.php?p=consulat-cameroun-passeports")
+    code_source_html=get_source_code(passport_page)
     tags=filter(code_source_html)
     srcs= [x.get("src") for x in tags if "communique" in x.get("src")] ## we select link with word communiqué 
 
