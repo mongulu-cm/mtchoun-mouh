@@ -28,6 +28,7 @@ Constraints ( 15 juillet 2020 )
 
 Travail A faire:
  - Le bucket pour les images scannées ainsi que DynamoDB dans la zone frankfort
+ - Créer des variables d'environnement lambda pour config.py dans l'objectif d'avoir une table de démo
  - Créer un fichier config.py dans lequel seront mis:
         * le nom du bucket des images
         * le nom des différentes tables dynamodb
