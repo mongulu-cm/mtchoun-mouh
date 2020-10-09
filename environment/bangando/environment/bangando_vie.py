@@ -8,11 +8,14 @@ import boto3
 from bs4 import BeautifulSoup  as soup
 from boto3.dynamodb.conditions import Attr
 import os
+from  config import bucket_name,Table_Links
 
 
-def S3_bucket_pictures(Picture_image):
+
+
+def S3_bucket_pictures(Picture_image,bucket_name):
     s3 = boto3.resource('s3')
-    s3.Object('djansang',Picture_image ).put(Body=open(Picture_image, 'rb'))
+    s3.Object(bucket_name,Picture_image ).put(Body=open(Picture_image, 'rb'))
     os.remove(Picture_image)
     
     
@@ -44,7 +47,7 @@ def filter(code_source_html):
     
 def  insert_link(link_image):
     dynamodb = boto3.resource('dynamodb')
-    table =dynamodb.Table('Link_table')
+    table =dynamodb.Table(Table_Links)
     table.put_item(
         Item={
             'link':link_image
@@ -53,7 +56,7 @@ def  insert_link(link_image):
     
 def Scan_Link(link_image):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Link_table')
+    table = dynamodb.Table(Table_Links)
     response = table.scan(
         FilterExpression=Attr('link').eq(link_image)
     )
@@ -73,7 +76,7 @@ def main():
         if len(Scan_reponse_link)==0:
             print(" new link: "+real_link)
             insert_link(real_link)
-            S3_bucket_pictures(dowload_image(real_link))
+            S3_bucket_pictures(dowload_image(real_link), bucket_name)
         else :
             print ("This link is not a new one")
    
