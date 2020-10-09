@@ -4,11 +4,8 @@ from botocore.exceptions import ClientError
 from registre import get_RegisterName
 from boto3.dynamodb.conditions import Attr
 from boto3 import client
+from  config import stopWords, bucket_name,Table_Users
 
-
-# List of words that is used to filter lines
-stopWords = ["Phone","Cours Pierre","Tel.","www.consulacam-marseille.fr","REPUBLIQUE","Paix","Marseille","Cameroun","passeports","presentation",
-            "REPUBLIC","Cameroon","Peace","CCM","COMMUNIQUE","DU","OF","N°","2020","2021","2022","2023","2024","2025","s'agit","recepisse"]
 
 
 def Images_in_Bucket(Bucket_Name):
@@ -28,7 +25,7 @@ def Empty_Bucket(Bucket_Name):
 
 def  insert_dynamodb(User):
     dynamodb = boto3.resource('dynamodb')
-    table =dynamodb.Table('Users')
+    table =dynamodb.Table(Table_Users)
     table.put_item(
         Item={
             'UserName':User
@@ -126,7 +123,7 @@ def Extract_Users(s3BucketName,ImageName):
             print("related image:"+ImageName)
             
 
-bucket_name="djansang"
+
 Image_List=Images_in_Bucket(bucket_name)
 for image in Image_List:
     print("-------> Image name: "+image)
