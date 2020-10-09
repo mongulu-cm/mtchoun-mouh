@@ -35,3 +35,16 @@ Travail A faire:
  - Changer le sujet et le body du mail disant que le passeport est sorti
  - Mettre aussi dans config.py les stopWords
  - Faire l'intégration avec la page web .
+ 
+
+ - Faire un fichier query.py de demo qui query le communiqué du 22/09/2020
+      Travail à main
+        * Récupérer toutes les images du consulat 
+        * Ne garder que les communiqués du 22/09/2020
+        * Créer des tables Demo_X ou X est le nom de la table
+        * Remplacer le nom des tables en question dans config.py
+      Travail de code:
+        * Modifier le code de scan pour stocker à la fois le nom et l'url de l'images
+        * Exécuter ce code
+        * Créer un fichier query.py qui prend en paramètre le nom de l'utilisateur et si celui-ci existe
+          retourne l' URL.
