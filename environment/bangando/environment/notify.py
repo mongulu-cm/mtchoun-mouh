@@ -2,10 +2,11 @@ from registre import get_RegisterName
 import boto3
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
+from  config import Table_Users, Table_Registers
 
 def Scan_Users(UserName):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Users')
+    table = dynamodb.Table(Table_Users)
     response = table.scan(
         FilterExpression=Attr('UserName').eq(UserName)
     )
@@ -15,18 +16,22 @@ def amazone_ses_mail(RECIPIENT):
     SENDER = "Sender Name <tagnefabiola97@gmail.com>"
     AWS_REGION = "us-east-1"
     SUBJECT = "consulat_du_CAMEROUN"
-    BODY_TEXT = ("Votre passeporte est sortie  (Python)\r\n"
+    BODY_TEXT = ("Votre passeport est sortie  (Python)\r\n"
              "This email was sent with Amazon SES using the "
              "AWS SDK for Python (Boto)."
             )
     BODY_HTML = """<html>
-          <head></head>
+          <head>Bonjour, </head>
                 <body>
-                  <h1>Amazon SES Test (SDK for Python)</h1>
-                  <p>This email was sent with
-                    <a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the
-                    <a href='https://aws.amazon.com/sdk-for-python/'>
-                      AWS SDK for Python (Boto)</a>.</p>
+                  
+                  <p> 
+                    
+                   Votre passeport  est disponible au consulat de Marseille.<br>
+                   N'oubliez pas de vous munir de votre reçu de dépot. <br>
+                    Retrait  des documents etablis du lundi au vendredi de 15H30 à 16H00 (selon l'affluence).<br> <br> <br>
+                    Cordialement, 
+                   
+                </p>
                 </body>
                 </html>
                             """         
@@ -72,7 +77,7 @@ def amazone_ses_mail(RECIPIENT):
 def Delete_Backup(D_Name):
     primary_column_Name='Name'
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Register')
+    table = dynamodb.Table(Table_Registers)
     response = table.delete_item(
         Key={
             primary_column_Name:D_Name

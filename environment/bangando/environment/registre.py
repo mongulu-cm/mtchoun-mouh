@@ -3,12 +3,13 @@ import subprocess
 from sys import argv
 from boto3.dynamodb.conditions import Key
 from boto3.dynamodb.conditions import Attr
+from  config import Table_Registers
 
 
 
 def  insert_dynamodb_registered(U_Name,E_Mail):
     dynamodb = boto3.resource('dynamodb')
-    table =dynamodb.Table('Register')
+    table =dynamodb.Table(Table_Registers)
     table.put_item(
         Item={
             'Name':U_Name.lower(),
@@ -18,7 +19,7 @@ def  insert_dynamodb_registered(U_Name,E_Mail):
     
 def get_RegisterName():
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Register')
+    table = dynamodb.Table(Table_Registers)
     response = table.scan()
     lst = []
     for i in response['Items']:
