@@ -4,7 +4,7 @@ from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
 from  config import Table_Users, Table_Registers
 
-def Scan_Users(UserName):
+def Scan_Users(UserName,Table_Users):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(Table_Users)
     response = table.scan(
@@ -28,8 +28,8 @@ def amazone_ses_mail(RECIPIENT):
                     
                    Votre passeport  est disponible au consulat de Marseille.<br>
                    N'oubliez pas de vous munir de votre reçu de dépot. <br>
-                    Retrait  des documents etablis du lundi au vendredi de 15H30 à 16H00 (selon l'affluence).<br> <br> <br>
-                    Cordialement, 
+                   Retrait  des documents etablis du lundi au vendredi de 15H30 à 16H00 (selon l'affluence).<br> <br> <br>
+                   Cordialement, 
                    
                 </p>
                 </body>
@@ -89,7 +89,7 @@ for i in Index_Register:
     print(i)
     Name=i[0]
     Email=i[1]
-    Scan_reponse=Scan_Users(Name)  
+    Scan_reponse=Scan_Users(Name,Table_Users)  
     if len(Scan_reponse)==0:
       print(" votre passeport n'est pas sorti")
     else:
