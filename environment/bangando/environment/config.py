@@ -8,7 +8,7 @@ stopWords = ["Phone","Cours Pierre","Tel.","www.consulacam-marseille.fr","REPUBL
 bucket_name="djansang"
 
 # differentes tables 
-Table_Users='Demo_Users'
+Table_Users='Users'
 Table_Links='Link_table'
 Table_Registers='Register'
 
