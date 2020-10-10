@@ -37,7 +37,7 @@ Travail A faire:
  - Faire l'intégration avec la page web .
  
 
- - Faire un fichier query.py de demo qui query le communiqué du 22/09/2020
+ - Faire un fichier demo.py de demo qui query le communiqué du 22/09/2020
       Travail à main
         * Récupérer toutes les images du consulat 
         * Ne garder que les communiqués du 22/09/2020
@@ -46,5 +46,4 @@ Travail A faire:
       Travail de code:
         * Modifier le code de scan pour stocker à la fois le nom et l'url de l'images
         * Exécuter ce code
-        * Créer un fichier query.py qui prend en paramètre le nom de l'utilisateur et si celui-ci existe
-          retourne l' URL.
+        * Créer un fichier query.py qui prend en paramètre le nom de l'utilisateur et si celui-ci existe retourne l' URL.
