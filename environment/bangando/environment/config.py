@@ -8,10 +8,12 @@ stopWords = ["Phone","Cours Pierre","Tel.","www.consulacam-marseille.fr","REPUBL
 bucket_name="djansang"
 
 # differentes tables 
-Table_Users='Users'
+Table_Users='Demo_Users'
 Table_Links='Link_table'
 Table_Registers='Register'
 
+
+
 #consulat
 passport_page="https://www.consulacam-marseille.fr/index.php?p=consulat-cameroun-passeports"
-url_image_path="https://www.consulacam-marseille.fr/images/"
+images_url_path="https://www.consulacam-marseille.fr/images"

@@ -4,7 +4,7 @@ from botocore.exceptions import ClientError
 from registre import get_RegisterName
 from boto3.dynamodb.conditions import Attr
 from boto3 import client
-from  config import stopWords, bucket_name,Table_Users
+from  config import stopWords, bucket_name,Table_Users,images_url_path
 
 
 
@@ -23,12 +23,13 @@ def Empty_Bucket(Bucket_Name):
     bucket.objects.all().delete()
 
 
-def  insert_dynamodb(User):
+def  insert_dynamodb(User,ImageName):
     dynamodb = boto3.resource('dynamodb')
     table =dynamodb.Table(Table_Users)
     table.put_item(
         Item={
-            'UserName':User
+            'UserName':User,
+            'URLImage': images_url_path+"/"+ImageName
         }
     )
 
@@ -85,7 +86,7 @@ def Extract_Users(s3BucketName,ImageName):
         try:
             # get the next item
             line = next(iter_lines)
-            print(line[1])
+            #print(line[1])
             
             UserName = ""
             if not " " in line[1]:
@@ -112,7 +113,7 @@ def Extract_Users(s3BucketName,ImageName):
             if UserName != "":
                 # We choosed to save all the names in lower former instead of upper because of the DU stopWord
                 # Indeed if upper names , all persons DU like DURAND in their names will not be detected.
-                insert_dynamodb(UserName.lower())
+                insert_dynamodb(UserName.lower(),ImageName)
                 print("Username="+UserName)
                 
         except StopIteration:
