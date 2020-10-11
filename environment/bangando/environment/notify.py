@@ -37,7 +37,7 @@ def amazone_ses_mail(NAME,RECIPIENT,URL_IMAGE):
                    
                    Tu veux voir pour croire ? <br>
                    On a prévu ça  &#128521;, suis juste ce lien: :  {URL_IMAGE} .<br>
-                   <p style="font-size:16px">On fait comme ça,</p>
+                   <p style="font-size:16px">On fait comme ça, On est ensemble </p>
                    
                 </p>
                 </body>
