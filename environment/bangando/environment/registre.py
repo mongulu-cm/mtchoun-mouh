@@ -30,7 +30,9 @@ def get_RegisterName():
 
     
 def verifying_Register_mail(E_Mail):
-    subprocess.run(["aws","ses","verify-email-identity","--email-address", E_Mail])
+    client = boto3.client('ses')
+    client.verify_email_identity(EmailAddress=E_Mail)
+    #subprocess.run(["aws","ses","verify-email-identity","--email-address", E_Mail])
 
 
 if __name__ == "__main__":
