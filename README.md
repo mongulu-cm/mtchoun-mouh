@@ -24,6 +24,7 @@ Constraints ( 15 juillet 2020 )
  - KWAY!/ETOUND! au lieu de KWAYI/ETOUDI prénom finissant par I
  - Irene au lieu d Irène ( pas d'accent globalement)
  - II comme kossa 4 disons - pas supoorté chiffres romains
+ - Le prénom après le nom comme au Cameroun
 
 
 Travail A faire:
