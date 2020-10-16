@@ -15,7 +15,7 @@ def Scan_Users(UserName,Table_Users):
 def amazone_ses_mail(NAME,RECIPIENT,URL_IMAGE):
     
     NAME=NAME.upper()
-    SENDER = "Mongulu Collective <tagnefabiola97@gmail.com>"
+    SENDER = "Mongulu Collective <xxxxxxxx@gmail.com>"
     AWS_REGION = "us-east-1"
     SUBJECT = "Ton passeport est disponible"
     
