@@ -21,7 +21,7 @@ Il faut alors parcourir cette page depuis le début en scrollant jusqu'à une da
 ### Solution proposé
 L'usager s'enregistre sur une plateforme via son nom et son adresse email ce qui permettra ensuite de le notifier  
 automatiquement notifié par email de la sortie de son passeport avec les contraintes suivantes:   
-    • Pas d’accès au système d’information digitalisé de gestions des passeports de la [DGSN]( https://www.dgsn.cm/?fbclid=IwAR1KmGe-drUBiwpUg_tx-6b-crEPsXrqoPdTK7X8Ik-mag-NG7pUky4zV7U)  
+    • Pas d’accès au système d’information digitalisé de gestions des passeports de la [DGSN]( https://www.dgsn.cm/?fbclid=IwAR1KmGe-drUBiwpUg_tx-6b-crEPsXrqoPdTK7X8Ik-mag-NG7pUky4zV7U)    
     • Pas de possibilité d’influer sur le processus interne de délivrance des passeports au consulat de Marseille
     
 > La solution sera donc externe au services du consulat et la source de donnée le site web du consulat. 
