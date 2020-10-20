@@ -1,0 +1,9 @@
+
+
+# IDE base
+.idea/
+
+# project based
+.terraform
+*.tfstate*
+.env
