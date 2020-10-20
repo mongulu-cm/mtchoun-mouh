@@ -19,8 +19,8 @@ Lorsqu'un usager se rend au consulat du Cameroun à Marseille pour faire sa dema
 
 ### Solution proposé
 L'usager s'enregistre sur une plateforme via son nom et son adresse email ce qui permettra ensuite de le notifier  
-automatiquement notifié par email de la sortie de son passeport avec les contraintes suivantes:  
-    • Pas d’accès au système d’information digitalisé de gestions des passeports de la DGSN
+automatiquement notifié par email de la sortie de son passeport avec les contraintes suivantes:   
+    • Pas d’accès au système d’information digitalisé de gestions des passeports de la DGSN  
     • Pas de possibilité d’influer sur le processus interne de délivrance des passeports au consulat de Marseille
     
 > La solution sera donc externe au services du consulat et la source de donnée le site web du consulat. 
@@ -50,7 +50,7 @@ Sur votre poste :
 * Un fork de ce ce projet
 
 Sur le web:
-* Disposer d'un compte sur https://gitreports.com/ et activez votre fork
+* Disposer d'un compte sur https://gitreports.com/ et activez votre fork.
 
 
 ### Déploiement
@@ -72,11 +72,10 @@ Sur le web:
   ```
 
 
-* Puis, modifiez la variable `URL` dans la fonction `submitToAPI` des fichier `index.html` et `demo.html` avec l'output `stage_url` retourné par terraform.  
-  Faire de même pour les URL de contact dans les mêmes fichiers en les remplaçant votre lien gitreports.com.
+* Puis, modifiez la variable `URL` dans la fonction `submitToAPI` des fichier `index.html` et `demo.html` avec l'output `stage_url` retourné par terraform. Faire de même pour les URL de contact dans les mêmes fichiers en les remplaçant votre lien gitreports.com.
  
-* Enfin créez deux enregistrements DNS dans Route 53:
-    • L'un reliant votre domaine au bucket du même nom
+* Enfin créez deux enregistrements DNS dans Route 53:  
+    • L'un reliant votre domaine au bucket du même nom  
     • L'autre reliant votre sous-domaine au bucket du même nom
 
 
@@ -87,7 +86,7 @@ Les services API Gateway et Lambda sauvent des logs dans CloudWatch.
 ### Performance applicative
 
 Il est possible de suivre l'évolution du nombre d'utilisateur enregistré par jour en exploitant le paramètre
-`ReturnedItemCount` de la table Register dans les graphiques Cloudwatch DynamoDB.
+`ReturnedItemCount` de la table `Register` dans les graphiques Cloudwatch DynamoDB.
 
 
 ## Comment contribuer ?
