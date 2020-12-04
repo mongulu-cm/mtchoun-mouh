@@ -42,6 +42,8 @@ sera le compte utilisé par Terraform)
  sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
 * Disposer d'un nom de domaine xxxx.yyy et d'un sous domaine zzzzz.xxxx.yyy enregistré dans Route 53
 
+![Design](design.png)
+
 Sur votre poste : 
 * terraform/v0.13.2
 * aws-cli
