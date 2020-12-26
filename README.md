@@ -3,7 +3,7 @@
 > Langue [Ghomala](https://fr.wikipedia.org/wiki/Ghomala%CA%BC) siginifiant nouvelle/message en français
 
 L'objectif du projet est de vous permettre de revoir une notification immédiatement après la sortie de votre passeport au consulat de Marseille en France.  
-Si vous souhaitez voir à quoi ça ressemble, rendez-vous à l'adresse suivante: http://mtchoun-mouh.mongulu.cm/
+Si vous souhaitez voir à quoi ça ressemble, rendez-vous à l'adresse suivante: https://mtchoun-mouh.mongulu.cm/
 
 ## Contexte fonctionnel
 
@@ -36,11 +36,12 @@ Si vous êtes ici , c'est que vous intéressés par un déploiement maison de la
 Vous devez avoir un minimum de compétence sur le cloud AWS et Terraform
 
 Sur le cloud AWS:
-* Disposer d'un IAM User avec les permissions d'écriture/lecture sur les services: Lambda, S3, API Gateway, IAM ( ce  
+* Disposez d'un IAM User avec les permissions d'écriture/lecture sur les services: Lambda, S3, API Gateway, IAM ( ce  
 sera le compte utilisé par Terraform)
-* Disposer d'un IAM Role appelé website-deployer associé au service Lambda et qui possède les droits écriture/lecture  
+* Disposez d'un IAM Role appelé website-deployer associé au service Lambda et qui possède les droits écriture/lecture  
  sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
-* Disposer d'un nom de domaine xxxx.yyy et d'un sous domaine zzzzz.xxxx.yyy enregistré dans Route 53
+* Avoir enregistré votre domaine xxxx.yyy ainsi que le sous-domaine mtchoun-mouh.xxxx.yyy dans Route 53
+* Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager  
 
 ![Design](design.png)
 
@@ -74,9 +75,13 @@ Sur le web:
     terraform apply
   ```
  
-* Enfin créez deux enregistrements DNS dans Route 53:  
-    • L'un reliant votre domaine au bucket du même nom  
-    • L'autre reliant votre sous-domaine au bucket du même nom
+* Puis, créez une distribution cloudfront:  
+    • ayant comme origine le nom de site de votre bucket ( pas le nom du bucket)    
+    • pointant vers votre sous-domaine mtchoun-mouh.xxxx.yyy
+ 
+* Et enfin deux enregistrements DNS dans Route 53:  
+    • L'un reliant le domaine xxxx.yyyy au sous-domaine mtchoun-mouh.xxxx.yyy  
+    • L'autre reliant mtchoun-mouh.xxxx.yyy à la distribution cloudfront créé précédemment
 
 
 ### Monitoring applicatif
