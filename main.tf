@@ -96,14 +96,6 @@ EOF
 
 }
 
-resource "aws_s3_bucket_object" "pages" {
-  for_each = fileset("html/", "*")
-  bucket = aws_s3_bucket.website.id
-  key = each.value
-  source = "html/${each.value}"
-  etag = filemd5("html/${each.value}")
-}
-
 resource "aws_dynamodb_table" "Users" {
   name           = var.table_user
   billing_mode   = "PROVISIONED"
@@ -278,6 +270,43 @@ resource "aws_api_gateway_deployment" "test" {
   stage_name = var.stage_name
 }
 
+output "stage_url" {
+  value = aws_api_gateway_deployment.test.invoke_url
+}
+
+locals {
+
+  url= aws_api_gateway_deployment.test.invoke_url
+
+  demo_page = templatefile("templates/demo.tmpl", {
+    url = local.url
+  })
+
+  index_page = templatefile("templates/index.tmpl", {
+    url = local.url
+  })
+
+}
+
+resource "local_file" "demo_page" {
+    content     = local.demo_page
+    filename = "html/demo.html"
+}
+
+resource "local_file" "index_page" {
+    content     = local.index_page
+    filename = "html/index.html"
+}
+
+
+resource "aws_s3_bucket_object" "pages" {
+  for_each = fileset("html/", "*")
+  bucket = aws_s3_bucket.website.id
+  key = each.value
+  source = "html/${each.value}"
+  etag = filemd5("html/${each.value}")
+}
+
 # Inspired from https://frama.link/GFCHrjEL
 module "cors" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
@@ -285,10 +314,6 @@ module "cors" {
 
   api_id            = aws_api_gateway_rest_api.api.id
   api_resource_id   = aws_api_gateway_resource.resource.id
-}
-
-output "stage_url" {
-  value = aws_api_gateway_deployment.test.invoke_url
 }
 
 
