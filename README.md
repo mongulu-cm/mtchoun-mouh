@@ -73,9 +73,6 @@ Sur le web:
     terraform init
     terraform apply
   ```
-
-
-* Puis, modifiez la variable `URL` dans la fonction `submitToAPI` des fichier `index.html` et `demo.html` avec l'output `stage_url` retourné par terraform. Faire de même pour les URL de contact dans les mêmes fichiers en les remplaçant votre lien gitreports.com.
  
 * Enfin créez deux enregistrements DNS dans Route 53:  
     • L'un reliant votre domaine au bucket du même nom  
