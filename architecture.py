@@ -9,7 +9,7 @@ from diagrams.aws.database import DDB
 from diagrams.aws.engagement import SES
 from diagrams.aws.ml import Textract
 
-with Diagram("mtchou_mouh_Architecture", show=False):
+with Diagram("architecture", show=False):
 
     with Cluster(" Envoie_de_la notification "):
         flux_2 = Eventbridge("planifie l'execution \nde la fonction\nscan_user du lundi \nau vendredi à 8H00") >>Lambda("Handler:lambdascan_handeler")
