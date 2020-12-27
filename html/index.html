@@ -71,8 +71,7 @@
 
       function submitToAPI(e) {
         e.preventDefault();
-        var URL =
-          "https://pjcn8wkzp2.execute-api.eu-central-1.amazonaws.com/dev";
+        var URL = "https://pjcn8wkzp2.execute-api.eu-central-1.amazonaws.com/dev/register";
 
         if ($("#name-input").val() != $("#confirmationName").val()) {
           $("#feedbackName").html("Votre nom ne correspond pas!");

@@ -216,6 +216,20 @@ resource "aws_lambda_function" "scan" {
 //  timeout = 300
 //}
 
+//output "demo_page" {
+//  value = local.demo_page
+//}
+//
+//resource "null_resource" "pretend_demo_page" {
+//  triggers = {
+//    policy = local.demo_page
+//  }
+//
+//  provisioner "local-exec" {
+//    command = "echo ${local.demo_page}"
+//  }
+//}
+
 
 resource "aws_api_gateway_rest_api" "api" {
   name        = "user registration"
@@ -276,7 +290,7 @@ output "stage_url" {
 
 locals {
 
-  url= aws_api_gateway_deployment.test.invoke_url
+  url = join("/",[aws_api_gateway_deployment.test.invoke_url,aws_api_gateway_resource.resource.path_part])
 
   demo_page = templatefile("templates/demo.tmpl", {
     url = local.url
@@ -315,13 +329,6 @@ module "cors" {
   api_id            = aws_api_gateway_rest_api.api.id
   api_resource_id   = aws_api_gateway_resource.resource.id
 }
-
-
-#TODO: Modify html with the stage url in jqquery javascript code
-
-#TODO: Added Observability to CloudWatch logs for ERROR
-#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_stage#access_log_settings
-#https://www.youtube.com/watch?v=N49Bp_bd93I
 
 resource "aws_cloudwatch_event_rule" "scheduler" {
   name        = "trigger_user_scan"
