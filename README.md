@@ -40,8 +40,9 @@ Sur le cloud AWS:
 sera le compte utilisé par Terraform)
 * Disposez d'un IAM Role appelé website-deployer associé au service Lambda et qui possède les droits écriture/lecture  
  sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
+* Permettre de sauvegarder le logs d'erreur API Gateway dans Cloudwatch: https://www.youtube.com/watch?v=N49Bp_bd93I
 * Avoir enregistré votre domaine xxxx.yyy ainsi que le sous-domaine mtchoun-mouh.xxxx.yyy dans Route 53
-* Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager  
+* Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager 
 
 ![Design](design.png)
 
@@ -77,7 +78,9 @@ Sur le web:
  
 * Puis, créez une distribution cloudfront:  
     • ayant comme origine le nom de site de votre bucket ( pas le nom du bucket)    
-    • pointant vers votre sous-domaine mtchoun-mouh.xxxx.yyy
+    • pointant vers votre sous-domaine mtchoun-mouh.xxxx.yyy  
+    • avec des caches invalidations pour les fichiers index.html et demo.html
+    
  
 * Et enfin deux enregistrements DNS dans Route 53:  
     • L'un reliant le domaine xxxx.yyyy au sous-domaine mtchoun-mouh.xxxx.yyy  
