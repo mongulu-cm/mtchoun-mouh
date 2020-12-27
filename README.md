@@ -38,13 +38,14 @@ Vous devez avoir un minimum de compétence sur le cloud AWS et Terraform
 Sur le cloud AWS:
 * Disposez d'un IAM User avec les permissions d'écriture/lecture sur les services: Lambda, S3, API Gateway, IAM ( ce  
 sera le compte utilisé par Terraform)
-* Disposez d'un IAM Role appelé website-deployer associé au service Lambda et qui possède les droits écriture/lecture  
- sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
+* Disposez d'un IAM Role appelé website-deployer associé au service Lambda et qui possède les droits écriture/lecture 
+sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
 * Permettre de sauvegarder le logs d'erreur API Gateway dans Cloudwatch: https://www.youtube.com/watch?v=N49Bp_bd93I
 * Avoir enregistré votre domaine xxxx.yyy ainsi que le sous-domaine mtchoun-mouh.xxxx.yyy dans Route 53
 > Si vous souhaitez utiliser un nom de domaine gratuitement, sachez que les .ml (mali) et bien d'autres sont gratuits.
 > Pour plus d'information ou réservation: http://www.freenom.com/en/freeandpaiddomains.html
-* Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager 
+* Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager
+> Le certificat est généré gratuitement dans AWS CM
 
 ![Design](design.png)
 
@@ -54,6 +55,9 @@ Sur votre poste :
 * git
 * docker
 * zip
+* Google Chrome
+* uirecorder: https://github.com/alibaba/uirecorder  
+* Java: https://java.com/fr/download/  
 * Un fork de ce ce projet
 
 Sur le web:
@@ -88,6 +92,34 @@ Sur le web:
     • L'un reliant le domaine xxxx.yyyy au sous-domaine mtchoun-mouh.xxxx.yyy  
     • L'autre reliant mtchoun-mouh.xxxx.yyy à la distribution cloudfront créé précédemment
 
+
+### Pyramid test
+
+#### Unit tests
+TODO
+
+#### Integration tests
+TODO
+
+#### End to end
+
+Ce test vérifie qu'un utilisateur utilisant un PC arrive bien à s'enregistrer ( en supposant qu'il rentre tous les
+paramètres comme il faut).
+
+* Initialisation du test & démarrage du server selenium standalone :
+  ```
+    cd test/
+    uirecorder init
+    npx selenium-standalone start
+  ```
+
+* Exécutez le test en mode PC:
+  ```
+     cd test/
+     .\run.bat sample/test.spec.js (windows) or source run.sh sample/test.spec.js (Linux/Mac)
+  ```
+
+Les résultats sont visibles dans le CLI ou dans reports/html
 
 ### Monitoring applicatif
 
