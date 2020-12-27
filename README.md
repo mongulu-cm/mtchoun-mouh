@@ -42,6 +42,8 @@ sera le compte utilisé par Terraform)
  sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
 * Permettre de sauvegarder le logs d'erreur API Gateway dans Cloudwatch: https://www.youtube.com/watch?v=N49Bp_bd93I
 * Avoir enregistré votre domaine xxxx.yyy ainsi que le sous-domaine mtchoun-mouh.xxxx.yyy dans Route 53
+> Si vous souhaitez utiliser un nom de domaine gratuitement, sachez que les .ml (mali) et bien d'autres sont gratuits.
+> Pour plus d'information ou réservation: http://www.freenom.com/en/freeandpaiddomains.html
 * Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager 
 
 ![Design](design.png)
