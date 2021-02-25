@@ -1,4 +1,3 @@
-## le projet a n'est plus maintenu ici , il est desormais là :https://github.com/mongulu-cm/mtchoun-mouh
 # Mtchoun' mouh
 > Langue [Ghomala](https://fr.wikipedia.org/wiki/Ghomala%CA%BC) siginifiant nouvelle/message en français
 
