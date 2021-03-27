@@ -46,7 +46,7 @@ sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
 * Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager
 > Le certificat est généré gratuitement dans AWS CM
 
-![Design](design.png)
+![Design](architecture.png)
 
 Sur votre poste : 
 * terraform/v0.13.2
