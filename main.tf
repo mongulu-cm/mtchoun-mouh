@@ -1,17 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "3.8.0"
-    }
-  }
-}
-
-provider "aws" {
-  region = var.region
-}
-
-
 resource "aws_s3_bucket" "images" {
   bucket=var.images_bucket_name
 
@@ -57,43 +43,6 @@ EOF
     index_document = "index.html"
     error_document = "error.html"
   }
-}
-
-resource "aws_s3_bucket" "redirect" {
-  bucket = var.redirect_bucket_name
-  acl = "public-read"
-
-  tags  = {
-    Name = "Website"
-  }
-
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["PUT","POST","GET"]
-    allowed_origins = ["*"]
-  }
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "PublicReadForGetBucketObjects",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "*"
-      },
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${var.redirect_bucket_name}/*"
-    }
-  ]
-}
-EOF
-
-  website {
-    redirect_all_requests_to = var.website_bucket_name
-  }
-
 }
 
 resource "aws_dynamodb_table" "Users" {
