@@ -40,7 +40,7 @@ sera le compte utilisé par Terraform)
 * Disposez d'un IAM Role appelé website-deployer associé au service Lambda et qui possède les droits écriture/lecture 
 sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
 * Permettre de sauvegarder le logs d'erreur API Gateway dans Cloudwatch: https://www.youtube.com/watch?v=N49Bp_bd93I
-* Avoir enregistré votre domaine xxxx.yyy ainsi que le sous-domaine mtchoun-mouh.xxxx.yyy dans Route 53
+* Avoir enregistré le sous-domaine mtchoun-mouh.xxxx.yyy dans Route 53
 > Si vous souhaitez utiliser un nom de domaine gratuitement, sachez que les .ml (mali) et bien d'autres sont gratuits.
 > Pour plus d'information ou réservation: http://www.freenom.com/en/freeandpaiddomains.html
 * Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager
@@ -69,7 +69,6 @@ Sur le web:
   ```
     export TF_VAR_maintainer_mail="<votre mail>"
     export TF_VAR_website_bucket_name="<votre sous-domaine>"
-    export TF_VAR_redirect_bucket_name="<votre domaine>"
     export TF_VAR_images_bucket_name="xxxxxxx"
     export TF_VAR_contact_url="votre lien view généré sur gitreports.com"
   ```    
@@ -87,9 +86,7 @@ Sur le web:
     • avec des caches invalidations pour les fichiers index.html et demo.html
     
  
-* Et enfin deux enregistrements DNS dans Route 53:  
-    • L'un reliant le domaine xxxx.yyyy au sous-domaine mtchoun-mouh.xxxx.yyy  
-    • L'autre reliant mtchoun-mouh.xxxx.yyy à la distribution cloudfront créé précédemment
+* Et enfin un enregistrements DNS dans Route 53 reliant mtchoun-mouh.xxxx.yyy à la distribution cloudfront créé précédemment
 
 
 ### Pyramid test
