@@ -37,8 +37,8 @@ resource "aws_dynamodb_table" "terraform-locks" {
     name         = "terraform-locks-mtchoun-mouh"
     billing_mode = "PROVISIONED"
     hash_key     = "LockID"
-    read_capacity  = 5
-    write_capacity = 5
+    read_capacity  = 1
+    write_capacity = 1
 
     attribute {
         name = "LockID"
