@@ -48,8 +48,8 @@ EOF
 resource "aws_dynamodb_table" "Users" {
   name           = var.table_user
   billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+  read_capacity  = 1
+  write_capacity = 1
   hash_key       = "UserName"
 
   attribute {
@@ -61,8 +61,8 @@ resource "aws_dynamodb_table" "Users" {
 resource "aws_dynamodb_table" "Link_table" {
   name           = var.table_links
   billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+  read_capacity  = 1
+  write_capacity = 1
   hash_key       = "link"
 
   attribute {
@@ -74,8 +74,8 @@ resource "aws_dynamodb_table" "Link_table" {
 resource "aws_dynamodb_table" "Register" {
   name           = var.table_registers
   billing_mode   = "PROVISIONED"
-  read_capacity  = 5
-  write_capacity = 5
+  read_capacity  = 1
+  write_capacity = 1
   hash_key       = "Name"
 
   attribute {
