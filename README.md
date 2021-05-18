@@ -78,6 +78,7 @@ Sur le web:
     source .env
     terraform init
     terraform apply
+    aws s3 cp html/ s3://mtchoun-mouh.mongulu.cm --recursive
   ```
  
 * Puis, créez une distribution cloudfront:  
