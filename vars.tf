@@ -31,10 +31,6 @@ variable "maintainer_mail" {
   type = string
 }
 
-variable "contact_url" {
-  type = string
-}
-
 variable "stage_name" {
   type = string
   default = "dev"
