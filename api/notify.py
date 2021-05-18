@@ -17,7 +17,7 @@ def Scan_Users(UserName, Table_Users):
 def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
     NAME = NAME.upper()
     SENDER = f"Collectif mongulu <{maintainer_mail}>"
-    AWS_REGION = "us-east-1"
+    AWS_REGION = "eu-central-1"
 
     if not maintainer:
 
