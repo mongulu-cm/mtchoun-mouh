@@ -126,7 +126,6 @@ resource "aws_lambda_function" "lambda" {
       LINKS_TABLE = var.table_links
       REGISTERS_TABLE = var.table_registers
       MAINTAINER_MAIL = var.maintainer_mail
-      CONTACT_URL = var.contact_url
     }
   }
 
@@ -149,7 +148,6 @@ resource "aws_lambda_function" "scan" {
       LINKS_TABLE = var.table_links
       REGISTERS_TABLE = var.table_registers
       MAINTAINER_MAIL = var.maintainer_mail
-      CONTACT_URL = var.contact_url
     }
   }
 
@@ -241,12 +239,15 @@ locals {
 
   url = join("/",[aws_api_gateway_deployment.test.invoke_url,aws_api_gateway_resource.resource.path_part])
 
+
   demo_page = templatefile("templates/demo.tmpl", {
     url = local.url
+    contact = var.maintainer_mail
   })
 
   index_page = templatefile("templates/index.tmpl", {
     url = local.url
+    contact = var.maintainer_mail
   })
 
 }
@@ -262,18 +263,10 @@ resource "local_file" "index_page" {
 }
 
 
-resource "aws_s3_bucket_object" "pages" {
-  for_each = fileset("html/", "*")
-  bucket = aws_s3_bucket.website.id
-  key = each.value
-  source = "html/${each.value}"
-  etag = filemd5("html/${each.value}")
-}
-
 # Inspired from https://frama.link/GFCHrjEL
 module "cors" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
-  version = "0.3.1"
+  version = "0.3.3"
 
   api_id            = aws_api_gateway_rest_api.api.id
   api_resource_id   = aws_api_gateway_resource.resource.id

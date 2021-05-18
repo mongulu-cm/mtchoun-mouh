@@ -21,4 +21,3 @@ Table_Registers=os.environ['REGISTERS_TABLE']
 
 # Maintainer
 maintainer_mail=os.environ['MAINTAINER_MAIL']
-contact_url=os.environ['CONTACT_URL']
