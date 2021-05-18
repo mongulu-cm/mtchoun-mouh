@@ -70,7 +70,6 @@ Sur le web:
     export TF_VAR_maintainer_mail="<votre mail>"
     export TF_VAR_website_bucket_name="<votre sous-domaine>"
     export TF_VAR_images_bucket_name="xxxxxxx"
-    export TF_VAR_contact_url="votre lien view généré sur gitreports.com"
   ```    
     
 * Ensuite, éxécutez les commandes suivantes:

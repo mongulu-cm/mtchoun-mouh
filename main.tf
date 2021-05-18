@@ -126,7 +126,6 @@ resource "aws_lambda_function" "lambda" {
       LINKS_TABLE = var.table_links
       REGISTERS_TABLE = var.table_registers
       MAINTAINER_MAIL = var.maintainer_mail
-      CONTACT_URL = var.contact_url
     }
   }
 
@@ -149,7 +148,6 @@ resource "aws_lambda_function" "scan" {
       LINKS_TABLE = var.table_links
       REGISTERS_TABLE = var.table_registers
       MAINTAINER_MAIL = var.maintainer_mail
-      CONTACT_URL = var.contact_url
     }
   }
 
