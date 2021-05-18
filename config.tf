@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "3.8.0"
+      version = "3.40.0"
     }
   }
 }
@@ -47,7 +47,7 @@ resource "aws_dynamodb_table" "terraform-locks" {
 }
 
 terraform {
-  required_version = ">= 0.13"
+  required_version = ">= 0.15"
 
   backend "s3" {
     bucket = "terraform-state-mongulu"
