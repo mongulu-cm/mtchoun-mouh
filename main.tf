@@ -265,14 +265,6 @@ resource "local_file" "index_page" {
 }
 
 
-resource "aws_s3_bucket_object" "pages" {
-  for_each = fileset("html/", "*")
-  bucket = aws_s3_bucket.website.id
-  key = each.value
-  source = "html/${each.value}"
-  etag = filemd5("html/${each.value}")
-}
-
 # Inspired from https://frama.link/GFCHrjEL
 module "cors" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
