@@ -2,7 +2,7 @@ from registre import get_RegisterName
 import boto3
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
-from config import Table_Users, Table_Registers,maintainer_mail,contact_url
+from config import Table_Users, Table_Registers,maintainer_mail
 
 
 def Scan_Users(UserName, Table_Users):
@@ -41,12 +41,12 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
                        On a prévu ça  &#128521;, suis juste ce lien: :  {URL_IMAGE} .<br>
                        
                        <p style="font-size:16px">On fait comme ça, On est ensemble. </p>
-                       <p> Un soucis ? c'est par <a href="{CONTACT_URL}">ici</a>  </p>
+                       <p> Un soucis ? Il vous suffit de faire répondre à ce mail </a>  </p>
     
                     </p>
                     </body>
                     </html>
-                                """.format(URL_IMAGE=URL_IMAGE, NAME=NAME,CONTACT_URL=contact_url)
+                                """.format(URL_IMAGE=URL_IMAGE, NAME=NAME)
     else:
         # maintainer
         SUBJECT = "Nouvelles images détectés sur le site du consulat"
