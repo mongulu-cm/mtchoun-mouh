@@ -55,9 +55,10 @@ Sur votre poste :
 * docker
 * zip
 * Google Chrome
-* uirecorder: https://github.com/alibaba/uirecorder  
+* [uirecorder](https://github.com/alibaba/uirecorder)  
 * Java: https://java.com/fr/download/  
 * Un fork de ce ce projet
+* [driftctl](https://driftctl.com/) 
 
 Sur le web:
 * Disposer d'un compte sur https://gitreports.com/ et activez votre fork.
@@ -126,6 +127,18 @@ Les services API Gateway et Lambda sauvent des logs dans CloudWatch.
 Il est possible de suivre l'évolution du nombre d'utilisateur enregistré par jour en exploitant le paramètre
 `ReturnedItemCount` de la table `Register` dans les graphiques Cloudwatch DynamoDB.
 
+### Couverture du code
+
+#### Infrastructure
+
+Exécutez:
+ ```
+    driftctl scan --from tfstate+s3://<bucket_name>/terraform.tfstate -o json://drift.json
+    driftctl gen-driftignore -i drifts.json >> .driftignore
+ ```
+
+Puis supprimez toutes les ressources non liés directement au projet.  
+Le taux de couverture actuel est de `76%`.
 
 ## Comment contribuer ?
 
