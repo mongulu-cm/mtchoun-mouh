@@ -79,6 +79,7 @@ Sur le web:
     terraform init
     terraform apply
     aws s3 cp html/ s3://mtchoun-mouh.mongulu.cm --recursive
+    docker run -it --rm -v "$(pwd)":/usr/local/src/your-app githubchangeloggenerator/github-changelog-generator -u mongulu-cm -p mtchoun-mouh -t <YOUR_GITHUB_REPO_TOKEN>
   ```
  
 * Puis, créez une distribution cloudfront:  
