@@ -87,4 +87,3 @@ def scan_consulate_passport_page():
 
 if __name__ == "__main__":
     scan_consulate_passport_page()
-

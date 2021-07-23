@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "images" {
-  bucket=var.images_bucket_name
+  bucket = var.images_bucket_name
 
-  tags  = {
+  tags = {
     Name = "images"
   }
 
@@ -10,15 +10,15 @@ resource "aws_s3_bucket" "images" {
 # Use https://registry.terraform.io/modules/cloudmaniac/static-website/aws/0.9.2 when we will buy domain name
 resource "aws_s3_bucket" "website" {
   bucket = var.website_bucket_name
-  acl = "public-read"
+  acl    = "public-read"
 
-  tags  = {
+  tags = {
     Name = "Website"
   }
 
   cors_rule {
     allowed_headers = ["*"]
-    allowed_methods = ["PUT","POST","GET"]
+    allowed_methods = ["PUT", "POST", "GET"]
     allowed_origins = ["*"]
   }
 
@@ -94,7 +94,7 @@ data "aws_caller_identity" "current" {}
 data "archive_file" "lambda_zip" {
   type        = "zip"
   output_path = "api/lambda.zip"
-  source_dir = "api/"
+  source_dir  = "api/"
 }
 
 
@@ -116,14 +116,14 @@ resource "aws_lambda_function" "lambda" {
   handler          = "lambda.register_handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime          = "python3.8"
-  timeout = 10
+  timeout          = 10
 
   environment {
     variables = {
-      REGION = var.region
-      BUCKET_NAME = var.images_bucket_name
-      USERS_TABLE = var.table_user
-      LINKS_TABLE = var.table_links
+      REGION          = var.region
+      BUCKET_NAME     = var.images_bucket_name
+      USERS_TABLE     = var.table_user
+      LINKS_TABLE     = var.table_links
       REGISTERS_TABLE = var.table_registers
       MAINTAINER_MAIL = var.maintainer_mail
     }
@@ -138,14 +138,14 @@ resource "aws_lambda_function" "scan" {
   handler          = "lambda.scan_handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime          = "python3.8"
-  timeout = 900
+  timeout          = 900
 
   environment {
-    variables  = {
-      REGION = var.region
-      BUCKET_NAME = var.images_bucket_name
-      USERS_TABLE = var.table_user
-      LINKS_TABLE = var.table_links
+    variables = {
+      REGION          = var.region
+      BUCKET_NAME     = var.images_bucket_name
+      USERS_TABLE     = var.table_user
+      LINKS_TABLE     = var.table_links
       REGISTERS_TABLE = var.table_registers
       MAINTAINER_MAIL = var.maintainer_mail
     }
@@ -212,23 +212,23 @@ resource "aws_api_gateway_integration" "integration" {
 }
 
 resource "aws_api_gateway_method_response" "method_response_200" {
-    rest_api_id   = aws_api_gateway_rest_api.api.id
-    resource_id   = aws_api_gateway_resource.resource.id
-    http_method   = aws_api_gateway_method.method.http_method
-    status_code   = "200"
-    response_parameters = {
-        "method.response.header.Access-Control-Allow-Headers"     = true,
-        "method.response.header.Access-Control-Allow-Methods"     = false,
-        "method.response.header.Access-Control-Allow-Origin"      = true
-    }
-    depends_on = [aws_api_gateway_method.method]
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.resource.id
+  http_method = aws_api_gateway_method.method.http_method
+  status_code = "200"
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true,
+    "method.response.header.Access-Control-Allow-Methods" = false,
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+  depends_on = [aws_api_gateway_method.method]
 }
 
 
 resource "aws_api_gateway_deployment" "test" {
   depends_on  = [aws_api_gateway_integration.integration]
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name = var.stage_name
+  stage_name  = var.stage_name
 }
 
 output "stage_url" {
@@ -237,29 +237,29 @@ output "stage_url" {
 
 locals {
 
-  url = join("/",[aws_api_gateway_deployment.test.invoke_url,aws_api_gateway_resource.resource.path_part])
+  url = join("/", [aws_api_gateway_deployment.test.invoke_url, aws_api_gateway_resource.resource.path_part])
 
 
   demo_page = templatefile("templates/demo.tmpl", {
-    url = local.url
+    url     = local.url
     contact = var.maintainer_mail
   })
 
   index_page = templatefile("templates/index.tmpl", {
-    url = local.url
+    url     = local.url
     contact = var.maintainer_mail
   })
 
 }
 
 resource "local_file" "demo_page" {
-    content     = local.demo_page
-    filename = "html/demo.html"
+  content  = local.demo_page
+  filename = "html/demo.html"
 }
 
 resource "local_file" "index_page" {
-    content     = local.index_page
-    filename = "html/index.html"
+  content  = local.index_page
+  filename = "html/index.html"
 }
 
 
@@ -268,13 +268,13 @@ module "cors" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
 
-  api_id            = aws_api_gateway_rest_api.api.id
-  api_resource_id   = aws_api_gateway_resource.resource.id
+  api_id          = aws_api_gateway_rest_api.api.id
+  api_resource_id = aws_api_gateway_resource.resource.id
 }
 
 resource "aws_cloudwatch_event_rule" "scheduler" {
-  name        = "trigger_user_scan"
-  description = "extract image - verify passport is out - send notifications"
+  name                = "trigger_user_scan"
+  description         = "extract image - verify passport is out - send notifications"
   schedule_expression = "cron(0 8 ? * MON-FRI *)" #https://crontab.guru/#0_8_*_*_1-5
 }
 

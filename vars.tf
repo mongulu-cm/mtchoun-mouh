@@ -7,22 +7,22 @@ variable "images_bucket_name" {
 }
 
 variable "region" {
-  type = string
+  type    = string
   default = "eu-central-1"
 }
 
 variable "table_user" {
-  type = string
+  type    = string
   default = "Users"
 }
 
 variable "table_links" {
-  type = string
+  type    = string
   default = "Link_table"
 }
 
 variable "table_registers" {
-  type = string
+  type    = string
   default = "Register"
 }
 
@@ -32,6 +32,6 @@ variable "maintainer_mail" {
 }
 
 variable "stage_name" {
-  type = string
+  type    = string
   default = "dev"
 }
