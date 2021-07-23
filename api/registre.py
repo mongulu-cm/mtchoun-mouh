@@ -36,8 +36,3 @@ def verifying_Register_mail(E_Mail):
 if __name__ == "__main__":
     insert_dynamodb_registered(argv[1], argv[2])
     verifying_Register_mail(argv[2])
-
-
-
-
-

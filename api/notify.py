@@ -29,20 +29,20 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
         BODY_HTML = """<html>
               <head> <p >Hello {NAME} ,</p></head>
                     <body>
-    
-                      <p> 
-    
+
+                      <p>
+
                        Nous sommes heureux de t'annoncer de que ton <strong>passeport  est disponible au consulat de Marseille</strong> &#128578; .<br>
-    
+
                        Tu peux dès à présent t'y rendre <strong>muni de votre reçu de dépot et votre ancien passeport.</strong> <br>
                        Retrait  des documents etablis du lundi au vendredi de 15H30 à 16H00 (selon l'affluence).<br> <br> <br>
-    
+
                        Tu veux voir pour croire ? <br>
                        On a prévu ça  &#128521;, suis juste ce lien: :  {URL_IMAGE} .<br>
-                       
+
                        <p style="font-size:16px">On fait comme ça, On est ensemble. </p>
                        <p> Un soucis ? Il vous suffit de faire répondre à ce mail </a>  </p>
-    
+
                     </p>
                     </body>
                     </html>
