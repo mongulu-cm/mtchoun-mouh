@@ -4,3 +4,5 @@ graphviz==0.13.2
 immutables==0.14
 Jinja2==2.11.3
 MarkupSafe==1.1.1
+pre-commit==2.13.0
+detect-secrets==1.1.0
