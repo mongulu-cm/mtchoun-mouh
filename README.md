@@ -121,7 +121,7 @@ Les résultats sont visibles dans le CLI ou dans reports/html
 
 ### Monitoring applicatif
 
-Les services API Gateway et Lambda sauvent des logs dans CloudWatch.
+Les services API Gateway et Lambda sauvent des logs dans CloudWatch.   
 Le suivi des visites sur le site web se fait grâce à https://fr.matomo.org/ ( alternative opensource à Google Analytics).
 
 ### Performance applicative
