@@ -1,6 +1,7 @@
 import boto3
 from boto3 import client
-from config import stopWords, bucket_name, Table_Users, images_url_path,region
+from config import stopWords, images_url_path
+import os
 
 
 def Images_in_Bucket(Bucket_Name):
@@ -18,11 +19,14 @@ def Empty_Bucket(Bucket_Name):
     bucket = s3.Bucket(Bucket_Name)
     bucket.objects.all().delete()
 
-def Delete_Image(Bucket_Name,ImageName):
+
+def Delete_Image(Bucket_Name, ImageName):
     s3 = client('s3')
-    s3.delete_object(Bucket=Bucket_Name,Key=ImageName)
+    s3.delete_object(Bucket=Bucket_Name, Key=ImageName)
+
 
 def insert_dynamodb(User, ImageName):
+    Table_Users = os.environ['USERS_TABLE']
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(Table_Users)
     table.put_item(
@@ -34,7 +38,8 @@ def insert_dynamodb(User, ImageName):
 
 
 def Extract_Users(s3BucketName, ImageName):
-    textract = boto3.client('textract',region_name=region)
+    region = os.environ['REGION']
+    textract = boto3.client('textract', region_name=region)
     reponse = textract.detect_document_text(
         Document={
             'S3Object':
@@ -124,13 +129,16 @@ def Extract_Users(s3BucketName, ImageName):
             print(e)
             print("related image:" + ImageName)
 
+
 def extract_names_from_images():
+    bucket_name = os.environ['BUCKET_NAME']
     Image_List = Images_in_Bucket(bucket_name)
     for image in Image_List:
         print("-------> Image name: " + image)
         Extract_Users(bucket_name, image)
-        Delete_Image(bucket_name, image) # so that if it executed 2 times extracted images will not be there
+        Delete_Image(bucket_name, image)  # so that if it executed 2 times extracted images will not be there
     Empty_Bucket(bucket_name)
+
 
 if __name__ == "__main__":
     extract_names_from_images()

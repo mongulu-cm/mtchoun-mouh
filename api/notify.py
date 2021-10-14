@@ -2,7 +2,12 @@ from registre import get_RegisterName
 import boto3
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
-from config import Table_Users, Table_Registers,maintainer_mail
+#from config import Table_Registers,maintainer_mail
+import os
+
+Table_Users=os.environ['USERS_TABLE']
+Table_Registers=os.environ['REGISTERS_TABLE']
+maintainer_mail=os.environ['MAINTAINER_MAIL']
 
 
 def Scan_Users(UserName, Table_Users):

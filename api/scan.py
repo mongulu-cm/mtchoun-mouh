@@ -1,14 +1,18 @@
 import sys
+
 sys.path.insert(0, './package')
 import requests
 import urllib.request
 import boto3
-from bs4 import BeautifulSoup  as soup
+from bs4 import BeautifulSoup as soup
 from boto3.dynamodb.conditions import Attr
 import os
-from config import bucket_name, Table_Links, passport_page,maintainer_mail
+from config import passport_page
 from notify import amazone_ses_mail
 
+bucket_name = os.environ['BUCKET_NAME']
+Table_Links = os.environ['LINKS_TABLE']
+maintainer_mail = os.environ['MAINTAINER_MAIL']
 
 def S3_bucket_pictures(Picture_image, bucket_name):
     s3 = boto3.resource('s3')
@@ -21,7 +25,7 @@ def dowload_image(url):
     ###  this function allows you to download the images  by providing the parameter url
     name = url.split("/")[-1]
     real_image = f"/tmp/{str(name)}"  # image in jpg version ( only /tmp is writable in aws lambda)
-    urllib.request.urlretrieve(url,real_image )
+    urllib.request.urlretrieve(url, real_image)
     return real_image
 
 
