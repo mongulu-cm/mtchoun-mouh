@@ -81,6 +81,10 @@ Sur le web:
     aws s3 cp html/ s3://mtchoun-mouh.mongulu.cm --recursive
     docker run -it --rm -v "$(pwd)":/usr/local/src/your-app githubchangeloggenerator/github-changelog-generator -u mongulu-cm -p mtchoun-mouh -t <YOUR_GITHUB_REPO_TOKEN>
   ```
+* To empty bucket before terraform destroy :
+  ```
+  aws s3 rb s3://$bucket --force
+  ```
 
 * Puis, créez une distribution cloudfront:
     • ayant comme origine le nom de site de votre bucket ( pas le nom du bucket)
