@@ -57,6 +57,12 @@ jobs:
         run: terraform fmt -check
         continue-on-error: true
 
+      - name: source environment variables
+        run: |
+          export ${{ secrets.TF_VAR_MAINTAINER_MAIL }}
+          export ${{ secrets.TF_VAR_IMAGE_BUCKET_NAME }}
+          export ${{ secrets.TF_VAR_WEBSITE_BUCKET_NAME }}
+
       - name: Terraform Init
         id: init
         run: terraform init
