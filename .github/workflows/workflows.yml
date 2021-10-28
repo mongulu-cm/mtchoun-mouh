@@ -4,6 +4,24 @@ on:
     branches: [ master ]
 
 jobs:
+  lint: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install linting libraries
+        run: |
+            cd function
+            pip install flake8
+      - name: Lint with flake8
+        run: |
+            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+            flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+            
   check-for-secrets:
     runs-on: 'ubuntu-latest'
     steps:
