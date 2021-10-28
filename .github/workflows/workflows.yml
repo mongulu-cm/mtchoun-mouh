@@ -45,23 +45,21 @@ jobs:
         run: |
           echo "GIT_SHA=${GIT_SHA}"
           echo "GIT_BRANCH=${GIT_BRANCH}"
-          #  set-workspace-and-deploy:
-          #    runs-on: 'ubuntu-latest'
-          #    steps:
-          #      - name: Checkout
-          #        uses: actions/checkout@v2
-          #
-          #      - name: Install tarraform
-          #        uses: hashicorp/setup-terraform@v1.2.1
-          #
-          #      - name: Terraform Init
-          #        id: init
-          #        run: terraform init
-          #
-          #      - name: setup workspace
-          #        id: workspace
-          #        run: terraform workspace ${GITHUB_REF##*/}
-          #
+
+      - name: Install tarraform
+        uses: hashicorp/setup-terraform@v1.2.1
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: setup workspace
+        id: workspace
+        run: terraform workspace new ${GIT_BRANCH}
+
+      - name: List workspace
+        run: terraform workspace list
+
 
         #  deploy:
         #    runs-on: ubuntu-latest
