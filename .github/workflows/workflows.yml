@@ -31,7 +31,6 @@ jobs:
       - name: Run Yelp's detect-secrets
         uses: RobertFischer/detect-secrets-action@v2.0.0
 
-jobs:
   set-env:
     runs-on: ubuntu-latest
     steps:
