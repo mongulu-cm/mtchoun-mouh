@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "website" {
     allowed_origins = ["*"]
   }
 
-policy = <<EOF
+  policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -38,11 +38,11 @@ policy = <<EOF
   ]
 }
 EOF
-  
-    website {
-      index_document = "index.html"
-      error_document = "error.html"
-    }
+
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
 }
 
 resource "aws_dynamodb_table" "Users" {
