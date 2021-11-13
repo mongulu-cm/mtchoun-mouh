@@ -26,8 +26,9 @@ def Delete_Image(Bucket_Name, ImageName):
 
 
 def insert_dynamodb(User, ImageName):
+    region = os.environ['REGION']
     Table_Users = os.environ['USERS_TABLE']
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb',region_name=region)
     table = dynamodb.Table(Table_Users)
     table.put_item(
         Item={

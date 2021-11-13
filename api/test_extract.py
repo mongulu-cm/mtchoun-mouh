@@ -3,12 +3,13 @@ import botocore
 import pytest as pytest
 from boto3 import client
 from config import stopWords, images_url_path
-from moto import mock_s3
-from extract import Images_in_Bucket,Empty_Bucket, Delete_Image
+from moto import mock_s3,mock_dynamodb2
+from extract import Images_in_Bucket,Empty_Bucket, Delete_Image,insert_dynamodb
 
 @pytest.fixture(autouse=True)
 def env_setup(monkeypatch):
     monkeypatch.setenv('REGION','eu-central-1')
+    monkeypatch.setenv('USERS_TABLE', 'Users')
 
 @mock_s3
 def test_images_in_bucket():
@@ -45,5 +46,21 @@ def test_Delete_Image():
     assert len(response["Contents"])==1
     assert response["Contents"][0]["Key"]=="tata"
 
-
-
+@mock_dynamodb2
+def test_insert_dynamodb():
+    dynamodb = boto3.resource('dynamodb', region_name='eu-central-1')
+    table= dynamodb.create_table(TableName='Users',
+                                 KeySchema=[
+                                     {
+                                         'AttributeName': 'UserName',
+                                         'KeyType': 'HASH'
+                                     }],
+                                 AttributeDefinitions=[
+                                     {
+                                         'AttributeName':  'UserName',
+                                         'AttributeType':'S'
+                                     }],
+                                 )
+    insert_dynamodb('fabiola','fabiolaImage')
+    response=table.scan()
+    assert len(response['Items']) == 1
