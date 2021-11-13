@@ -33,27 +33,13 @@ resource "aws_s3_bucket" "terraform-state" {
   //    }
 }
 
-resource "aws_dynamodb_table" "terraform-locks" {
-  name           = "terraform-locks-mtchoun-mouh"
-  billing_mode   = "PROVISIONED"
-  hash_key       = "LockID"
-  read_capacity  = 1
-  write_capacity = 1
-
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-}
-
 terraform {
   required_version = ">= 0.15"
 
   backend "s3" {
-    bucket         = "terraform-state-mongulu"
-    key            = "mtchoun-mouh/terraform.tfstate"
-    region         = "eu-central-1"
-    dynamodb_table = "terraform-locks-mtchoun-mouh"
+    bucket = "terraform-state-mongulu"
+    key    = "mtchoun-mouh/terraform.tfstate"
+    region = "eu-central-1"
     //encrypt = true
   }
 }
