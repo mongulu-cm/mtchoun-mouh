@@ -5,7 +5,7 @@ on:
       - master
 
 jobs:
-#  lint: 
+#  lint:
 #    runs-on: ubuntu-latest
 #    steps:
 #      - name: Check out code
@@ -22,7 +22,7 @@ jobs:
 #        run: |
 #            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 #            flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-            
+
   check-for-secrets:
     runs-on: 'ubuntu-latest'
     steps:
@@ -38,7 +38,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_maintainer_mail: ${{ secrets.TF_VAR_MAINTAINER_MAIL }}
       TF_VAR_website_bucket_name: ${{ secrets.TF_VAR_WEBSITE_BUCKET_NAME }}
-      TF_VAR_images_bucket_name: ${{ secrets.TF_VAR_IMAGE_BUCKET_NAME }}
+      TF_VAR_images_bucket_name: ${{ secrets.TF_VAR_IMAGES_BUCKET_NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
