@@ -1,7 +1,10 @@
 name: Main Workflow
 on:
   push:
-    branches-ignore:
+    branches:
+      - master
+  pull_request:
+    branches:
       - master
 
 jobs:
@@ -50,7 +53,7 @@ jobs:
       - name: Use environment variables
         run: |
           echo "GIT_SHA=${GIT_SHA}"
-          echo "GIT_BRANCH=${GIT_BRANCH}"
+          echo "GIT_BRANCH=${{ github.event.pull_request.base.ref }}"
 
       - name: Install tarraform
         uses: hashicorp/setup-terraform@v1.2.1
@@ -66,7 +69,7 @@ jobs:
 
       - name: setup workspace
         id: workspace
-        run: terraform workspace new ${GIT_BRANCH}
+        run: terraform workspace select ${GIT_BRANCH}
 
       - name: List workspace
         run: terraform workspace list
@@ -85,6 +88,9 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+
+      - name: Website URL
+        run: terraform output website_url
 
       - name: Copy Site files
         uses: jakejarvis/s3-sync-action@master
