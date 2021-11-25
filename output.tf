@@ -3,5 +3,5 @@ output "stage_url" {
 }
 
 output "website_url" {
-  value = join("", ["http://", "${terraform.workspace}", "-mtchoun-mouh.mongulu.cm.s3-website.eu-central-1.amazonaws.com"])
+  value = join("", ["http://", aws_s3_bucket.website.website_endpoint])
 }
