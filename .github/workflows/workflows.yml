@@ -1,27 +1,13 @@
 name: Main Workflow
 on:
   push:
-    branches-ignore:
+    branches:
+      - master
+  pull_request:
+    branches:
       - master
 
 jobs:
-#  lint:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Check out code
-#        uses: actions/checkout@v2
-#      - name: Set up python
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: 3.8
-#      - name: Install linting libraries
-#        run: |
-#            cd function
-#            pip install flake8
-#      - name: Lint with flake8
-#        run: |
-#            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-#            flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   check-for-secrets:
     runs-on: 'ubuntu-latest'
@@ -37,20 +23,11 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_maintainer_mail: ${{ secrets.TF_VAR_MAINTAINER_MAIL }}
-      TF_VAR_website_bucket_name: ${{ secrets.TF_VAR_WEBSITE_BUCKET_NAME }}
+      TF_VAR_website_bucket_name: "mtchoun-mouh.mongulu.cm"
       TF_VAR_images_bucket_name: ${{ secrets.TF_VAR_IMAGES_BUCKET_NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Set environment variables
-        run: |
-          echo "GIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
-          echo "GIT_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-      - name: Use environment variables
-        run: |
-          echo "GIT_SHA=${GIT_SHA}"
-          echo "GIT_BRANCH=${GIT_BRANCH}"
 
       - name: Install tarraform
         uses: hashicorp/setup-terraform@v1.2.1
@@ -66,7 +43,7 @@ jobs:
 
       - name: setup workspace
         id: workspace
-        run: terraform workspace new ${GIT_BRANCH}
+        run: terraform workspace select $GITHUB_HEAD_REF
 
       - name: List workspace
         run: terraform workspace list
@@ -86,10 +63,13 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve
 
+      - name: Website URL
+        run: terraform output website_url
+
       - name: Copy Site files
         uses: jakejarvis/s3-sync-action@master
         env:
-          AWS_S3_BUCKET: ${GIT_BRANCH}-${{ secrets.TF_VAR_WEBSITE_BUCKET_NAME }}
+          AWS_S3_BUCKET:  $GITHUB_HEAD_REF-${{ secrets.TF_VAR_WEBSITE_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'eu-central-1'

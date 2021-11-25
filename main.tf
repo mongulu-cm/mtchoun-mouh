@@ -231,10 +231,6 @@ resource "aws_api_gateway_deployment" "test" {
   stage_name  = "${terraform.workspace}-${var.stage_name}"
 }
 
-output "stage_url" {
-  value = aws_api_gateway_deployment.test.invoke_url
-}
-
 locals {
 
   url = join("/", [aws_api_gateway_deployment.test.invoke_url, aws_api_gateway_resource.resource.path_part])
