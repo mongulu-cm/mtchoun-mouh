@@ -1,0 +1,41 @@
+name: Close Pull Request
+
+# only trigger on pull request closed events
+on:
+  pull_request:
+    types: [ closed ]
+
+jobs:
+
+  close_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install tarraform
+        uses: hashicorp/setup-terraform@v1.2.1
+
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install tarraform
+        uses: hashicorp/setup-terraform@v1.2.1
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: setup workspace
+        id: workspace
+        run: terraform workspace select $GITHUB_HEAD_REF
+
+      - name: Terraform Destroy
+        id: destroy
+        run: terraform destroy
