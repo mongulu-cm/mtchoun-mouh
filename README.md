@@ -59,6 +59,7 @@ Sur votre poste :
 * Java: https://java.com/fr/download/
 * Un fork de ce ce projet
 * [driftctl](https://driftctl.com/)
+* [act](https://github.com/nektos/act)
 
 Sur le web:
 * Disposer d'un compte sur https://gitreports.com/ et activez votre fork.
@@ -69,8 +70,13 @@ Sur le web:
 * Créez un fichier `.env` à la racine contenant:
   ```
     export TF_VAR_maintainer_mail="<votre mail>"
+    export TF_VAR_MAINTAINER_MAIL="<votre mail>"
     export TF_VAR_website_bucket_name="<votre sous-domaine>"
+    export TF_VAR_WEBSITE_BUCKET_NAME="<votre sous-domaine>"
     export TF_VAR_images_bucket_name="xxxxxxx"
+    export TF_VAR_IMAGES_BUCKET_NAME="xxxxxxx"
+    export AWS_ACCESS_KEY_ID="xxxxxxx"
+    export AWS_SECRET_ACCESS_KEY="xxxxx"
   ```
 
 * Ensuite, éxécutez les commandes suivantes:
@@ -80,6 +86,10 @@ Sur le web:
     terraform apply
     aws s3 cp html/ s3://mtchoun-mouh.mongulu.cm --recursive
     docker run -it --rm -v "$(pwd)":/usr/local/src/your-app githubchangeloggenerator/github-changelog-generator -u mongulu-cm -p mtchoun-mouh -t <YOUR_GITHUB_REPO_TOKEN>
+  ```
+* To empty bucket before terraform destroy :
+  ```
+  aws s3 rb s3://$bucket --force
   ```
 
 * Puis, créez une distribution cloudfront:
@@ -97,7 +107,11 @@ Sur le web:
 TODO
 
 #### Integration tests
-TODO
+
+To launch integration tests locally :
+  ```
+    act -j <job_name> --secret-file .env
+  ```
 
 #### End to end
 
