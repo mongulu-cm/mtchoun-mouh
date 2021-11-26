@@ -43,7 +43,7 @@ jobs:
 
       - name: setup workspace
         id: workspace
-        run: terraform workspace new $GITHUB_HEAD_REF
+        run: terraform workspace select $GITHUB_HEAD_REF
 
       - name: List workspace
         run: terraform workspace list
