@@ -15,6 +15,7 @@ jobs:
       TF_VAR_maintainer_mail: ${{ secrets.TF_VAR_MAINTAINER_MAIL }}
       TF_VAR_website_bucket_name: "mtchoun-mouh.mongulu.cm"
       TF_VAR_images_bucket_name: ${{ secrets.TF_VAR_IMAGES_BUCKET_NAME }}
+      AWS_REGION: "eu-central-1"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -43,4 +44,7 @@ jobs:
 
       - name: Terraform Destroy
         id: destroy
-        run: terraform destroy -auto-approve
+        run: |
+          terraform destroy -auto-approve
+          terraform workspace select default
+          terraform workspace delete $GITHUB_HEAD_REF
