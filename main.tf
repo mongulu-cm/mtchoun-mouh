@@ -5,6 +5,7 @@ resource "aws_s3_bucket" "images" {
     Name = "images"
   }
 
+  force_destroy = true
 }
 
 # Use https://registry.terraform.io/modules/cloudmaniac/static-website/aws/0.9.2 when we will buy domain name
@@ -12,6 +13,7 @@ resource "aws_s3_bucket" "website" {
   bucket = "${terraform.workspace}-${var.website_bucket_name}"
   acl    = "public-read"
 
+  force_destroy = true
   tags = {
     Name = "Website"
   }
