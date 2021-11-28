@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "images" {
-  bucket = "${terraform.workspace}-${var.images_bucket_name}"
+  bucket = (terraform.workspace == "default") ? var.images_bucket_name : "${terraform.workspace}-${var.images_bucket_name}"
 
   tags = {
     Name = "images"
@@ -8,9 +8,24 @@ resource "aws_s3_bucket" "images" {
   force_destroy = true
 }
 
+data "aws_iam_policy_document" "override" {
+  statement {
+    sid = "PublicReadForGetBucketObjects"
+    principals {
+      identifiers = ["AWS"]
+      type        = "*"
+    }
+
+    actions = ["s3:GetObject"]
+    resources = [(terraform.workspace == "default") ? "arn:aws:s3:::${var.website_bucket_name}/*" : "arn:aws:s3:::${terraform.workspace}-${var.website_bucket_name}/*"
+    ]
+  }
+}
+
+
 # Use https://registry.terraform.io/modules/cloudmaniac/static-website/aws/0.9.2 when we will buy domain name
 resource "aws_s3_bucket" "website" {
-  bucket = "${terraform.workspace}-${var.website_bucket_name}"
+  bucket = (terraform.workspace == "default") ? var.website_bucket_name : "${terraform.workspace}-${var.website_bucket_name}"
   acl    = "public-read"
 
   force_destroy = true
@@ -24,22 +39,7 @@ resource "aws_s3_bucket" "website" {
     allowed_origins = ["*"]
   }
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "PublicReadForGetBucketObjects",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "*"
-      },
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${terraform.workspace}-${var.website_bucket_name}/*"
-    }
-  ]
-}
-EOF
+  policy = data.aws_iam_policy_document.override.json
 
   website {
     index_document = "index.html"
@@ -48,7 +48,7 @@ EOF
 }
 
 resource "aws_dynamodb_table" "Users" {
-  name           = "${terraform.workspace}-${var.table_user}"
+  name           = (terraform.workspace == "default") ? var.table_user : "${terraform.workspace}-${var.table_user}"
   billing_mode   = "PROVISIONED"
   read_capacity  = 1
   write_capacity = 1
@@ -61,7 +61,7 @@ resource "aws_dynamodb_table" "Users" {
 }
 
 resource "aws_dynamodb_table" "Link_table" {
-  name           = "${terraform.workspace}-${var.table_links}"
+  name           = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
   billing_mode   = "PROVISIONED"
   read_capacity  = 1
   write_capacity = 1
@@ -74,7 +74,7 @@ resource "aws_dynamodb_table" "Link_table" {
 }
 
 resource "aws_dynamodb_table" "Register" {
-  name           = "${terraform.workspace}-${var.table_registers}"
+  name           = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
   billing_mode   = "PROVISIONED"
   read_capacity  = 1
   write_capacity = 1
@@ -113,7 +113,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
-  function_name    = "${terraform.workspace}-user_registration_consulcam"
+  function_name    = (terraform.workspace == "default") ? "user_registration_consulcam" : "${terraform.workspace}-user_registration_consulcam"
   role             = data.aws_iam_role.role.arn
   handler          = "lambda.register_handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
@@ -123,10 +123,10 @@ resource "aws_lambda_function" "lambda" {
   environment {
     variables = {
       REGION          = var.region
-      BUCKET_NAME     = "${terraform.workspace}-${var.images_bucket_name}"
-      USERS_TABLE     = "${terraform.workspace}-${var.table_user}"
-      LINKS_TABLE     = "${terraform.workspace}-${var.table_links}"
-      REGISTERS_TABLE = "${terraform.workspace}-${var.table_registers}"
+      BUCKET_NAME     = (terraform.workspace == "default") ? var.images_bucket_name : "${terraform.workspace}-${var.images_bucket_name}"
+      USERS_TABLE     = (terraform.workspace == "default") ? var.table_user : "${terraform.workspace}-${var.table_user}"
+      LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
+      REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.maintainer_mail
     }
   }
@@ -135,7 +135,7 @@ resource "aws_lambda_function" "lambda" {
 
 resource "aws_lambda_function" "scan" {
   filename         = data.archive_file.lambda_zip.output_path
-  function_name    = "${terraform.workspace}-scan_user_consulcam"
+  function_name    = (terraform.workspace == "default") ? "scan_user_consulcam" : "${terraform.workspace}-scan_user_consulcam"
   role             = data.aws_iam_role.role.arn
   handler          = "lambda.scan_handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
@@ -145,10 +145,10 @@ resource "aws_lambda_function" "scan" {
   environment {
     variables = {
       REGION          = var.region
-      BUCKET_NAME     = "${terraform.workspace}-${var.images_bucket_name}"
-      USERS_TABLE     = "${terraform.workspace}-${var.table_user}"
-      LINKS_TABLE     = "${terraform.workspace}-${var.table_links}"
-      REGISTERS_TABLE = "${terraform.workspace}-${var.table_registers}"
+      BUCKET_NAME     = (terraform.workspace == "default") ? var.images_bucket_name : "${terraform.workspace}-${var.images_bucket_name}"
+      USERS_TABLE     = (terraform.workspace == "default") ? var.table_user : "${terraform.workspace}-${var.table_user}"
+      LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
+      REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.maintainer_mail
     }
   }
@@ -181,7 +181,7 @@ resource "aws_lambda_function" "scan" {
 
 
 resource "aws_api_gateway_rest_api" "api" {
-  name        = "${terraform.workspace}-user registration"
+  name        = (terraform.workspace == "default") ? "user registration" : "${terraform.workspace}-user registration"
   description = "Allow to register user for sending notifications later"
 
   endpoint_configuration {
@@ -230,13 +230,12 @@ resource "aws_api_gateway_method_response" "method_response_200" {
 resource "aws_api_gateway_deployment" "test" {
   depends_on  = [aws_api_gateway_integration.integration]
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = "${terraform.workspace}-${var.stage_name}"
+  stage_name  = (terraform.workspace == "default") ? var.stage_name : "${terraform.workspace}-${var.stage_name}"
 }
 
 locals {
 
   url = join("/", [aws_api_gateway_deployment.test.invoke_url, aws_api_gateway_resource.resource.path_part])
-
 
   demo_page = templatefile("templates/demo.tmpl", {
     url     = local.url
@@ -271,7 +270,7 @@ module "cors" {
 }
 
 resource "aws_cloudwatch_event_rule" "scheduler" {
-  name                = "${terraform.workspace}-trigger_user_scan"
+  name                = (terraform.workspace == "default") ? "trigger_user_scan" : "${terraform.workspace}-trigger_user_scan"
   description         = "extract image - verify passport is out - send notifications"
   schedule_expression = "cron(0 8 ? * MON-FRI *)" #https://crontab.guru/#0_8_*_*_1-5
 }
