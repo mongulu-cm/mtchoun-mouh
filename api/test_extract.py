@@ -1,5 +1,6 @@
 import boto3
 import botocore
+from botocore.exceptions import ClientError
 import pytest as pytest
 from boto3 import client
 from config import stopWords, images_url_path
@@ -48,19 +49,26 @@ def test_Delete_Image():
 
 @mock_dynamodb2
 def test_insert_dynamodb():
-    dynamodb = boto3.resource('dynamodb', region_name='eu-central-1')
-    table= dynamodb.create_table(TableName='Users',
-                                 KeySchema=[
-                                     {
-                                         'AttributeName': 'UserName',
-                                         'KeyType': 'HASH'
-                                     }],
-                                 AttributeDefinitions=[
+    #client = boto3.client('dynamodb')
+    dynamodb = boto3.client('dynamodb', region_name='eu-central-1')
+    table= dynamodb.create_table( 
+                                AttributeDefinitions=[
                                      {
                                          'AttributeName':  'UserName',
                                          'AttributeType':'S'
-                                     }],
-                                 )
+                                     },
+                                ],
+        
+                                TableName='Users',
+                                KeySchema=[
+                                        {
+                                         'AttributeName': 'UserName',
+                                         'KeyType': 'HASH'
+                                        },
+                                     ],
+                                   ProvisionedThroughput={
+                                                'ReadCapacityUnits': 123,
+                                                'WriteCapacityUnits': 123},)                                
     insert_dynamodb('fabiola','fabiolaImage')
-    response=table.scan()
-    assert len(response['Items']) == 1
+    response=dynamodb.scan( TableName='Users')
+    assert response['Count']== 1
