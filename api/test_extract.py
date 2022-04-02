@@ -4,7 +4,7 @@ from botocore.exceptions import ClientError
 import pytest as pytest
 from boto3 import client
 from config import stopWords, images_url_path
-from moto import mock_s3,mock_dynamodb2
+from moto import mock_s3,mock_dynamodb
 from extract import Images_in_Bucket,Empty_Bucket, Delete_Image,insert_dynamodb
 
 @pytest.fixture(autouse=True)
@@ -14,7 +14,6 @@ def env_setup(monkeypatch):
 
 @mock_s3
 def test_images_in_bucket():
-    #with mock_s3():
         conn = boto3.resource('s3',region_name='us-east-1')
         conn.create_bucket(Bucket='bucket_fabiola')
         assert Images_in_Bucket('bucket_fabiola') == []
@@ -26,7 +25,6 @@ def test_images_in_bucket():
 
 @mock_s3
 def test_Empty_Bucket():
-    #with mock_s3():
         s3 = boto3.client('s3',region_name='us-east-1')
         s3.create_bucket(Bucket='bucket_fabiola')
         s3.put_object(Bucket='bucket_fabiola', Key='toto')
@@ -47,11 +45,10 @@ def test_Delete_Image():
     assert len(response["Contents"])==1
     assert response["Contents"][0]["Key"]=="tata"
 
-@mock_dynamodb2
+@mock_dynamodb
 def test_insert_dynamodb():
-    #client = boto3.client('dynamodb')
     dynamodb = boto3.client('dynamodb', region_name='eu-central-1')
-    table= dynamodb.create_table( 
+    dynamodb.create_table(
                                 AttributeDefinitions=[
                                      {
                                          'AttributeName':  'UserName',

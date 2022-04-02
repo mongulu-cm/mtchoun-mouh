@@ -5,9 +5,9 @@ from botocore.exceptions import ClientError
 #from config import Table_Registers,maintainer_mail
 import os
 
-Table_Users=os.environ['USERS_TABLE']
-Table_Registers=os.environ['REGISTERS_TABLE']
-maintainer_mail=os.environ['MAINTAINER_MAIL']
+
+
+
 
 
 def Scan_Users(UserName, Table_Users):
@@ -20,6 +20,7 @@ def Scan_Users(UserName, Table_Users):
 
 
 def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
+    maintainer_mail = os.environ['MAINTAINER_MAIL']
     NAME = NAME.upper()
     SENDER = f"Collectif mongulu <{maintainer_mail}>"
     AWS_REGION = "eu-central-1"
@@ -97,6 +98,7 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
 
 
 def Delete_Backup(D_Name):
+    Table_Registers = os.environ['REGISTERS_TABLE']
     primary_column_Name = 'Name'
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(Table_Registers)
@@ -108,6 +110,7 @@ def Delete_Backup(D_Name):
 
 
 def notify_user_registered():
+    Table_Users = os.environ['USERS_TABLE']
     Index_Register = get_RegisterName()
     for i in Index_Register:
         #print(i)
