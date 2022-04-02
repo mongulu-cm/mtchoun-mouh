@@ -1,11 +1,11 @@
 variable "website_bucket_name" {
   type = string
-  validation {
-    condition = can(regex(
-      "^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}.(xn--)?([a-z0-9-]{1,61}|[a-z0-9-]{1,30}.[a-z]{2,})$",
-    var.website_bucket_name))
-    error_message = "The website_bucket_name should be a domain name."
-  }
+#  validation {
+#    condition = can(regex(
+#      "^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}.(xn--)?([a-z0-9-]{1,61}|[a-z0-9-]{1,30}.[a-z]{2,})$",
+#    var.website_bucket_name))
+#    error_message = "The website_bucket_name should be a domain name."
+#  }
 }
 
 variable "images_bucket_name" {
