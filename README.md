@@ -52,17 +52,11 @@ Sur votre poste :
 * terraform/v0.13.2
 * aws-cli
 * git
-* docker
 * zip
 * Google Chrome
-* [uirecorder](https://github.com/alibaba/uirecorder)
-* Java: https://java.com/fr/download/
 * Un fork de ce ce projet
 * [driftctl](https://driftctl.com/)
 * [act](https://github.com/nektos/act)
-
-Sur le web:
-* Disposer d'un compte sur https://gitreports.com/ et activez votre fork.
 
 
 ### Déploiement
@@ -85,7 +79,6 @@ Sur le web:
     terraform init
     terraform apply
     aws s3 cp html/ s3://mtchoun-mouh.mongulu.cm --recursive
-    docker run -it --rm -v "$(pwd)":/usr/local/src/your-app githubchangeloggenerator/github-changelog-generator -u mongulu-cm -p mtchoun-mouh -t <YOUR_GITHUB_REPO_TOKEN>
   ```
 * To empty bucket before terraform destroy :
   ```
@@ -115,23 +108,7 @@ To launch integration tests locally :
 
 #### End to end
 
-Ce test vérifie qu'un utilisateur utilisant un PC arrive bien à s'enregistrer ( en supposant qu'il rentre tous les
-paramètres comme il faut).
 
-* Initialisation du test & démarrage du server selenium standalone :
-  ```
-    cd test/
-    uirecorder init
-    npx selenium-standalone start
-  ```
-
-* Exécutez le test en mode PC:
-  ```
-     cd test/
-     .\run.bat sample/test.spec.js (windows) or source run.sh sample/test.spec.js (Linux/Mac)
-  ```
-
-Les résultats sont visibles dans le CLI ou dans reports/html
 
 ### Monitoring applicatif
 
