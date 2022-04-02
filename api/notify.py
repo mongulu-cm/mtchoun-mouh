@@ -2,25 +2,21 @@ from registre import get_RegisterName
 import boto3
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
-#from config import Table_Registers,maintainer_mail
+
+# from config import Table_Registers,maintainer_mail
 import os
 
 
-
-
-
-
 def Scan_Users(UserName, Table_Users):
-    dynamodb = boto3.resource('dynamodb')
+    region = os.environ["REGION"]
+    dynamodb = boto3.resource("dynamodb", region_name=region)
     table = dynamodb.Table(Table_Users)
-    response = table.scan(
-        FilterExpression=Attr('UserName').eq(UserName)
-    )
-    return response['Items']
+    response = table.scan(FilterExpression=Attr("UserName").eq(UserName))
+    return response["Items"]
 
 
-def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
-    maintainer_mail = os.environ['MAINTAINER_MAIL']
+def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE, maintainer=False):
+    maintainer_mail = os.environ["MAINTAINER_MAIL"]
     NAME = NAME.upper()
     SENDER = f"Collectif mongulu <{maintainer_mail}>"
     AWS_REGION = "eu-central-1"
@@ -28,10 +24,11 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
     if not maintainer:
 
         SUBJECT = "Ton passeport est disponible"
-        BODY_TEXT = ("Votre passeport est sortie  (Python)\r\n"
-                     "This email was sent with Amazon SES using the "
-                     "AWS SDK for Python (Boto)."
-                     )
+        BODY_TEXT = (
+            "Votre passeport est sortie  (Python)\r\n"
+            "This email was sent with Amazon SES using the "
+            "AWS SDK for Python (Boto)."
+        )
         BODY_HTML = """<html>
               <head> <p >Hello {NAME} ,</p></head>
                     <body>
@@ -52,37 +49,43 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
                     </p>
                     </body>
                     </html>
-                                """.format(URL_IMAGE=URL_IMAGE, NAME=NAME)
+                                """.format(
+            URL_IMAGE=URL_IMAGE, NAME=NAME
+        )
     else:
         # maintainer
         SUBJECT = "Nouvelles images détectés sur le site du consulat"
         BODY_TEXT = f"Lien vers la première image: {URL_IMAGE}"
-        BODY_HTML = """<html> Lien vers la première image: {URL_IMAGE} </html>""".format(URL_IMAGE=URL_IMAGE)
+        BODY_HTML = (
+            """<html> Lien vers la première image: {URL_IMAGE} </html>""".format(
+                URL_IMAGE=URL_IMAGE
+            )
+        )
 
     CHARSET = "UTF-8"
-    client = boto3.client('ses', region_name=AWS_REGION)
+    client = boto3.client("ses", region_name=AWS_REGION)
     try:
 
         response = client.send_email(
             Destination={
-                'ToAddresses': [
+                "ToAddresses": [
                     RECIPIENT,
                 ],
             },
             Message={
-                'Body': {
-                    'Html': {
-                        'Charset': CHARSET,
-                        'Data': BODY_HTML,
+                "Body": {
+                    "Html": {
+                        "Charset": CHARSET,
+                        "Data": BODY_HTML,
                     },
-                    'Text': {
-                        'Charset': CHARSET,
-                        'Data': BODY_TEXT,
+                    "Text": {
+                        "Charset": CHARSET,
+                        "Data": BODY_TEXT,
                     },
                 },
-                'Subject': {
-                    'Charset': CHARSET,
-                    'Data': SUBJECT,
+                "Subject": {
+                    "Charset": CHARSET,
+                    "Data": SUBJECT,
                 },
             },
             Source=SENDER,
@@ -91,34 +94,30 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE,maintainer=False):
             # ConfigurationSetName=CONFIGURATION_SET,
         )
     except ClientError as e:
-        print(e.response['Error']['Message'])
+        print(e.response["Error"]["Message"])
     else:
         print("Email sent! Message ID:"),
-        print(response['MessageId'])
+        print(response["MessageId"])
 
 
 def Delete_Backup(D_Name):
-    Table_Registers = os.environ['REGISTERS_TABLE']
-    primary_column_Name = 'Name'
-    dynamodb = boto3.resource('dynamodb')
+    Table_Registers = os.environ["REGISTERS_TABLE"]
+    primary_column_Name = "Name"
+    dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(Table_Registers)
-    response = table.delete_item(
-        Key={
-            primary_column_Name: D_Name
-        }
-    )
+    response = table.delete_item(Key={primary_column_Name: D_Name})
 
 
 def notify_user_registered():
-    Table_Users = os.environ['USERS_TABLE']
+    Table_Users = os.environ["USERS_TABLE"]
     Index_Register = get_RegisterName()
     for i in Index_Register:
-        #print(i)
+        # print(i)
         Name = i[0]
         Email = i[1]
         Scan_reponse = Scan_Users(Name, Table_Users)
         if len(Scan_reponse) == 0:
-            print(Name +" votre passeport n'est pas sorti")
+            print(Name + " votre passeport n'est pas sorti")
         else:
             amazone_ses_mail(Name, Email, Scan_reponse[0]["URLImage"])
             Delete_Backup(Name)

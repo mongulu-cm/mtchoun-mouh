@@ -8,36 +8,26 @@ from extract import insert_dynamodb
 
 @pytest.fixture(autouse=True)
 def env_setup(monkeypatch):
-    monkeypatch.setenv('REGION', 'eu-central-1')
-    monkeypatch.setenv('USERS_TABLE', 'Users')
-    monkeypatch.setenv('REGISTERS_TABLE', 'Register')
+    monkeypatch.setenv("REGION", "eu-central-1")
+    monkeypatch.setenv("USERS_TABLE", "Users")
+    monkeypatch.setenv("REGISTERS_TABLE", "Register")
 
 
 @mock_dynamodb
 def test_scan_users():
-    Table_Users = os.environ['USERS_TABLE']
-    dynamodb = boto3.client('dynamodb', region_name=os.environ['REGION'])
+    Table_Users = os.environ["USERS_TABLE"]
+    dynamodb = boto3.client("dynamodb", region_name="eu-central-1")
     dynamodb.create_table(
         AttributeDefinitions=[
-            {
-                'AttributeName': 'UserName',
-                'AttributeType': 'S'
-            },
+            {"AttributeName": "UserName", "AttributeType": "S"},
         ],
-
         TableName=Table_Users,
         KeySchema=[
-            {
-                'AttributeName': 'UserName',
-                'KeyType': 'HASH'
-            },
+            {"AttributeName": "UserName", "KeyType": "HASH"},
         ],
-        ProvisionedThroughput={
-            'ReadCapacityUnits': 123,
-            'WriteCapacityUnits': 123}, )
+        ProvisionedThroughput={"ReadCapacityUnits": 123, "WriteCapacityUnits": 123},
+    )
     assert Scan_Users("fabiola", Table_Users) == []
 
-    insert_dynamodb("fabiola","fabiolaImage")
+    insert_dynamodb("fabiola", "fabiolaImage")
     assert len(Scan_Users("fabiola", Table_Users)) == 1
-
-
