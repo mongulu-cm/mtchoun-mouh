@@ -6,6 +6,7 @@
 # project based
 .terraform
 *.tfstate*
+*.pyc
 .env
 
 api/lambda.zip
