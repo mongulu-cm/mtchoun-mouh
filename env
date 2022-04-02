@@ -1,0 +1,7 @@
+export TF_VAR_MAINTAINER_MAIL=""
+export TF_VAR_WEBSITE_BUCKET_NAME="mtchoun-mouh"
+export TF_VAR_IMAGES_BUCKET_NAME=""
+
+export TF_VAR_maintainer_mail=""
+export TF_VAR_website_bucket_name="mtchoun-mouh"
+export TF_VAR_images_bucket_name=""
