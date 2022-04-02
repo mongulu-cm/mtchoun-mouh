@@ -1,6 +1,6 @@
 name: Test Workflow
 on:
-  pull_request:
+  push:
     branches:
       - master
 
@@ -71,3 +71,28 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'eu-central-1'
           SOURCE_DIR: 'html'
+
+  unittest:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - uses: actions/cache@v2
+        name: Configure pip caching
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r api/requirements.txt
+      - name: test functions
+        run: | 
+          cd api &&  pytest test_extract.py &&\
+          pytest test_notify.py
