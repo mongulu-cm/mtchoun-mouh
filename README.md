@@ -46,7 +46,7 @@ Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la s
 * Avoir un minimum de compétence sur le cloud AWS et Terraform
 * Installez localement tous les outils ( il vous suffit d'éxécuter les scripts `init` et `command` du fichier [.gitpod.yml](.gitpod.yml) **ou** utilisez un environnement de développement déjà prêt à l'emploi sur gitpod :
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/mongulu-cm/mtchoun-mouh/tree/gitpod)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/mongulu-cm/mtchoun-mouh)
 
 
 ### Déploiement
