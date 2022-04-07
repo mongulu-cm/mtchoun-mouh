@@ -29,34 +29,24 @@ automatiquement notifié par email de la sortie de son passeport avec les contra
 
 ## Contexte technique
 
-Si vous êtes ici , c'est que vous intéressés par un déploiement maison de la solution. Suivez le guide :) !
+Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la solution. Suivez le guide :) !
 
-### Prérequis
-Vous devez avoir un minimum de compétence sur le cloud AWS et Terraform
+### Architecture
 
-Sur le cloud AWS:
-* Disposez d'un IAM User avec les permissions d'écriture/lecture sur les services: Lambda, S3, API Gateway, IAM ( ce
-sera le compte utilisé par Terraform)
-* Disposez d'un IAM Role appelé website-deployer associé au service Lambda et qui possède les droits écriture/lecture
-sur les services: S3, DynamoDB, Textract, SES, Cloudwatch
-* Permettre de sauvegarder le logs d'erreur API Gateway dans Cloudwatch: https://www.youtube.com/watch?v=N49Bp_bd93I
-* Avoir enregistré le sous-domaine mtchoun-mouh.xxxx.yyy dans Route 53
-> Si vous souhaitez utiliser un nom de domaine gratuitement, sachez que les .ml (mali) et bien d'autres sont gratuits.
-> Pour plus d'information ou réservation: http://www.freenom.com/en/freeandpaiddomains.html
-* Avoir généré un certificat SSL wildcard pour votre domaine xxxx.yyy dans AWS Certificate Manager
-> Le certificat est généré gratuitement dans AWS CM
+<details><summary>Cliquez sur la flèche pour visualiser </summary>
 
 ![Design](architecture.png)
 
-Sur votre poste :
-* terraform/v0.13.2
-* aws-cli
-* git
-* zip
-* Google Chrome
-* Un fork de ce ce projet
-* [driftctl](https://driftctl.com/)
-* [act](https://github.com/nektos/act)
+</details>
+
+
+
+### Prérequis
+
+* Avoir un minimum de compétence sur le cloud AWS et Terraform
+* Installez localement tous les outils ( il vous suffit d'éxécuter les scripts `init` et `command` du fichier [.gitpod.yml](.gitpod.yml) **ou** utilisez un environnement de développement déjà prêt à l'emploi sur gitpod :
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/mongulu-cm/mtchoun-mouh/tree/gitpod)
 
 
 ### Déploiement
@@ -83,12 +73,15 @@ Sur votre poste :
   ```
 
 * Puis, créez une distribution cloudfront:
+
     • ayant comme origine le nom de site de votre bucket ( pas le nom du bucket)
+
     • pointant vers votre sous-domaine mtchoun-mouh.xxxx.yyy
+
     • avec des caches invalidations pour les fichiers index.html et demo.html
 
 
-* Et enfin un enregistrements DNS dans Route 53 reliant mtchoun-mouh.xxxx.yyy à la distribution cloudfront créé précédemment
+* Et enfin un enregistrement DNS dans Route 53 reliant mtchoun-mouh.xxxx.yyy à la distribution cloudfront créé précédemment
 
 
 ### Pyramid test
