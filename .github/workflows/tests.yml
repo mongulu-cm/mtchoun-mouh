@@ -3,6 +3,11 @@ on:
   pull_request:
     branches:
       - master
+    paths:
+      - '**.tf'
+      - 'html/**'
+      - 'api/**'
+      - 'templates/**'
 
 jobs:
 
