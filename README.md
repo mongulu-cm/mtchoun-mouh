@@ -63,11 +63,8 @@ Sur votre poste :
 
 * Créez un fichier `.env` à la racine contenant:
   ```
-    export TF_VAR_maintainer_mail="<votre mail>"
     export TF_VAR_MAINTAINER_MAIL="<votre mail>"
-    export TF_VAR_website_bucket_name="<votre sous-domaine>"
     export TF_VAR_WEBSITE_BUCKET_NAME="<votre sous-domaine>"
-    export TF_VAR_images_bucket_name="xxxxxxx"
     export TF_VAR_IMAGES_BUCKET_NAME="xxxxxxx"
     export AWS_ACCESS_KEY_ID="xxxxxxx"
     export AWS_SECRET_ACCESS_KEY="xxxxx"
