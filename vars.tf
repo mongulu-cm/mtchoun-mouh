@@ -1,14 +1,14 @@
-variable "website_bucket_name" {
+variable "WEBSITE_BUCKET_NAME" {
   type = string
   #  validation {
   #    condition = can(regex(
   #      "^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}.(xn--)?([a-z0-9-]{1,61}|[a-z0-9-]{1,30}.[a-z]{2,})$",
-  #    var.website_bucket_name))
-  #    error_message = "The website_bucket_name should be a domain name."
+  #    var.WEBSITE_BUCKET_NAME))
+  #    error_message = "The WEBSITE_BUCKET_NAME should be a domain name."
   #  }
 }
 
-variable "images_bucket_name" {
+variable "IMAGES_BUCKET_NAME" {
   type = string
 }
 
@@ -33,10 +33,10 @@ variable "table_registers" {
 }
 
 # Passed using .env variable to protect maintainer privacy
-variable "maintainer_mail" {
+variable "MAINTAINER_MAIL" {
   type = string
   validation {
-    condition     = can(regex("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", var.maintainer_mail))
+    condition     = can(regex("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", var.MAINTAINER_MAIL))
     error_message = "The maintainer_mail should be a mail address."
   }
 }
