@@ -54,6 +54,10 @@ resource "aws_dynamodb_table" "Users" {
   write_capacity = 1
   hash_key       = "UserName"
 
+  point_in_time_recovery {
+    enabled = true
+  }
+
   attribute {
     name = "UserName"
     type = "S"
@@ -67,6 +71,10 @@ resource "aws_dynamodb_table" "Link_table" {
   write_capacity = 1
   hash_key       = "link"
 
+  point_in_time_recovery {
+    enabled = true
+  }
+
   attribute {
     name = "link"
     type = "S"
@@ -79,6 +87,10 @@ resource "aws_dynamodb_table" "Register" {
   read_capacity  = 1
   write_capacity = 1
   hash_key       = "Name"
+
+  point_in_time_recovery {
+    enabled = true
+  }
 
   attribute {
     name = "Name"
