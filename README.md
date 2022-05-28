@@ -59,6 +59,7 @@ Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la s
     export AWS_ACCESS_KEY_ID="xxxxxxx"
     export AWS_SECRET_ACCESS_KEY="xxxxx"
   ```
+> Vous devez vous assurer que TF_VAR_MAINTAINER_MAIL contient un mail vérifié par Amazon SES
 
 * Ensuite, éxécutez les commandes suivantes:
   ```
@@ -67,27 +68,18 @@ Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la s
     terraform apply
     aws s3 cp html/ s3://mtchoun-mouh.mongulu.cm --recursive
   ```
-* To empty bucket before terraform destroy :
-  ```
-  aws s3 rb s3://$bucket --force
-  ```
 
-* Puis, créez une distribution cloudfront:
-
-    • ayant comme origine le nom de site de votre bucket ( pas le nom du bucket)
-
-    • pointant vers votre sous-domaine mtchoun-mouh.xxxx.yyy
-
-    • avec des caches invalidations pour les fichiers index.html et demo.html
-
-
-* Et enfin un enregistrement DNS dans Route 53 reliant mtchoun-mouh.xxxx.yyy à la distribution cloudfront créé précédemment
+* Enfin, créez une distribution cloudfront et enregistrement DNS mtchoun-mouh.xxxx.yyy pointant vers elle
 
 
 ### Pyramid test
 
 #### Unit tests
-TODO
+  ```
+    cd api/
+    pytest test_extract.py
+    pytest test_notify.py
+  ```
 
 #### Integration tests
 
