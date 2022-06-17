@@ -101,3 +101,7 @@ jobs:
         run: | 
           cd api &&  pytest test_extract.py &&\
           pytest test_notify.py
+          coverage run -m pytest test_extract.py test_notify.py 
+          coverage report -m
+      
+          
