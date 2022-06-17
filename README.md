@@ -1,10 +1,8 @@
 # Mtchoun' mouh
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-[![coverage](coverage.svg)
-
 > Langue [Ghomala](https://fr.wikipedia.org/wiki/Ghomala%CA%BC) siginifiant nouvelle/message en français
+
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-) 
+![coverage](coverage.svg)
 
 L'objectif du projet est de vous permettre de revoir une notification immédiatement après la sortie de votre passeport au consulat de Marseille en France.
 Si vous souhaitez voir à quoi ça ressemble, rendez-vous à l'adresse suivante: https://mtchoun-mouh.mongulu.cm/
