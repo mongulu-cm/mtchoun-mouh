@@ -18,11 +18,8 @@ def get_RegisterName():
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(Table_Registers)
     response = table.scan()
-    lst = []
-    for i in response["Items"]:
-        lst.append([i["Name"], i["EMail"]])
     # print(lst)
-    return lst
+    return [[i["Name"], i["EMail"]] for i in response["Items"]]
 
 
 def verifying_Register_mail(E_Mail):

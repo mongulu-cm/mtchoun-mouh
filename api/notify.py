@@ -8,6 +8,13 @@ import os
 
 
 def Scan_Users(UserName, Table_Users):
+    """
+    Scan the table for the user name and return the items
+
+    :param UserName: The user name of the user you want to scan for
+    :param Table_Users: The name of the DynamoDB table that contains the user information
+    :return: A list of dictionaries.
+    """
     region = os.environ["REGION"]
     dynamodb = boto3.resource("dynamodb", region_name=region)
     table = dynamodb.Table(Table_Users)
@@ -16,6 +23,14 @@ def Scan_Users(UserName, Table_Users):
 
 
 def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE, maintainer=False):
+    """
+    It sends an email to the recipient with the image attached
+
+    :param NAME: The name of the person to whom the email is being sent
+    :param RECIPIENT: The email address of the recipient
+    :param URL_IMAGE: The URL of the image to be sent in the email
+    :param maintainer: if True, send an email to the maintainer of the project, defaults to False (optional)
+    """
     maintainer_mail = os.environ["MAINTAINER_MAIL"]
     NAME = NAME.upper()
     SENDER = f"Collectif mongulu <{maintainer_mail}>"
@@ -101,6 +116,11 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE, maintainer=False):
 
 
 def Delete_Backup(D_Name):
+    """
+    It deletes the backup from the DynamoDB table
+
+    :param D_Name: The name of the backup you want to delete
+    """
     Table_Registers = os.environ["REGISTERS_TABLE"]
     primary_column_Name = "Name"
     dynamodb = boto3.resource("dynamodb")
@@ -109,6 +129,10 @@ def Delete_Backup(D_Name):
 
 
 def notify_user_registered():
+    """
+    It scans the DynamoDB table for the user's name, and if it finds it, it sends an email to the user with the URL of the
+    image
+    """
     Table_Users = os.environ["USERS_TABLE"]
     Index_Register = get_RegisterName()
     for i in Index_Register:
