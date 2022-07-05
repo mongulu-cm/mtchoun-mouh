@@ -21,3 +21,10 @@ repos:
     hooks:
     - id: black
       language_version: python3.8
+-   repo: https://github.com/Yelp/detect-secrets
+    hooks:
+    -   id: detect-secrets
+        name: Detect secrets
+        language: python
+        entry: detect-secrets-hook
+        args: ['--baseline', '.secrets.baseline']
