@@ -5,37 +5,64 @@ import os
 
 
 def Images_in_Bucket(Bucket_Name):
+    """
+    This function takes in a bucket name and returns a list of all the images in that bucket
+
+    :param Bucket_Name: The name of the bucket you want to list the images from
+    :return: A list of all the images in the bucket.
+    """
     s3 = client("s3")
     Image_List = []
     if "Contents" in s3.list_objects(Bucket=Bucket_Name):
-        for key in s3.list_objects(Bucket=Bucket_Name)["Contents"]:
-            Image_List.append(key["Key"])
+        Image_List.extend(key["Key"] for key in s3.list_objects(Bucket=Bucket_Name)["Contents"])
 
     return Image_List
 
 
 def Empty_Bucket(Bucket_Name):
+    """
+    It takes a bucket name as an argument, and then deletes all the objects in that bucket.
+
+    :param Bucket_Name: The name of the bucket you want to empty
+    """
     s3 = boto3.resource("s3")
     bucket = s3.Bucket(Bucket_Name)
     bucket.objects.all().delete()
 
 
 def Delete_Image(Bucket_Name, ImageName):
+    """
+    This function deletes an image from an S3 bucket
+
+    :param Bucket_Name: The name of the bucket you want to upload the image to
+    :param ImageName: The name of the image you want to delete
+    """
     s3 = client("s3")
     s3.delete_object(Bucket=Bucket_Name, Key=ImageName)
 
 
 def insert_dynamodb(User, ImageName):
+    """
+    > It takes the user name and the image name as input, and then it inserts a new item into the DynamoDB table
+
+    :param User: The user name of the person who uploaded the image
+    :param ImageName: The name of the image that was uploaded to S3
+    """
     region = os.environ["REGION"]
     Table_Users = os.environ["USERS_TABLE"]
     dynamodb = boto3.resource("dynamodb", region_name=region)
     table = dynamodb.Table(Table_Users)
-    table.put_item(
-        Item={"UserName": User, "URLImage": images_url_path + "/" + ImageName}
-    )
+    table.put_item(Item={"UserName": User, "URLImage": f"{images_url_path}/{ImageName}"})
 
 
-def Extract_Users(s3BucketName, ImageName):
+def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
+    """
+    It takes an image name and an S3 bucket name as input, and then uses Amazon Textract to extract the names of the people
+    in the image
+
+    :param s3BucketName: The name of the S3 bucket that contains the image
+    :param ImageName: The name of the image file that you want to extract text from
+    """
     region = os.environ["REGION"]
     textract = boto3.client("textract", region_name=region)
     reponse = textract.detect_document_text(
@@ -82,12 +109,8 @@ def Extract_Users(s3BucketName, ImageName):
     for line in lines:
         # print(line[1])
         detected_stop_words = [x for x in stopWords if x in line[1]]
-        if len(detected_stop_words) == 0:
+        if not detected_stop_words:
             filtered_lines.append(line)
-        else:
-            pass
-            # print("line filtered")
-
     # TODO: Create a custom iterator: https://www.programiz.com/python-programming/iterator
     iter_lines = iter(filtered_lines)
     while True:
@@ -97,46 +120,44 @@ def Extract_Users(s3BucketName, ImageName):
             # print(line[1])
 
             UserName = ""
-            if not " " in line[1]:
+            if " " not in line[1]:
 
                 # print ( "prev line:"+line[1])
                 line = next(iter_lines)
                 # Sometimes the number. and names are detected separetely and not in order
                 # In this case, the next line can not be the name but also number. so we iterate until there is a name
-                while not " " in line[1]:
+                while " " not in line[1]:
                     line = next(iter_lines)
 
                 # print ( "next line:"+line[1])
                 UserName = line[1]
 
             else:
-                if "." in line[1]:
-                    UserName = line[1].split(". ")[1]
-                else:
-                    # Sometimes the number. and names are detected separetely and not in order
-                    # In this case, line[1] is directly the username
-                    UserName = line[1]
-
+                UserName = line[1].split(". ")[1] if "." in line[1] else line[1]
             # print(line)
             if UserName != "":
                 # We choosed to save all the names in lower former instead of upper because of the DU stopWord
                 # Indeed if upper names , all persons DU like DURAND in their names will not be detected.
                 insert_dynamodb(UserName.lower(), ImageName)
-                print("Username=" + UserName)
+                print(f"Username={UserName}")
 
         except StopIteration:
             break
 
         except IndexError as e:
             print(e)
-            print("related image:" + ImageName)
+            print(f"related image:{ImageName}")
 
 
 def extract_names_from_images():
+    """
+    > It takes all the images in the bucket, extracts the names of the people in the images, and then deletes the images
+    from the bucket
+    """
     bucket_name = os.environ["BUCKET_NAME"]
     Image_List = Images_in_Bucket(bucket_name)
     for image in Image_List:
-        print("-------> Image name: " + image)
+        print(f"-------> Image name: {image}")
         Extract_Users(bucket_name, image)
         Delete_Image(
             bucket_name, image
