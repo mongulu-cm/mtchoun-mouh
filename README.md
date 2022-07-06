@@ -67,9 +67,10 @@ Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la s
 * Ensuite, éxécutez les commandes suivantes:
   ```
     source .env
+    cd infra/
     terraform init
     terraform apply
-    aws s3 cp html/ s3://mtchoun-mouh.mongulu.cm --recursive
+    aws s3 cp ../html/ s3://mtchoun-mouh.mongulu.cm --recursive
   ```
 
 * Enfin, créez une distribution cloudfront et enregistrement DNS mtchoun-mouh.xxxx.yyy pointant vers elle

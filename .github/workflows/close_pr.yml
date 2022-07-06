@@ -31,20 +31,27 @@ jobs:
 
       - name: Terraform fmt
         id: fmt
-        run: terraform fmt -check
+        run: |
+          cd infra
+          terraform fmt -check
         continue-on-error: true
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          cd infra
+          terraform init
 
       - name: setup workspace
         id: workspace
-        run: terraform workspace select $GITHUB_HEAD_REF
+        run: |
+          cd infra
+          terraform workspace select $GITHUB_HEAD_REF
 
       - name: Terraform Destroy
         id: destroy
         run: |
+          cd infra
           terraform destroy -auto-approve
           terraform workspace select default
           terraform workspace delete $GITHUB_HEAD_REF
