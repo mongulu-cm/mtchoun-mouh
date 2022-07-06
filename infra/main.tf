@@ -108,7 +108,7 @@ data "aws_caller_identity" "current" {}
 data "archive_file" "lambda_zip" {
   type        = "zip"
   output_path = "api/lambda.zip"
-  source_dir  = "api/"
+  source_dir  = "../api/"
 }
 
 
