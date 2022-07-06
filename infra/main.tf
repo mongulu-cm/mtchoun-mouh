@@ -263,12 +263,12 @@ locals {
 
 resource "local_file" "demo_page" {
   content  = local.demo_page
-  filename = "html/demo.html"
+  filename = "../html/demo.html"
 }
 
 resource "local_file" "index_page" {
   content  = local.index_page
-  filename = "html/index.html"
+  filename = "../html/index.html"
 }
 
 
