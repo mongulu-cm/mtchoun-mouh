@@ -36,22 +36,30 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          cd infra
+          terraform init
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate
+        run: |
+          cd infra
+          terraform validate
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan
+        run: |
+          cd infra
+          terraform plan
 
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: |
+          cd infra
+          terraform apply -auto-approve
 
       - name: Copy Site files
         uses: jakejarvis/s3-sync-action@master

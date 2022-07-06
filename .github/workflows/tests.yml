@@ -36,37 +36,53 @@ jobs:
 
       - name: Terraform fmt
         id: fmt
-        run: terraform fmt -check
+        run: |
+          cd infra
+          terraform fmt -check
         continue-on-error: true
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          cd infra
+          terraform init
 
       - name: setup workspace
         id: workspace
-        run: terraform workspace new $GITHUB_HEAD_REF
+        run: |
+          cd infra
+          terraform workspace new $GITHUB_HEAD_REF
 
       - name: List workspace
-        run: terraform workspace list
+        run: |
+          cd infra
+          terraform workspace list
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate
+        run: |
+          cd infra
+          terraform validate
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan
+        run: |
+          cd infra
+          terraform plan
 
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: |
+          cd infra
+          terraform apply -auto-approve
 
       - name: Website URL
-        run: terraform output website_url
+        run: |
+          cd infra
+          terraform output website_url
 
       - name: Copy Site files
         uses: jakejarvis/s3-sync-action@master
