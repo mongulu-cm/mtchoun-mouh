@@ -1,42 +1,42 @@
 # Mtchoun' mouh
-> Langue [Ghomala](https://fr.wikipedia.org/wiki/Ghomala%CA%BC) siginifiant nouvelle/message en français
+> [Ghomala](https://fr.wikipedia.org/wiki/Ghomala%CA%BC) language meaning news/message in French
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-) 
 ![coverage](coverage.svg)
 
-L'objectif du projet est de vous permettre de revoir une notification immédiatement après la sortie de votre passeport au consulat de Marseille en France.
-Si vous souhaitez voir à quoi ça ressemble, rendez-vous à l'adresse suivante: https://mtchoun-mouh.mongulu.cm/
+The goal of the project is to allow you to review a notification immediately after your passport is issued at the consulate in Marseille, France.
+If you want to see what it looks like, go to: https://mtchoun-mouh.mongulu.cm/
 
-## Contexte fonctionnel
+## Functional context
 
-### Comportement actuel
+### Current behavior
 
-Lorsqu'un usager se rend au consulat du Cameroun à Marseille pour faire sa demande au consulat, il lui est rappelé que pour savoir si son passeport est sorti , il lui faut régulièrement regarder une page du site du [consulat](https://www.consulacam-marseille.fr/index.php?p=consulat-cameroun-passeports). En effet cette page contient tous les communiqués d’arrivée de passeport ordonnées de façon chronologique et débutant par la mention  **Communiqué du dd month year** .
-Il faut alors parcourir cette page depuis le début en scrollant jusqu'à une date de communiqué ultérieure à la date de dépôt. C'est qu'il s’agit d’images et non de texte publiés ;impossible donc d’utiliser la fonction de recherche du navigateur.
+When a user goes to the Cameroonian Consulate in Marseille to apply for a passport, he is reminded that in order to know if his passport has been issued, he must regularly look at a page on the [consulate] website (https://www.consulacam-marseille.fr/index.php?p=consulat-cameroun-passeports). This page contains all the passport arrival notices in chronological order, beginning with the mention **Passport arrival notice of the dd month year** .
+You have to scroll through this page from the beginning to a release date later than the filing date. The reason is that these are images and not published text; it is therefore impossible to use the browser's search function.
 
-### Problèmes
+### Problem
 
-* La personne qui a fait sa demande au consulat même si elle peut avoir une vague idée du temps que cela prendra devra néanmoins régulièrement checker le site web pour savoir si celui-ci est sorti ou pas. Il faut donc qu’elle se le garde dans un coin de sa tête.
+* The person who has applied at the consulate, even if he or she has a vague idea of how long it will take, will nevertheless have to check the website regularly to see if it is out or not. It is therefore necessary to keep it in the back of one's mind.
 
-* Une fois sur le site, même si elle est aidé par le fait que les communiqués sont rangés chronologiquement, elle doit néanmoins parcourir les communiqués ultérieurs à sa demande de visa pour voir si le sien est sorti. Une erreur est donc vite arrivé si l’on est pas concentré .
+* Once on the site, even if she is helped by the fact that the communiqués are arranged chronologically, she must nevertheless browse the communiqués subsequent to her application to see if hers is out. A mistake can happen quickly if you are not concentrated.
 
-### Solution proposé
-L'usager s'enregistre sur une plateforme via son nom et son adresse email ce qui permettra ensuite de le notifier
-automatiquement notifié par email de la sortie de son passeport avec les contraintes suivantes:
-    • Pas d’accès au système d’information digitalisé de gestions des passeports de la [DGSN]( https://www.dgsn.cm/?fbclid=IwAR1KmGe-drUBiwpUg_tx-6b-crEPsXrqoPdTK7X8Ik-mag-NG7pUky4zV7U)
-    • Pas de possibilité d’influer sur le processus interne de délivrance des passeports au consulat de Marseille
+### Proposed solution
+The user registers on a platform via his name and email address which will then allow to notify him
+automatically notified by email of the release of his passport with the following constraints:
+    - No access to the digitalized information system of passport management of the [DGSN] (https://www.dgsn.cm/?fbclid=IwAR1KmGe-drUBiwpUg_tx-6b-crEPsXrqoPdTK7X8Ik-mag-NG7pUky4zV7U)
+    - No possibility to influence the internal process of passport issuance at the consulate of Marseille
 
-> La solution sera donc externe au services du consulat et la source de donnée le site web du consulat.
+> The solution will therefore be external to the Consulate's services and the data source will be the Consulate's website.
 
 
 
-## Contexte technique
+## Technical context
 
-Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la solution. Suivez le guide :) !
+If you are here, it means that you are interested in an in-house deployment of the solution. Follow the guide :) !
 
 ### Architecture
 
-<details><summary>Cliquez sur la flèche pour visualiser </summary>
+<details><summary>Click on the arrow to view </summary>
 
 ![Design](architecture.png)
 
@@ -44,17 +44,17 @@ Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la s
 
 
 
-### Prérequis
+### Prerequisites
 
-* Avoir un minimum de compétence sur le cloud AWS et Terraform
-* Installez localement tous les outils ( il vous suffit d'éxécuter les scripts `init` et `command` du fichier [.gitpod.yml](.gitpod.yml) **ou** utilisez un environnement de développement déjà prêt à l'emploi sur gitpod :
+* Have a minimum of competence on the AWS and Terraform cloud
+* Install all tools locally (just run the `init` and `command` scripts in the [.gitpod.yml] file (.gitpod.yml) **or** use a ready-made development environment on gitpod :
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/mongulu-cm/mtchoun-mouh)
 
 
-### Déploiement
+### Deployment
 
-* Créez un fichier `.env` à la racine contenant:
+* Create a `.env` file in the root containing:
   ```
     export TF_VAR_MAINTAINER_MAIL="<votre mail>"
     export TF_VAR_WEBSITE_BUCKET_NAME="<votre sous-domaine>"
@@ -62,9 +62,9 @@ Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la s
     export AWS_ACCESS_KEY_ID="xxxxxxx"
     export AWS_SECRET_ACCESS_KEY="xxxxx"
   ```
-> Vous devez vous assurer que TF_VAR_MAINTAINER_MAIL contient un mail vérifié par Amazon SES
+> You must ensure that TF_VAR_MAINTAINER_MAIL contains a verified email from Amazon SES
 
-* Ensuite, éxécutez les commandes suivantes:
+* Then run the following commands:
   ```
     source .env
     cd infra/
@@ -73,8 +73,7 @@ Si vous êtes ici, c'est que vous intéressez par un déploiement maison de la s
     aws s3 cp ../html/ s3://mtchoun-mouh.mongulu.cm --recursive
   ```
 
-* Enfin, créez une distribution cloudfront et enregistrement DNS mtchoun-mouh.xxxx.yyy pointant vers elle
-
+* Finally, create a cloudfront distribution and DNS record mtchoun-mouh.xxxx.yyy pointing to it
 
 ### Pyramid test
 
@@ -96,32 +95,19 @@ To launch integration tests locally :
 
 
 
-### Monitoring applicatif
+### Application monitoring
 
-Les services API Gateway et Lambda sauvent des logs dans CloudWatch.   
-Le suivi des visites sur le site web se fait grâce à https://fr.matomo.org/ ( alternative opensource à Google Analytics).
+The API Gateway and Lambda services save logs in CloudWatch.   
+The tracking of the visits on the website is done with https://fr.matomo.org/ (opensource alternative to Google Analytics).
 
-### Performance applicative
+### Application performance
 
-Il est possible de suivre l'évolution du nombre d'utilisateur enregistré par jour en exploitant le paramètre
-`ReturnedItemCount` de la table `Register` dans les graphiques Cloudwatch DynamoDB.
+It is possible to track the evolution of the number of registered users per day by exploiting the
+`ReturnedItemCount` parameter of the `Register` table in Cloudwatch DynamoDB graphs.
 
-### Couverture du code
+## How to contribute ?
 
-#### Infrastructure
-
-Exécutez:
- ```
-    driftctl scan --from tfstate+s3://<bucket_name>/terraform.tfstate -o json://drift.json
-    driftctl gen-driftignore -i drifts.json >> .driftignore
- ```
-
-Puis supprimez toutes les ressources non liés directement au projet.
-Le taux de couverture actuel est de `76%`.
-
-## Comment contribuer ?
-
-Vous avez remarqué un soucis ou vous voulez proposer une amélioration ? N'hésitez pas à ouvrir une issue :) !
+You noticed a problem or you want to suggest an improvement ? Do not hesitate to open an issue :) !
 
 ## Contributors ✨
 
