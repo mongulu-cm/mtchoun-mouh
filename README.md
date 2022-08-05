@@ -3,6 +3,8 @@
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-) 
 ![coverage](coverage.svg)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 
 The goal of the project is to allow you to review a notification immediately after your passport is issued at the consulate in Marseille, France.
 If you want to see what it looks like, go to: https://mtchoun-mouh.mongulu.cm/
