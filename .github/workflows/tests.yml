@@ -120,4 +120,10 @@ jobs:
           coverage run -m pytest test_extract.py test_notify.py 
           coverage report -m
       
-          
+  commitlint:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v5
