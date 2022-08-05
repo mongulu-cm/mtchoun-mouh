@@ -4,6 +4,12 @@ tasks:
       curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
       sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
       sudo apt-get update && sudo apt-get install terraform
+            
+      npm install commitizen -g
+      commitizen init cz-conventional-changelog --save-dev --save-exact
+      npm install --save-dev @commitlint/prompt @commitlint/config-conventional commitizen
+      touch .git/hooks/prepare-commit-msg
+      echo "exec < /dev/tty && node_modules/.bin/cz --hook || true" >> .git/hooks/prepare-commit-msg
         
       curl -L https://github.com/snyk/driftctl/releases/latest/download/driftctl_linux_amd64 -o driftctl
       chmod +x driftctl && sudo mv driftctl /usr/local/bin/
@@ -21,6 +27,6 @@ tasks:
       terraform init
       git status
 
-#vscode:
-#  extensions:
-#    - akamud.vscode-theme-onedark
+vscode:
+  extensions:
+    - vivaxy.vscode-conventional-commits
