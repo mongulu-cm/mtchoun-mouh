@@ -283,3 +283,6 @@ fabric.properties
 node_modules/**
 package-lock.json
 package.json
+
+## To avoid commit of aws creds in gitpod env
+.aws/
