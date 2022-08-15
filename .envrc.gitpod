@@ -1,0 +1,46 @@
+#!/bin/bash
+
+if ! command -v terraform &> /dev/null
+then
+    sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+    sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    sudo apt-get update && sudo apt-get install terraform
+fi
+
+if ! command -v commitizen &> /dev/null
+then
+    npm install commitizen -g
+    commitizen init cz-conventional-changelog --save-dev --save-exact
+    npm install --save-dev @commitlint/prompt @commitlint/config-conventional commitizen
+    touch .git/hooks/prepare-commit-msg
+    echo "exec < /dev/tty && node_modules/.bin/cz --hook || true" >> .git/hooks/prepare-commit-msg
+fi
+
+if ! command -v driftctl &> /dev/null
+then
+    curl -L https://github.com/snyk/driftctl/releases/latest/download/driftctl_linux_amd64 -o driftctl
+    chmod +x driftctl && sudo mv driftctl /usr/local/bin/
+fi
+
+if ! command -v act &> /dev/null
+then
+    curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+    sudo mv ./bin/act /usr/local/bin/
+fi
+
+WORKPLACE="/workspace/mtchoun-mouh/"
+if ! command -v aws &> /dev/null
+then
+    pushd /tmp || exit
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip awscliv2.zip && sudo ./aws/install && rm awscliv2.zip && rm -rf aws/ &&\
+    mkdir $WORKPLACE/.aws  && touch $WORKPLACE/.aws/credentials && touch $WORKPLACE/.aws/config &&\
+    export AWS_SHARED_CREDENTIALS_FILE=$WORKPLACE/.aws/credentials &&\
+    export AWS_CONFIG_FILE=$WORKPLACE/.aws/config &&\
+    aws configure
+    popd || exit
+fi
+
+export AWS_SHARED_CREDENTIALS_FILE=$WORKPLACE/.aws/credentials
+export AWS_CONFIG_FILE=$WORKPLACE/.aws/config
