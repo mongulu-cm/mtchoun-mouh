@@ -4,6 +4,7 @@ tasks:
       pre-commit install
     command: |
       bash .envrc.gitpod
+      cp .envrc.gitpod .envrc
 
 vscode:
   extensions:
