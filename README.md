@@ -118,6 +118,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://github.com/fabiolatagne97"><img src="https://avatars.githubusercontent.com/u/60782218?v=4?s=100" width="100px;" alt=""/><br /><sub><b>fabiolatagne97</b></sub></a><br /><a href="https://github.com/mongulu-cm/mtchoun-mouh/commits?author=fabiolatagne97" title="Tests">⚠️</a> <a href="https://github.com/mongulu-cm/mtchoun-mouh/commits?author=fabiolatagne97" title="Code">💻</a> <a href="#design-fabiolatagne97" title="Design">🎨</a></td>
+    <td align="center"><a href="https://github.com/ngnnpgn"><img src="https://avatars.githubusercontent.com/u/28226134?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ngnnpgn</b></sub></a><br /><a href="#ideas-ngnnpgn" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
