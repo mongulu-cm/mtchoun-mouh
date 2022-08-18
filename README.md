@@ -59,12 +59,9 @@ If you are here, it means that you are interested in an in-house deployment of t
 * Create a `.env` file in the root containing:
   ```
     export TF_VAR_MAINTAINER_MAIL="<votre mail>"
-    export TF_VAR_WEBSITE_BUCKET_NAME="<votre sous-domaine>"
+    export TF_VAR_WEBSITE_BUCKET_NAME="<votre sous-domaine>.<domaine>"
     export TF_VAR_IMAGES_BUCKET_NAME="xxxxxxx"
-    export AWS_ACCESS_KEY_ID="xxxxxxx"
-    export AWS_SECRET_ACCESS_KEY="xxxxx"
   ```
-> You must ensure that TF_VAR_MAINTAINER_MAIL contains a verified email from Amazon SES
 
 * Then run the following commands:
   ```
@@ -72,10 +69,10 @@ If you are here, it means that you are interested in an in-house deployment of t
     cd infra/
     terraform init
     terraform apply
-    aws s3 cp ../html/ s3://mtchoun-mouh.mongulu.cm --recursive
+    aws s3 cp ../html/ s3://${TF_VAR_WEBSITE_BUCKET_NAME}.mongulu.cm --recursive
   ```
 
-* Finally, create a cloudfront distribution and DNS record mtchoun-mouh.xxxx.yyy pointing to it
+* Finally, create a cloudfront distribution and DNS record ${TF_VAR_WEBSITE_BUCKET_NAME}.xxxx.yyy pointing to it
 
 ### Pyramid test
 
@@ -109,7 +106,7 @@ It is possible to track the evolution of the number of registered users per day 
 
 ## How to contribute ?
 
-You noticed a problem or you want to suggest an improvement ? Do not hesitate to open an issue :) !
+You noticed a problem, or you want to suggest an improvement ? Do not hesitate to open an issue :) !
 
 ## Contributors ✨
 
