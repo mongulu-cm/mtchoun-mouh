@@ -1,5 +1,6 @@
 import os
 
+
 # List of words that is used to filter lines
 stopWords = [
     "Phone",
