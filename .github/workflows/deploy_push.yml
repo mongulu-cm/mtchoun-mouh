@@ -1,8 +1,6 @@
-name: Test Workflow
+name: Deploy cases
 on:
   push:
-    branches-ignore:
-      - master
     paths:
       - '**.tf'
       - 'html/**'
@@ -11,22 +9,14 @@ on:
 
 jobs:
 
-  check-for-secrets:
-    runs-on: 'ubuntu-latest'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Run Yelp's detect-secrets
-        uses: RobertFischer/detect-secrets-action@v2.0.0
-
-  setup-new-env:
+  deploy:
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_MAINTAINER_MAIL: ${{ secrets.TF_VAR_MAINTAINER_MAIL }}
-      TF_VAR_WEBSITE_BUCKET_NAME: ${{ secrets.TF_VAR_WEBSITE_BUCKET_NAME }}
-      TF_VAR_IMAGES_BUCKET_NAME: ${{ secrets.TF_VAR_IMAGES_BUCKET_NAME }}
+      TF_VAR_WEBSITE_BUCKET_NAME: "mtchoun-mouh.mongulu.cm"
+      TF_VAR_IMAGES_BUCKET_NAME: "djansang"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,9 +26,7 @@ jobs:
 
       - name: Terraform fmt
         id: fmt
-        run: |
-          cd infra
-          terraform fmt -check
+        run: terraform fmt -check
         continue-on-error: true
 
       - name: Terraform Init
@@ -49,11 +37,13 @@ jobs:
 
       - name: setup workspace
         id: workspace
+        if: github.ref_name != 'master'
         run: |
           cd infra
-          terraform workspace new $GITHUB_REF
+          terraform workspace new $GITHUB_REF_NAME || terraform workspace select $GITHUB_REF_NAME
 
       - name: List workspace
+        if: github.ref_name != 'master'
         run: |
           cd infra
           terraform workspace list
@@ -78,52 +68,81 @@ jobs:
         run: |
           cd infra
           terraform apply -auto-approve
+      
 
       - name: Website URL
+        if: github.ref_name != 'master'
         run: |
           cd infra
           terraform output website_url
 
       - name: Copy Site files
         uses: jakejarvis/s3-sync-action@master
+        if: github.ref_name == 'master'
         env:
-          AWS_S3_BUCKET: $GITHUB_HEAD_REF-${TF_VAR_WEBSITE_BUCKET_NAME}
+          AWS_S3_BUCKET: ${TF_VAR_WEBSITE_BUCKET_NAME}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'eu-central-1'
           SOURCE_DIR: 'html'
 
-  unittest:
-    runs-on: 'ubuntu-latest'
+      - name: Copy Site files
+        uses: jakejarvis/s3-sync-action@master
+        if: github.ref_name != 'master'
+        env:
+          AWS_S3_BUCKET: $GITHUB_REF_NAME-${TF_VAR_WEBSITE_BUCKET_NAME}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'eu-central-1'
+          SOURCE_DIR: 'html'
+
+  add-coverage-badge:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'master'
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+
+      - uses: actions/checkout@v2
+        with: 
+          fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.10"
-      - uses: actions/cache@v2
-        name: Configure pip caching
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+      
       - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
           pip install -r api/requirements.txt
+      
       - name: test functions
         run: | 
-          cd api &&  pytest test_extract.py &&\
-          pytest test_notify.py
-          coverage run -m pytest test_extract.py test_notify.py 
+          
+          coverage run -m pytest api/test_extract.py api/test_notify.py 
           coverage report -m
       
-  commitlint:
-    runs-on: 'ubuntu-latest'
-    steps:
-      - uses: actions/checkout@v3
+      
+      - name: Coverage Badge
+        uses: tj-actions/coverage-badge-py@v1.8
+      
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v9
+        id: changed_files
         with:
-          fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v5
+          files: coverage.svg
+
+      - name: Commit files
+        if: steps.changed_files.outputs.files_changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add coverage.svg
+          git commit -m "Updated coverage.svg"
+
+      - name: Push changes
+        if: steps.changed_files.outputs.files_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          branch: ${{ github.ref_name }}
