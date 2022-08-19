@@ -59,4 +59,3 @@ def scan_handler(event, context):
     scan_consulate_passport_page()
     extract_names_from_images()
     notify_user_registered()
-
