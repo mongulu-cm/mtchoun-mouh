@@ -54,6 +54,7 @@ def register_handler(event, context):
         }
 
 
+# bobo
 def scan_handler(event, context):
     print(event)
     scan_consulate_passport_page()
