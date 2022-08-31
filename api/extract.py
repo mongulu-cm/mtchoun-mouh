@@ -118,6 +118,7 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
             # get the next item
             line = next(iter_lines)
             # print(line[1])
+            raise IndexError
 
             UserName = ""
             if " " not in line[1]:
@@ -147,6 +148,9 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
         except IndexError as e:
             print(e)
             print(f"related image:{ImageName}")
+        # TODO : stocker les erreurs dans un tableau
+    # TODO : print le tableau et return
+    
 
 
 def extract_names_from_images():
@@ -158,6 +162,7 @@ def extract_names_from_images():
     Image_List = Images_in_Bucket(bucket_name)
     for image in Image_List:
         print(f"-------> Image name: {image}")
+        # TODO : recuperer le tableau d'erreurs et envoyer le mail
         Extract_Users(bucket_name, image)
         Delete_Image(
             bucket_name, image
