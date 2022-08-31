@@ -3,7 +3,7 @@ from scan import scan_consulate_passport_page
 from extract import extract_names_from_images
 from notify import notify_user_registered, Scan_Users
 
-
+# aaaa
 def register_handler(event, context):
 
     import json
@@ -59,4 +59,3 @@ def scan_handler(event, context):
     scan_consulate_passport_page()
     extract_names_from_images()
     notify_user_registered()
-
