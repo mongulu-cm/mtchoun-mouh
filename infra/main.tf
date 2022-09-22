@@ -55,7 +55,7 @@ resource "aws_dynamodb_table" "Users" {
   hash_key       = "UserName"
 
   point_in_time_recovery {
-    enabled = true
+    enabled = (terraform.workspace == "default") ? true : false
   }
 
   attribute {
@@ -72,7 +72,7 @@ resource "aws_dynamodb_table" "Link_table" {
   hash_key       = "link"
 
   point_in_time_recovery {
-    enabled = true
+    enabled = (terraform.workspace == "default") ? true : false
   }
 
   attribute {
@@ -89,7 +89,7 @@ resource "aws_dynamodb_table" "Register" {
   hash_key       = "Name"
 
   point_in_time_recovery {
-    enabled = true
+    enabled = (terraform.workspace == "default") ? true : false
   }
 
   attribute {
