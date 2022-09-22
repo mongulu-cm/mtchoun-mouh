@@ -6,9 +6,7 @@ on:
       - 'html/**'
       - 'api/**'
       - 'templates/**'
-
 jobs:
-
   deploy:
     runs-on: ubuntu-latest
     env:
@@ -19,65 +17,53 @@ jobs:
       TF_VAR_IMAGES_BUCKET_NAME: "djansang"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
       - name: Install tarraform
-        uses: hashicorp/setup-terraform@v1.2.1
-
+        uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
         continue-on-error: true
-
       - name: Terraform Init
         id: init
         run: |
           cd infra
           terraform init
-
       - name: setup workspace
         id: workspace
         if: github.ref_name != 'master'
         run: |
           cd infra
           terraform workspace new $GITHUB_REF_NAME || terraform workspace select $GITHUB_REF_NAME
-
       - name: List workspace
         if: github.ref_name != 'master'
         run: |
           cd infra
           terraform workspace list
-
       - name: Terraform Validate
         id: validate
         run: |
           cd infra
           terraform validate
-
       - name: Terraform Plan
         id: plan
         run: |
           cd infra
           terraform plan
-
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
-
       - name: Terraform Apply
         run: |
           cd infra
           terraform apply -auto-approve
-      
-
       - name: Website URL
         if: github.ref_name != 'master'
         run: |
           cd infra
           terraform output website_url
-
       - name: Copy Site files
-        uses: jakejarvis/s3-sync-action@master
+        uses: jakejarvis/s3-sync-action@7ed8b112447abb09f1da74f3466e4194fc7a6311 # ratchet:jakejarvis/s3-sync-action@master
         if: github.ref_name == 'master'
         env:
           AWS_S3_BUCKET: ${TF_VAR_WEBSITE_BUCKET_NAME}
@@ -85,9 +71,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'eu-central-1'
           SOURCE_DIR: 'html'
-
       - name: Copy Site files
-        uses: jakejarvis/s3-sync-action@master
+        uses: jakejarvis/s3-sync-action@7ed8b112447abb09f1da74f3466e4194fc7a6311 # ratchet:jakejarvis/s3-sync-action@master
         if: github.ref_name != 'master'
         env:
           AWS_S3_BUCKET: $GITHUB_REF_NAME-${TF_VAR_WEBSITE_BUCKET_NAME}
@@ -95,43 +80,30 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'eu-central-1'
           SOURCE_DIR: 'html'
-
   add-coverage-badge:
     runs-on: ubuntu-latest
     if: github.ref_name == 'master'
     steps:
-
-      - uses: actions/checkout@v2
-        with: 
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
+        with:
           fetch-depth: 0
-
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@7f80679172b057fc5e90d70d197929d454754a5a # ratchet:actions/setup-python@v2
         with:
           python-version: "3.10"
-      
       - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
           pip install -r api/requirements.txt
-      
       - name: test functions
-        run: | 
-          
-          coverage run -m pytest api/test_extract.py api/test_notify.py 
-          coverage report -m
-      
-      
+        run: "\ncoverage run -m pytest api/test_extract.py api/test_notify.py \ncoverage report -m\n"
       - name: Coverage Badge
-        uses: tj-actions/coverage-badge-py@v1.8
-      
-
+        uses: tj-actions/coverage-badge-py@c3a0870495183a1848c89d568db7a4e7954fee71 # ratchet:tj-actions/coverage-badge-py@v1.8
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v9
+        uses: tj-actions/verify-changed-files@c09bcad97929b17bacf737670bee312af98be94f # ratchet:tj-actions/verify-changed-files@v9
         id: changed_files
         with:
           files: coverage.svg
-
       - name: Commit files
         if: steps.changed_files.outputs.files_changed == 'true'
         run: |
@@ -139,10 +111,9 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add coverage.svg
           git commit -m "Updated coverage.svg"
-
       - name: Push changes
         if: steps.changed_files.outputs.files_changed == 'true'
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@9a46ba8d86d3171233e861a4351b1278a2805c83 # ratchet:ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           branch: ${{ github.ref_name }}

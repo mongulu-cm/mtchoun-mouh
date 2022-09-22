@@ -1,20 +1,17 @@
 name: All cases
 on: push
-
 jobs:
-
   commitlint:
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # ratchet:actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v5
-
+      - uses: wagoid/commitlint-github-action@4caf21aed4a778f940d0b17eb109942ef167bb27 # ratchet:wagoid/commitlint-github-action@v5
   check-for-secrets:
     runs-on: 'ubuntu-latest'
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
       - name: Run Yelp's detect-secrets
-        uses: RobertFischer/detect-secrets-action@v2.0.0
+        uses: RobertFischer/detect-secrets-action@fa2d02975bad47bd65e5752377d0ded2714c985f # ratchet:RobertFischer/detect-secrets-action@v2.0.0
