@@ -1,12 +1,9 @@
 name: Close Pull Request
-
 # only trigger on pull request closed events
 on:
   pull_request:
-    types: [ closed ]
-
+    types: [closed]
 jobs:
-
   close_job:
     runs-on: ubuntu-latest
     env:
@@ -18,36 +15,29 @@ jobs:
       AWS_REGION: "eu-central-1"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
       - name: Install tarraform
-        uses: hashicorp/setup-terraform@v1.2.1
-
+        uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
       - name: Checkout
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
       - name: Install tarraform
-        uses: hashicorp/setup-terraform@v1.2.1
-
+        uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
       - name: Terraform fmt
         id: fmt
         run: |
           cd infra
           terraform fmt -check
         continue-on-error: true
-
       - name: Terraform Init
         id: init
         run: |
           cd infra
           terraform init
-
       - name: setup workspace
         id: workspace
         run: |
           cd infra
           terraform workspace select $GITHUB_HEAD_REF
-
       - name: Terraform Destroy
         id: destroy
         run: |
