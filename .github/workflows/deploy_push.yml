@@ -4,8 +4,8 @@ on:
     paths:
       - '**.tf'
       - 'html/**'
-      - 'api/**'
-      - 'templates/**'
+      - 'infra/api/**'
+      - 'infra/templates/**'
 jobs:
   deploy:
     runs-on: ubuntu-latest
