@@ -14,7 +14,9 @@ def Images_in_Bucket(Bucket_Name):
     s3 = client("s3")
     Image_List = []
     if "Contents" in s3.list_objects(Bucket=Bucket_Name):
-        Image_List.extend(key["Key"] for key in s3.list_objects(Bucket=Bucket_Name)["Contents"])
+        Image_List.extend(
+            key["Key"] for key in s3.list_objects(Bucket=Bucket_Name)["Contents"]
+        )
 
     return Image_List
 
@@ -52,7 +54,9 @@ def insert_dynamodb(User, ImageName):
     Table_Users = os.environ["USERS_TABLE"]
     dynamodb = boto3.resource("dynamodb", region_name=region)
     table = dynamodb.Table(Table_Users)
-    table.put_item(Item={"UserName": User, "URLImage": f"{images_url_path}/{ImageName}"})
+    table.put_item(
+        Item={"UserName": User, "URLImage": f"{images_url_path}/{ImageName}"}
+    )
 
 
 def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
@@ -114,6 +118,7 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
     # TODO: Create a custom iterator: https://www.programiz.com/python-programming/iterator
     iter_lines = iter(filtered_lines)
     while True:
+        errors_tab = []
         try:
             # get the next item
             line = next(iter_lines)
@@ -147,10 +152,12 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
 
         except IndexError as e:
             print(e)
+            errors_tab.append(e)
             print(f"related image:{ImageName}")
-        # TODO : stocker les erreurs dans un tableau
+
+    print(errors_tab)
+    # TODO : stocker les erreurs dans un tableau
     # TODO : print le tableau et return
-    
 
 
 def extract_names_from_images():
