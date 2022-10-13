@@ -1,6 +1,6 @@
 from registre import insert_dynamodb_registered, verifying_Register_mail
 from scan import scan_consulate_passport_page
-from extract import extract_names_from_images
+from extract import extract_names_from_images, extract_names_from_images_test
 from notify import notify_user_registered, Scan_Users
 
 # aaaa
@@ -56,6 +56,7 @@ def register_handler(event, context):
 
 def scan_handler(event, context):
     print(event)
-    scan_consulate_passport_page()
-    extract_names_from_images()
-    notify_user_registered()
+    # scan_consulate_passport_page()
+    # extract_names_from_images()
+    # notify_user_registered()
+    extract_names_from_images_test()

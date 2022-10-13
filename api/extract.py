@@ -75,6 +75,7 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
     # print(reponse)
     columns = []
     lines = []
+    errors_tab = []
     for item in reponse["Blocks"]:
         if item["BlockType"] == "LINE":
             column_found = False
@@ -118,7 +119,6 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
     # TODO: Create a custom iterator: https://www.programiz.com/python-programming/iterator
     iter_lines = iter(filtered_lines)
     while True:
-        errors_tab = []
         try:
             # get the next item
             line = next(iter_lines)
@@ -152,12 +152,11 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
 
         except IndexError as e:
             print(e)
-            errors_tab.append(e)
-            print(f"related image:{ImageName}")
+            errors_tab.append({str(line): ImageName})
+            print(errors_tab)
+            # print(f"related image:{ImageName}")
 
-    print(errors_tab)
-    # TODO : stocker les erreurs dans un tableau
-    # TODO : print le tableau et return
+    return errors_tab
 
 
 def extract_names_from_images():
@@ -175,6 +174,20 @@ def extract_names_from_images():
             bucket_name, image
         )  # so that if it executed 2 times extracted images will not be there
     Empty_Bucket(bucket_name)
+
+
+def extract_names_from_images_test():
+    """
+    > It takes all the images in the bucket, extracts the names of the people in the images, and then deletes the images
+    from the bucket
+    """
+    bucket_name = os.environ["BUCKET_NAME"]
+    Image_List = ["communique-071218-A.jpg"]
+    for image in Image_List:
+        print(f"-------> Image name: {image}")
+        # TODO : recuperer le tableau d'erreurs et envoyer le mail
+        errors_tab = Extract_Users(bucket_name, image)
+        print(errors_tab)
 
 
 if __name__ == "__main__":
