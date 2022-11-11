@@ -9,15 +9,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       TF_VAR_MAINTAINER_MAIL: ${{ secrets.TF_VAR_MAINTAINER_MAIL }}
       TF_VAR_WEBSITE_BUCKET_NAME: "mtchoun-mouh.mongulu.cm"
       TF_VAR_IMAGES_BUCKET_NAME: "djansang"
     steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # ratchet:aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::053932140667:role/mongulu-github
+          role-session-name: mtchoun-mouh-deployment
+          aws-region: eu-central-1
       - name: Checkout
-        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
+        uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791 # ratchet:actions/checkout@v2
       - name: Install tarraform
         uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
       - name: Terraform fmt
@@ -63,28 +70,20 @@ jobs:
           cd infra
           terraform output website_url
       - name: Copy Site files
-        uses: jakejarvis/s3-sync-action@7ed8b112447abb09f1da74f3466e4194fc7a6311 # ratchet:jakejarvis/s3-sync-action@master
         if: github.ref_name == 'master'
-        env:
-          AWS_S3_BUCKET: ${TF_VAR_WEBSITE_BUCKET_NAME}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'eu-central-1'
-          SOURCE_DIR: 'html'
+        run: |
+          cd infra
+          aws s3 sync ../html s3://${TF_VAR_WEBSITE_BUCKET_NAME} --delete
       - name: Copy Site files
-        uses: jakejarvis/s3-sync-action@7ed8b112447abb09f1da74f3466e4194fc7a6311 # ratchet:jakejarvis/s3-sync-action@master
         if: github.ref_name != 'master'
-        env:
-          AWS_S3_BUCKET: $GITHUB_REF_NAME-${TF_VAR_WEBSITE_BUCKET_NAME}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'eu-central-1'
-          SOURCE_DIR: 'html'
+        run: |
+          cd infra
+          aws s3 sync ../html s3://$GITHUB_REF_NAME-${TF_VAR_WEBSITE_BUCKET_NAME} --delete
   add-coverage-badge:
     runs-on: ubuntu-latest
     if: github.ref_name == 'master'
     steps:
-      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
+      - uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791 # ratchet:actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Set up Python
@@ -113,7 +112,7 @@ jobs:
           git commit -m "Updated coverage.svg"
       - name: Push changes
         if: steps.changed_files.outputs.files_changed == 'true'
-        uses: ad-m/github-push-action@9a46ba8d86d3171233e861a4351b1278a2805c83 # ratchet:ad-m/github-push-action@master
+        uses: ad-m/github-push-action@552c074ed701137ebd2bf098e70c394ca293e87f # ratchet:ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           branch: ${{ github.ref_name }}
