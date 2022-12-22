@@ -150,9 +150,9 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
         except StopIteration:
             break
 
-        except IndexError as e:
+        except Exception as e:
             print(e)
-            errors_tab.append({str(line): ImageName})
+            errors_tab.append({str(e) + " " + str(line): ImageName})
             print(errors_tab)
             # print(f"related image:{ImageName}")
 
@@ -187,6 +187,19 @@ def extract_names_from_images_test():
         print(f"-------> Image name: {image}")
         # TODO : recuperer le tableau d'erreurs et envoyer le mail
         errors_tab = Extract_Users(bucket_name, image)
+
+        # send by zulip
+        # https://zulip.com/api/send-message
+        for errors in errors_tab:
+
+            request = {
+                "type": "stream",
+                "to": "mtchoun-mouh",
+                "topic": "Errors",
+                "content": errors,
+            }
+
+            result = zulip_client.send_message(request)
         print(errors_tab)
 
 
