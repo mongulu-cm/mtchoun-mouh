@@ -163,6 +163,7 @@ resource "aws_lambda_function" "scan" {
       LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
+      SENTRY_DNS = var.SENTRY_DNS
     }
   }
 
