@@ -42,6 +42,10 @@ variable "MAINTAINER_MAIL" {
   }
 }
 
+variable "SENTRY_DNS" {
+  type = string
+}
+
 variable "stage_name" {
   type    = string
   default = "dev"
