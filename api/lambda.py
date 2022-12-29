@@ -1,3 +1,4 @@
+import os 
 from registre import insert_dynamodb_registered, verifying_Register_mail
 from scan import scan_consulate_passport_page
 from extract import extract_names_from_images
@@ -7,8 +8,10 @@ from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 from sentry_sdk import capture_exception
 
 # Configure Sentry SDK
+sentry_dns=os.environ["SENTRY_DNS"]
+
 sentry_sdk.init(
-    dsn="https://d57d944897e3459b876c1da6ceef439c@o4504301629407232.ingest.sentry.io/4504301817692160",
+    dsn= sentry_dns,
     integrations=[AwsLambdaIntegration()],
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
