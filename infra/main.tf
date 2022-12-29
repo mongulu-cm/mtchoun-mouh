@@ -133,6 +133,7 @@ resource "aws_lambda_function" "lambda" {
   timeout          = 10
 
   environment {
+    
     variables = {
       REGION          = var.region
       BUCKET_NAME     = (terraform.workspace == "default") ? var.IMAGES_BUCKET_NAME : "${terraform.workspace}-${var.IMAGES_BUCKET_NAME}"
