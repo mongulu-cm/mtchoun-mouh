@@ -3,6 +3,12 @@ from boto3 import client
 from config import stopWords, images_url_path
 import os
 
+zulip_client = zulip.Client(
+    email="errorbot-bot@mongulu.zulipchat.com",
+    api_key=os.environ["API_KEY"],
+    site="https://mongulu.zulipchat.com",
+)
+
 
 def Images_in_Bucket(Bucket_Name):
     """
@@ -166,30 +172,11 @@ def extract_names_from_images():
     """
     bucket_name = os.environ["BUCKET_NAME"]
     Image_List = Images_in_Bucket(bucket_name)
-    for image in Image_List:
-        print(f"-------> Image name: {image}")
-        # TODO : recuperer le tableau d'erreurs et envoyer le mail
-        Extract_Users(bucket_name, image)
-        Delete_Image(
-            bucket_name, image
-        )  # so that if it executed 2 times extracted images will not be there
-    Empty_Bucket(bucket_name)
-
-
-def extract_names_from_images_test():
-    """
-    > It takes all the images in the bucket, extracts the names of the people in the images, and then deletes the images
-    from the bucket
-    """
-    bucket_name = os.environ["BUCKET_NAME"]
-    Image_List = ["communique-071218-A.jpg"]
+    # Image_List = ["communique-071218-A.jpg"]
     for image in Image_List:
         print(f"-------> Image name: {image}")
         # TODO : recuperer le tableau d'erreurs et envoyer le mail
         errors_tab = Extract_Users(bucket_name, image)
-
-        # send by zulip
-        # https://zulip.com/api/send-message
         for errors in errors_tab:
 
             request = {
@@ -201,6 +188,11 @@ def extract_names_from_images_test():
 
             result = zulip_client.send_message(request)
         print(errors_tab)
+
+        Delete_Image(
+            bucket_name, image
+        )  # so that if it executed 2 times extracted images will not be there
+    Empty_Bucket(bucket_name)
 
 
 if __name__ == "__main__":

@@ -56,7 +56,6 @@ def register_handler(event, context):
 
 def scan_handler(event, context):
     print(event)
-    # scan_consulate_passport_page()
-    # extract_names_from_images()
-    # notify_user_registered()
-    extract_names_from_images_test()
+    scan_consulate_passport_page()
+    extract_names_from_images()
+    notify_user_registered()
