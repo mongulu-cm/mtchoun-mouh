@@ -133,6 +133,7 @@ resource "aws_lambda_function" "lambda" {
   timeout          = 10
 
   environment {
+    
     variables = {
       REGION          = var.region
       BUCKET_NAME     = (terraform.workspace == "default") ? var.IMAGES_BUCKET_NAME : "${terraform.workspace}-${var.IMAGES_BUCKET_NAME}"
@@ -140,6 +141,7 @@ resource "aws_lambda_function" "lambda" {
       LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
+      SENTRY_DNS = var.SENTRY_DNS
     }
   }
 
@@ -162,6 +164,7 @@ resource "aws_lambda_function" "scan" {
       LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
+      SENTRY_DNS = var.SENTRY_DNS
     }
   }
 
