@@ -8,6 +8,7 @@ variable "WEBSITE_BUCKET_NAME" {
   #  }
 }
 
+
 variable "IMAGES_BUCKET_NAME" {
   type = string
 }
@@ -39,6 +40,10 @@ variable "MAINTAINER_MAIL" {
     condition     = can(regex("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", var.MAINTAINER_MAIL))
     error_message = "The maintainer_mail should be a mail address."
   }
+}
+
+variable "SENTRY_DNS" {
+  type = string
 }
 
 variable "stage_name" {
