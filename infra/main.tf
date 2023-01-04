@@ -1,3 +1,23 @@
+locals {
+
+  url = join("/", [aws_api_gateway_deployment.test.invoke_url, aws_api_gateway_resource.resource.path_part])
+
+  demo_page = templatefile("templates/demo.tmpl", {
+    url     = local.url
+    contact = var.MAINTAINER_MAIL
+  })
+
+  index_page = templatefile("templates/index.tmpl", {
+    url     = local.url
+    contact = var.MAINTAINER_MAIL
+  })
+
+  building_path = "api"
+  lambda_code_filename = "lambda.zip"
+  lambda_src_path = "../api"
+
+}
+
 resource "aws_s3_bucket" "images" {
   bucket = (terraform.workspace == "default") ? var.IMAGES_BUCKET_NAME : "${terraform.workspace}-${var.IMAGES_BUCKET_NAME}"
 
@@ -105,10 +125,44 @@ data "aws_iam_role" "role" {
 data "aws_caller_identity" "current" {}
 
 //Inspire from https://medium.com/craftsmenltd/invoke-aws-lambda-from-aws-step-functions-with-terraform-30b4098d9c1f
-data "archive_file" "lambda_zip" {
-  type        = "zip"
-  output_path = "api/lambda.zip"
-  source_dir  = "../api/"
+#data "archive_file" "lambda_zip" {
+#  type        = "zip"
+#  output_path = "api/lambda.zip"
+#  source_dir  = "../api/"
+#}
+
+resource "null_resource" "sam_metadata_aws_lambda_function_lambda" {
+    triggers = {
+        resource_name = "aws_lambda_function.lambda"
+        resource_type = "ZIP_LAMBDA_FUNCTION"
+        original_source_code = "${local.lambda_src_path}"
+        built_output_path = "${local.building_path}/${local.lambda_code_filename}"
+    }
+    depends_on = [
+        null_resource.build_lambda_function
+    ]
+}
+
+resource "null_resource" "sam_metadata_aws_lambda_function_scan" {
+    triggers = {
+        resource_name = "aws_lambda_function.scan"
+        resource_type = "ZIP_LAMBDA_FUNCTION"
+        original_source_code = "${local.lambda_src_path}"
+        built_output_path = "${local.building_path}/${local.lambda_code_filename}"
+    }
+    depends_on = [
+        null_resource.build_lambda_function
+    ]
+}
+
+resource "null_resource" "build_lambda_function" {
+    triggers = {
+        build_number = "${timestamp()}" # TODO: calculate hash of lambda function. Mo will have a look at this part
+    }
+
+    provisioner "local-exec" {
+        command =  substr(pathexpand("~"), 0, 1) == "/"? "./py_build.sh \"${local.lambda_src_path}\" \"${local.building_path}\" \"${local.lambda_code_filename}\" Function" : "powershell.exe -File .\\PyBuild.ps1 ${local.lambda_src_path} ${local.building_path} ${local.lambda_code_filename} Function"
+    }
 }
 
 
@@ -124,11 +178,10 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 
 resource "aws_lambda_function" "lambda" {
-  filename         = data.archive_file.lambda_zip.output_path
+  filename = "${local.building_path}/${local.lambda_code_filename}"
   function_name    = (terraform.workspace == "default") ? "user_registration_consulcam" : "${terraform.workspace}-user_registration_consulcam"
   role             = data.aws_iam_role.role.arn
   handler          = "lambda.register_handler"
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime          = "python3.8"
   timeout          = 10
 
@@ -145,14 +198,17 @@ resource "aws_lambda_function" "lambda" {
     }
   }
 
+  depends_on = [
+    null_resource.build_lambda_function
+  ]
+
 }
 
 resource "aws_lambda_function" "scan" {
-  filename         = data.archive_file.lambda_zip.output_path
+  filename = "${local.building_path}/${local.lambda_code_filename}"
   function_name    = (terraform.workspace == "default") ? "scan_user_consulcam" : "${terraform.workspace}-scan_user_consulcam"
   role             = data.aws_iam_role.role.arn
   handler          = "lambda.scan_handler"
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime          = "python3.8"
   timeout          = 900
 
@@ -168,31 +224,11 @@ resource "aws_lambda_function" "scan" {
     }
   }
 
+  depends_on = [
+    null_resource.build_lambda_function
+  ]
+
 }
-
-//resource "aws_lambda_function" "extract" {
-//  filename         = "api/lambda.zip"
-//  function_name    = "extract_usernames"
-//  role             = data.aws_iam_role.role.arn
-//  handler          = "lambda.extract_handler"
-//  source_code_hash = base64sha256(filebase64("api/lambda.zip"))
-//  runtime          = "python3.8"
-//  timeout = 300
-//}
-
-//output "demo_page" {
-//  value = local.demo_page
-//}
-//
-//resource "null_resource" "pretend_demo_page" {
-//  triggers = {
-//    policy = local.demo_page
-//  }
-//
-//  provisioner "local-exec" {
-//    command = "echo ${local.demo_page}"
-//  }
-//}
 
 
 resource "aws_api_gateway_rest_api" "api" {
@@ -246,22 +282,6 @@ resource "aws_api_gateway_deployment" "test" {
   depends_on  = [aws_api_gateway_integration.integration]
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = (terraform.workspace == "default") ? var.stage_name : "${terraform.workspace}-${var.stage_name}"
-}
-
-locals {
-
-  url = join("/", [aws_api_gateway_deployment.test.invoke_url, aws_api_gateway_resource.resource.path_part])
-
-  demo_page = templatefile("templates/demo.tmpl", {
-    url     = local.url
-    contact = var.MAINTAINER_MAIL
-  })
-
-  index_page = templatefile("templates/index.tmpl", {
-    url     = local.url
-    contact = var.MAINTAINER_MAIL
-  })
-
 }
 
 resource "local_file" "demo_page" {
