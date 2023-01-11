@@ -140,6 +140,7 @@ resource "aws_lambda_function" "lambda" {
       LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
+      API_KEY         = (terraform.workspace == "default") ? var.API_KEY : "${terraform.workspace}-${var.API_KEY}"
     }
   }
 
@@ -162,6 +163,7 @@ resource "aws_lambda_function" "scan" {
       LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
+      API_KEY         = (terraform.workspace == "default") ? var.API_KEY : "${terraform.workspace}-${var.API_KEY}"
     }
   }
 
