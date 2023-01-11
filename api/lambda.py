@@ -1,6 +1,6 @@
 from registre import insert_dynamodb_registered, verifying_Register_mail
 from scan import scan_consulate_passport_page
-from extract import extract_names_from_images, extract_names_from_images_test
+from extract import extract_names_from_images
 from notify import notify_user_registered, Scan_Users
 
 # aaaa
