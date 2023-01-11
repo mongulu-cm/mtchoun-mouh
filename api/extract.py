@@ -2,6 +2,7 @@ import boto3
 from boto3 import client
 from config import stopWords, images_url_path
 import os
+import zulip
 
 zulip_client = zulip.Client(
     email="errorbot-bot@mongulu.zulipchat.com",
