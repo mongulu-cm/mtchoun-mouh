@@ -6,3 +6,5 @@ requests==2.25.1
 soupsieve==2.0.1
 urllib3==1.26.5
 zulip==0.8.2
+sentry-sdk==1.11.1
+

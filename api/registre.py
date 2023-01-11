@@ -25,7 +25,7 @@ def get_RegisterName():
 def verifying_Register_mail(E_Mail):
     client = boto3.client("ses")
     client.verify_email_identity(EmailAddress=E_Mail)
-
+    
 
 if __name__ == "__main__":
     insert_dynamodb_registered(argv[1], argv[2])
