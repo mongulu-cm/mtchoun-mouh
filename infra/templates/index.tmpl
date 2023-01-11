@@ -66,6 +66,8 @@
           return;
         }
 
+        $("#confirmationName").val($("#name-input").val());
+        $("#confirmationEmail").val($("#email-input").val());
         $("#confirmationModal").modal("show");
       }
 
@@ -301,7 +303,7 @@
       </a>
     </div>
 
-    <!-- Alert-error -->
+    <!-- Alert error -->
     <div id="errorMessage" class="modal">
       <p>Content error</p>
     </div>

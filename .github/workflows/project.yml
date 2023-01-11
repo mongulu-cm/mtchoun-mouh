@@ -1,16 +1,14 @@
 name: Add issues to project
-
 on:
   issues:
     types:
       - opened
-
 jobs:
   add-to-project:
     name: Add issue to project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/add-to-project@v0.1.0
+      - uses: actions/add-to-project@2b841e5b72907f4af4e565d8eb350c44cda3da96 # ratchet:actions/add-to-project@v0.1.0
         with:
           project-url: https://github.com/orgs/mongulu-cm/projects/2
           github-token: ${{ secrets.GH_TOKEN }}

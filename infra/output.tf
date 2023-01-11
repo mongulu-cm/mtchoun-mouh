@@ -5,3 +5,4 @@ output "stage_url" {
 output "website_url" {
   value = join("", ["http://", aws_s3_bucket.website.website_endpoint])
 }
+

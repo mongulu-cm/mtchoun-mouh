@@ -55,7 +55,7 @@ resource "aws_dynamodb_table" "Users" {
   hash_key       = "UserName"
 
   point_in_time_recovery {
-    enabled = true
+    enabled = (terraform.workspace == "default") ? true : false
   }
 
   attribute {
@@ -72,7 +72,7 @@ resource "aws_dynamodb_table" "Link_table" {
   hash_key       = "link"
 
   point_in_time_recovery {
-    enabled = true
+    enabled = (terraform.workspace == "default") ? true : false
   }
 
   attribute {
@@ -89,7 +89,7 @@ resource "aws_dynamodb_table" "Register" {
   hash_key       = "Name"
 
   point_in_time_recovery {
-    enabled = true
+    enabled = (terraform.workspace == "default") ? true : false
   }
 
   attribute {
@@ -133,6 +133,7 @@ resource "aws_lambda_function" "lambda" {
   timeout          = 10
 
   environment {
+    
     variables = {
       REGION          = var.region
       BUCKET_NAME     = (terraform.workspace == "default") ? var.IMAGES_BUCKET_NAME : "${terraform.workspace}-${var.IMAGES_BUCKET_NAME}"
@@ -141,6 +142,7 @@ resource "aws_lambda_function" "lambda" {
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
       API_KEY         = var.API_KEY 
+      SENTRY_DNS = var.SENTRY_DNS
     }
   }
 
@@ -164,6 +166,7 @@ resource "aws_lambda_function" "scan" {
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
       API_KEY         = var.API_KEY
+      SENTRY_DNS = var.SENTRY_DNS
     }
   }
 
