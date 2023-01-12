@@ -67,10 +67,11 @@ jobs:
           cd infra
           terraform apply -auto-approve
       - name: Website URL
+        id: websiteUrl
         if: github.ref_name != 'master'
         run: |
           cd infra
-          terraform output website_url
+          echo "website_url=$(terraform output -raw website_url)" >> $GITHUB_OUTPUT
       - name: Copy Site files
         if: github.ref_name == 'master'
         run: |
@@ -81,6 +82,14 @@ jobs:
         run: |
           cd infra
           aws s3 sync ../html s3://$GITHUB_REF_NAME-${TF_VAR_WEBSITE_BUCKET_NAME} --delete
+      - name: "website: check readiness"
+        uses: APina03/wait_for_response@master
+        with:
+          url: '${{ steps.websiteUrl.outputs.website_url }}'
+          responseCode: 200
+          timeout: 2000
+          interval: 500
+          
   add-coverage-badge:
     runs-on: ubuntu-latest
     if: github.ref_name == 'master'
