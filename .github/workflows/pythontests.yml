@@ -26,7 +26,7 @@ jobs:
           pip install -r api/requirements.txt
       - name: test functions
         run: | 
-          cd api &&  pytest test_extract.py &&\
-          pytest test_notify.py
-          coverage run -m pytest test_extract.py test_notify.py 
+          cd api &&  pytest tests/test_extract.py &&\
+          pytest tests/test_notify.py
+          coverage run -m pytest tests/test_extract.py tests/test_notify.py 
           coverage report -m
