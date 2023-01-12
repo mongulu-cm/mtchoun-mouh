@@ -89,8 +89,7 @@ jobs:
           url: '${{ steps.websiteUrl.outputs.website_url }}'
           responseCode: 200
           timeout: 2000
-          interval: 500
-          
+          interval: 500     
   add-coverage-badge:
     runs-on: ubuntu-latest
     if: github.ref_name == 'master'
