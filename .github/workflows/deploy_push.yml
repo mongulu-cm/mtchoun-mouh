@@ -6,6 +6,7 @@ on:
       - 'html/**'
       - 'infra/api/**'
       - 'infra/templates/**'
+      - '.github/workflows/deploy_push.yml'
 jobs:
   deploy:
     runs-on: ubuntu-latest
