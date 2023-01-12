@@ -46,6 +46,10 @@ variable "SENTRY_DNS" {
   type = string
 }
 
+variable "API_KEY" {
+  type = string
+}
+
 variable "stage_name" {
   type    = string
   default = "dev"
