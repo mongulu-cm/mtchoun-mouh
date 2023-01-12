@@ -2,6 +2,13 @@ import boto3
 from boto3 import client
 from config import stopWords, images_url_path
 import os
+import zulip
+
+zulip_client = zulip.Client(
+    email="errorbot-bot@mongulu.zulipchat.com",
+    api_key=os.environ["API_KEY"],
+    site="https://mongulu.zulipchat.com",
+)
 
 
 def Images_in_Bucket(Bucket_Name):
@@ -14,7 +21,9 @@ def Images_in_Bucket(Bucket_Name):
     s3 = client("s3")
     Image_List = []
     if "Contents" in s3.list_objects(Bucket=Bucket_Name):
-        Image_List.extend(key["Key"] for key in s3.list_objects(Bucket=Bucket_Name)["Contents"])
+        Image_List.extend(
+            key["Key"] for key in s3.list_objects(Bucket=Bucket_Name)["Contents"]
+        )
 
     return Image_List
 
@@ -52,7 +61,9 @@ def insert_dynamodb(User, ImageName):
     Table_Users = os.environ["USERS_TABLE"]
     dynamodb = boto3.resource("dynamodb", region_name=region)
     table = dynamodb.Table(Table_Users)
-    table.put_item(Item={"UserName": User, "URLImage": f"{images_url_path}/{ImageName}"})
+    table.put_item(
+        Item={"UserName": User, "URLImage": f"{images_url_path}/{ImageName}"}
+    )
 
 
 def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
@@ -71,6 +82,7 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
     # print(reponse)
     columns = []
     lines = []
+    errors_tab = []
     for item in reponse["Blocks"]:
         if item["BlockType"] == "LINE":
             column_found = False
@@ -118,6 +130,7 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
             # get the next item
             line = next(iter_lines)
             # print(line[1])
+            raise IndexError
 
             UserName = ""
             if " " not in line[1]:
@@ -144,9 +157,13 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
         except StopIteration:
             break
 
-        except IndexError as e:
+        except Exception as e:
             print(e)
-            print(f"related image:{ImageName}")
+            errors_tab.append({str(e) + " " + str(line): ImageName})
+            print(errors_tab)
+            # print(f"related image:{ImageName}")
+
+    return errors_tab
 
 
 def extract_names_from_images():
@@ -156,9 +173,23 @@ def extract_names_from_images():
     """
     bucket_name = os.environ["BUCKET_NAME"]
     Image_List = Images_in_Bucket(bucket_name)
+    # Image_List = ["communique-071218-A.jpg"]
     for image in Image_List:
         print(f"-------> Image name: {image}")
-        Extract_Users(bucket_name, image)
+        # TODO : recuperer le tableau d'erreurs et envoyer le mail
+        errors_tab = Extract_Users(bucket_name, image)
+        for errors in errors_tab:
+
+            request = {
+                "type": "stream",
+                "to": "mtchoun-mouh",
+                "topic": "Errors",
+                "content": errors,
+            }
+
+            result = zulip_client.send_message(request)
+        print(errors_tab)
+
         Delete_Image(
             bucket_name, image
         )  # so that if it executed 2 times extracted images will not be there
