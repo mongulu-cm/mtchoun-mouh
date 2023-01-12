@@ -19,7 +19,7 @@ sentry_sdk.init(
     traces_sample_rate=1.0
 )
 
-
+# aaaa
 def register_handler(event, context):
 
     import json
@@ -74,10 +74,7 @@ def register_handler(event, context):
          capture_exception(e)
          
 
-def scan_handler(event, context):
-    
-    
-        
+def scan_handler(event, context):    
     try:
 
         print(event)
