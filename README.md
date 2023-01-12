@@ -79,8 +79,8 @@ If you are here, it means that you are interested in an in-house deployment of t
 #### Unit tests
   ```
     cd api/
-    pytest test_extract.py
-    pytest test_notify.py
+    pytest tests/test_extract.py
+    pytest tests/test_notify.py
   ```
 
 #### Integration tests
