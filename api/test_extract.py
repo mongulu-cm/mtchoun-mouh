@@ -12,6 +12,7 @@ from extract import Images_in_Bucket, Empty_Bucket, Delete_Image, insert_dynamod
 def env_setup(monkeypatch):
     monkeypatch.setenv("REGION", "eu-central-1")
     monkeypatch.setenv("USERS_TABLE", "Users")
+    monkeypatch.setenv("API_KEY", "Zulip")
 
 
 @mock_s3
