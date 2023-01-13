@@ -56,23 +56,15 @@ If you are here, it means that you are interested in an in-house deployment of t
 
 ### Deployment
 
-* Create a `.env` file in the root containing:
-  ```
-    export TF_VAR_MAINTAINER_MAIL="<votre mail>"
-    export TF_VAR_WEBSITE_BUCKET_NAME="<votre sous-domaine>.<domaine>"
-    export TF_VAR_IMAGES_BUCKET_NAME="xxxxxxx"
-  ```
 
-* Then run the following commands:
+* Run the following commands:
   ```
-    source .env
     cd infra/
     terraform init
-    terraform apply
+    secretsfoundry run --script "terraform apply"
     aws s3 cp ../html/ s3://${TF_VAR_WEBSITE_BUCKET_NAME}.mongulu.cm --recursive
   ```
 
-* Finally, create a cloudfront distribution and DNS record ${TF_VAR_WEBSITE_BUCKET_NAME}.xxxx.yyy pointing to it
 
 ### Pyramid test
 
