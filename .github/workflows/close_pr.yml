@@ -14,6 +14,7 @@ jobs:
       TF_VAR_WEBSITE_BUCKET_NAME: "mtchoun-mouh.mongulu.cm"
       TF_VAR_IMAGES_BUCKET_NAME: "djansang"
       TF_VAR_SENTRY_DNS: ${{ secrets.TF_VAR_SENTRY_DNS}}
+      TF_VAR_API_KEY: ${{ secrets.TF_VAR_API_KEY }}
       AWS_REGION: "eu-central-1"
     steps:
       - name: Configure AWS credentials
