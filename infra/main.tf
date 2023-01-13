@@ -314,6 +314,6 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_check_foo" {
 }
 
 locals {
-  terratag_added_main = {"environment"="master","project"="mtchoun-mouh"}
+  terratag_added_main = { "environment" = "master", "project" = "mtchoun-mouh" }
 }
 
