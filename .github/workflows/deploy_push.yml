@@ -107,7 +107,7 @@ jobs:
           pip install -r requirements.txt
           pip install -r api/requirements.txt
       - name: test functions
-        run: "\ncoverage run -m pytest api/tests/test_extract.py api/tests/test_notify.py \ncoverage report -m\n"
+        run: "\ncoverage run -m pytest api/test_extract.py api/test_notify.py \ncoverage report -m\n"
       - name: Coverage Badge
         uses: tj-actions/coverage-badge-py@c3a0870495183a1848c89d568db7a4e7954fee71 # ratchet:tj-actions/coverage-badge-py@v1.8
       - name: Verify Changed files
