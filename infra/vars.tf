@@ -8,7 +8,6 @@ variable "WEBSITE_BUCKET_NAME" {
   #  }
 }
 
-
 variable "IMAGES_BUCKET_NAME" {
   type = string
 }
