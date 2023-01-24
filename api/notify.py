@@ -136,9 +136,7 @@ def amazone_ses_mail_registration(NAME, RECIPIENT):
 
     SUBJECT = "Confirmation d'enregistrement"
     BODY_TEXT = (
-        "Confirmation d'enregistrement\r\n"
-        "This email was sent with Amazon SES using the "
-        "AWS SDK for Python (Boto)."
+        "Confirmation d'enregistrement.\r\n"
     )
     BODY_HTML = data
 
