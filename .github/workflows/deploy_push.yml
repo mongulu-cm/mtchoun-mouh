@@ -73,8 +73,9 @@ jobs:
         run: |
           cd infra
           terraform output website_url
-          terraform output website_url | sed 's/\"//g'
-          echo "WEBSITE_URL=$(terraform output website_url | sed 's/\"//g')" >> $GITHUB_ENV
+          terraform output website_url | grep .net | grep -v "::" | sed -e 's/"//g'
+          echo "WEBSITE_URL=$(terraform output website_url | grep .net | grep -v "::" | sed -e 's/"//g')" >> $GITHUB_ENV
+          echo ‘EOF’ >> $GITHUB_ENV
       - name: Test
         run: echo $WEBSITE_URL
       - name: Copy Site files
