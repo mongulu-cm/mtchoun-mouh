@@ -73,8 +73,7 @@ jobs:
         run: |
           cd infra
           terraform output website_url
-          website_url=$(terraform output website_url)
-          echo "WEBSITE_URL=$website_url" >> $GITHUB_ENV
+          echo "WEBSITE_URL=$(terraform output website_url)" >> $GITHUB_ENV
       - name: Test
         run: echo $WEBSITE_URL
       - name: Copy Site files
