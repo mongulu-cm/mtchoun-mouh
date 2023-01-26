@@ -131,7 +131,7 @@ def amazone_ses_mail_registration(NAME, RECIPIENT):
     SENDER = f"Collectif mongulu <{maintainer_mail}>"
     SUBJECT = "Confirmation d'enregistrement"
     
-    mail_reader = open('./template/mtchoun-mouhregistration.html')
+    mail_reader = open('mtchoun-mouhregistration.html')
     #TODO REPLACE replace with format 
     BODY_HTML = "".join(mail_reader.readlines() ).strip().replace("\\n","").replace("{name}!", NAME)
     soup = BeautifulSoup(BODY_HTML)
