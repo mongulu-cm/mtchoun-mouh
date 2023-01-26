@@ -125,7 +125,6 @@ resource "aws_lambda_permission" "apigw_lambda" {
   source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.method.http_method}${aws_api_gateway_resource.resource.path}"
 }
 
-
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = (terraform.workspace == "default") ? "user_registration_consulcam" : "${terraform.workspace}-user_registration_consulcam"
