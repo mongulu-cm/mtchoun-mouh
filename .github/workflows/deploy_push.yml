@@ -90,7 +90,7 @@ jobs:
       - name: "website: check readiness"
         uses: APina03/wait_for_response@master
         with:
-          url: '${{ WEBSITE_URL }}'
+          url: '${{ env.WEBSITE_URL }}'
           responseCode: 200
           timeout: 2000
           interval: 500
