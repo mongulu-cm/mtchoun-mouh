@@ -86,7 +86,7 @@ jobs:
       - name: "website: check readiness"
         uses: APina03/wait_for_response@master
         with:
-          url: '${{ steps.websiteUrl.outputs.website_url }}'
+          url: 'http://healthy-checkup-mtchoun-mouh.mongulu.cm.s3-website.eu-central-1.amazonaws.com'
           responseCode: 200
           timeout: 2000
           interval: 500     
