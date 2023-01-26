@@ -72,9 +72,10 @@ jobs:
         if: github.ref_name != 'master'
         run: |
           cd infra
+          echo 'WEBSITE_URL<<EOF' >> $GITHUB_ENV
           terraform output website_url
-          terraform output website_url | grep .net | grep -v "::" | sed -e 's/"//g'
-          echo "WEBSITE_URL=$(terraform output website_url | grep .net | grep -v "::" | sed -e 's/"//g')" >> $GITHUB_ENV
+          terraform output website_url | sed -e 's/"//g'
+          echo "WEBSITE_URL=$(terraform output website_url | sed -e 's/"//g')" >> $GITHUB_ENV
           echo ‘EOF’ >> $GITHUB_ENV
       - name: Test
         run: echo $WEBSITE_URL
