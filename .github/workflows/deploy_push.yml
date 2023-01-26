@@ -73,6 +73,10 @@ jobs:
         run: |
           cd infra
           terraform output website_url
+          website_url=$(terraform output website_url)
+          echo "WEBSITE_URL=$website_url" >> $GITHUB_ENV
+      - name: Test
+        run: echo $WEBSITE_URL
       - name: Copy Site files
         if: github.ref_name == 'master'
         run: |
@@ -86,10 +90,10 @@ jobs:
       - name: "website: check readiness"
         uses: APina03/wait_for_response@master
         with:
-          url: 'http://healthy-checkup-mtchoun-mouh.mongulu.cm.s3-website.eu-central-1.amazonaws.com'
+          url: '${{ WEBSITE_URL }}'
           responseCode: 200
           timeout: 2000
-          interval: 500     
+          interval: 500
   add-coverage-badge:
     runs-on: ubuntu-latest
     if: github.ref_name == 'master'
