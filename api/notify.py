@@ -2,6 +2,7 @@ from registre import get_RegisterName
 import boto3
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
+from bs4 import BeautifulSoup
 
 # from config import Table_Registers,maintainer_mail
 import os
@@ -122,23 +123,20 @@ def amazone_ses_mail_registration(NAME, RECIPIENT):
     :param RECIPIENT: The email address of the recipient
     
     """
+                
+    AWS_REGION = "eu-central-1"
+    
     maintainer_mail = os.environ["MAINTAINER_MAIL"]
     NAME = NAME.upper()
     SENDER = f"Collectif mongulu <{maintainer_mail}>"
-    
-    s3 = boto3.resource("s3")
-    obj = s3.Object('templates-emails','mtchoun-mouh registration.html')
-    #TODO REPLACE replace with format 
-    data=str(obj.get()['Body'].read().decode('utf-8') ).strip().replace("\\n","").replace("{name}!", NAME)
-            
-    AWS_REGION = "eu-central-1"
-
-
     SUBJECT = "Confirmation d'enregistrement"
-    BODY_TEXT = (
-        "Confirmation d'enregistrement.\r\n"
-    )
-    BODY_HTML = data
+    
+    mail_reader = open('./template/mtchoun-mouhregistration.html')
+    #TODO REPLACE replace with format 
+    BODY_HTML = "".join(mail_reader.readlines() ).strip().replace("\\n","").replace("{name}!", NAME)
+    soup = BeautifulSoup(BODY_HTML)
+    BODY_TEXT = soup.get_text()
+
 
     CHARSET = "UTF-8"
     client = boto3.client("ses", region_name=AWS_REGION)
