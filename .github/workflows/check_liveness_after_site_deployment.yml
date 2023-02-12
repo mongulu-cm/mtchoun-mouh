@@ -1,0 +1,21 @@
+# .github/workflows/test01.yaml
+name: check_liveness_after_site_deployment.yml
+on:
+  workflow_dispatch:  
+jobs:
+  checkLivenessAfterSiteDeployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo
+        uses: actions/checkout@v2
+     #Setup Python   
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install software
+        run: sudo apt-get install -y chromium-browser
+      - name: Install the necessary packages
+        run: pip install requests webdriver-manager selenium pytest
+      - name: Run the PytTest script
+        run: pytest -rA
