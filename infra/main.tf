@@ -145,6 +145,7 @@ resource "aws_lambda_function" "lambda" {
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
       API_KEY         = var.API_KEY
       SENTRY_DNS      = var.SENTRY_DNS
+      ENV             = (terraform.workspace == "default") ? "production" : "${terraform.workspace}"
     }
   }
 
@@ -170,6 +171,8 @@ resource "aws_lambda_function" "scan" {
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
       API_KEY         = var.API_KEY
       SENTRY_DNS      = var.SENTRY_DNS
+      ENV             = (terraform.workspace == "default") ? "production" : "${terraform.workspace}"
+
     }
   }
 
