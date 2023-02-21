@@ -72,12 +72,7 @@ jobs:
         if: github.ref_name != 'master'
         run: |
           cd infra
-          echo 'WEBSITE_URL_VAR<<EOF' >> $GITHUB_ENV
-          terraform output website_url
-          terraform output website_url | sed -e 's/"//g'
-          WEBSITE_URL=$(terraform output website_url | sed -e 's/"//g')
-          echo $WEBSITE_URL >> $GITHUB_ENV
-          echo ‘EOF’ >> $GITHUB_ENV
+          echo "WEBSITE_URL=$(terraform output -json website_url | jq -r .)" >> $GITHUB_ENV
       - name: Test
         run: echo $WEBSITE_URL
       - name: Copy Site files
@@ -93,7 +88,7 @@ jobs:
       - name: "website: check readiness"
         uses: APina03/wait_for_response@master
         with:
-          url: '${{ env.WEBSITE_URL_VAR }}'
+          url: '${{ env.WEBSITE_URL }}'
           responseCode: 200
           timeout: 2000
           interval: 500
