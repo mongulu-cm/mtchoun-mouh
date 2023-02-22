@@ -74,7 +74,7 @@ jobs:
         if: github.ref_name != 'master'
         run: |
           cd infra
-          echo "website_url=$(terraform output -raw | tr -d '\n' | sed -e 's/\"//g')" >> $GITHUB_ENV
+          echo "website_url=$(terraform output -json | jq -r .)" >> $GITHUB_ENV
       - name: Test
         run: echo "$website_url"
       - name: Copy Site files
