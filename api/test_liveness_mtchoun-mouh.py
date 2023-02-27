@@ -20,7 +20,7 @@ class TestLiveness():
   
   def test_liveness(self):
     # Test name: liveness
-    # Step # | name | target | value | comment 
+    # Step # | name | target | value | comment
     # 1 | open | / |  | 
     self.driver.get("https://mtchoun-mouh.mongulu.cm/")
     # 2 | setWindowSize | 976x1016 |  | 
