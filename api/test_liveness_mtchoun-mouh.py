@@ -37,7 +37,7 @@ class TestLiveness():
     # 5 | type | id=email-input | jordanetsafack@yahoo.fr | 
     self.driver.find_element(By.ID, "email-input").send_keys("jordanetsafack@yahoo.fr")
     # 6 | click | css=.btn-primary |  | 
-    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
+    self.driver.find_element(By.CSS_SELECTOR, ".btn-primary_").click()
     # 7 | click | css=.col-4 |  | 
     self.driver.find_element(By.CSS_SELECTOR, ".col-4").click()
   
