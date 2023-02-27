@@ -24,4 +24,4 @@ jobs:
       - name: Install the necessary packages
         run: pip install requests webdriver-manager selenium pytest
       - name: Run the PytTest script
-        run: pytest -rA
+        run: pytest api/test_liveness_mtchoun-mouh.py
