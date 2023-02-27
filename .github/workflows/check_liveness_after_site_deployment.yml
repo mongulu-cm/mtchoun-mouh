@@ -1,7 +1,13 @@
 # .github/workflows/test01.yaml
 name: check_liveness_after_site_deployment.yml
+
 on:
-  workflow_dispatch:  
+  push:
+    paths:
+      - '**.tf'
+      - 'html/**'
+      - 'api/**'
+      - 'infra/templates/**' 
 jobs:
   checkLivenessAfterSiteDeployment:
     runs-on: ubuntu-latest
