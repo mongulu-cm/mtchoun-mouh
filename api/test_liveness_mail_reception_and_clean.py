@@ -2,9 +2,8 @@
 import pytest
 import time
 import json
-from datetime import datetime,timedelta
-
 import requests
+from datetime import datetime,timedelta
  
 class TestLivenessNonUi():
   def setup_method(self, method):
