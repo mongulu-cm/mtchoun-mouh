@@ -4,7 +4,7 @@ on:
     paths:
       - '**.tf'
       - 'html/**'
-      - 'infra/api/**'
+      - 'api/**'
       - 'infra/templates/**'
       - '.github/workflows/deploy_push.yml'
 jobs:
@@ -18,7 +18,8 @@ jobs:
       TF_VAR_WEBSITE_BUCKET_NAME: "mtchoun-mouh.mongulu.cm"
       TF_VAR_IMAGES_BUCKET_NAME: "djansang"
       TF_VAR_API_KEY: ${{ secrets.TF_VAR_API_KEY }}
-      TF_VAR_SENTRY_DNS: ${{ secrets.TF_VAR_SENTRY_DNS}}   
+      TF_VAR_SENTRY_DNS: ${{ secrets.TF_VAR_SENTRY_DNS}}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # ratchet:aws-actions/configure-aws-credentials@v1
@@ -32,10 +33,14 @@ jobs:
         uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
+      - name: Install tfcmt
+        uses: shmokmt/actions-setup-tfcmt@v2
+      - name: Install github-comments
+        uses: shmokmt/actions-setup-github-comment@v2
       - name: Terraform fmt
         id: fmt
         run: terraform fmt -check
-        continue-on-error: true
+        continue-on-error: false
       - name: Terraform Init
         id: init
         run: |
@@ -57,18 +62,23 @@ jobs:
         run: |
           cd infra
           terraform validate
+      - name: Terratag by env0
+        run: |
+          curl -O -L https://github.com/env0/terratag/releases/download/v0.1.48/terratag_0.1.48_linux_amd64.tar.gz
+          tar -xvf terratag_0.1.48_linux_amd64.tar.gz
+          ./terratag -tags="project=mtchoun-mouh,environment=$GITHUB_REF_NAME" -dir=infra/ -rename=false
       - name: Terraform Plan
         id: plan
         run: |
           cd infra
-          terraform plan
+          tfcmt plan -- terraform plan -no-color
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
       - name: Terraform Apply
         run: |
           cd infra
-          terraform apply -auto-approve
+          tfcmt apply -- terraform apply -auto-approve -no-color
       - name: Website URL
         id: websiteUrl
         if: github.ref_name != 'master'

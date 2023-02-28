@@ -4,12 +4,6 @@ from config import stopWords, images_url_path
 import os
 import zulip
 
-zulip_client = zulip.Client(
-    email="errorbot-bot@mongulu.zulipchat.com",
-    api_key=os.environ["API_KEY"],
-    site="https://mongulu.zulipchat.com",
-)
-
 
 def Images_in_Bucket(Bucket_Name):
     """
@@ -171,6 +165,13 @@ def extract_names_from_images():
     > It takes all the images in the bucket, extracts the names of the people in the images, and then deletes the images
     from the bucket
     """
+
+    zulip_client = zulip.Client(
+        email="errorbot-bot@mongulu.zulipchat.com",
+        api_key=os.environ["API_KEY"],
+        site="https://mongulu.zulipchat.com",
+    )
+
     bucket_name = os.environ["BUCKET_NAME"]
     Image_List = Images_in_Bucket(bucket_name)
     # Image_List = ["communique-071218-A.jpg"]

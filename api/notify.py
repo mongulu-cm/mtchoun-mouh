@@ -2,6 +2,7 @@ from registre import get_RegisterName
 import boto3
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
+from bs4 import BeautifulSoup
 
 # from config import Table_Registers,maintainer_mail
 import os
@@ -114,6 +115,65 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE, maintainer=False):
         print("Email sent! Message ID:"),
         print(response["MessageId"])
 
+def amazone_ses_mail_registration(NAME, RECIPIENT):
+    """
+    It sends an registration confirmation  email to the recipient
+
+    :param NAME: The name of the person to whom the email is being sent
+    :param RECIPIENT: The email address of the recipient
+    
+    """
+                
+    AWS_REGION = "eu-central-1"
+    
+    maintainer_mail = os.environ["MAINTAINER_MAIL"]
+    NAME = NAME.upper()
+    SENDER = f"Collectif mongulu <{maintainer_mail}>"
+    SUBJECT = "Confirmation d'enregistrement"
+    
+    mail_reader = open('mtchoun-mouhregistration.html')
+    #TODO REPLACE replace with format 
+    BODY_HTML = "".join(mail_reader.readlines() ).strip().replace("\\n","").replace("{name}!", NAME)
+    soup = BeautifulSoup(BODY_HTML)
+    BODY_TEXT = soup.get_text()
+
+
+    CHARSET = "UTF-8"
+    client = boto3.client("ses", region_name=AWS_REGION)
+    try:
+
+        response = client.send_email(
+            Destination={
+                "ToAddresses": [
+                    RECIPIENT,
+                ],
+            },
+            Message={
+                "Body": {
+                    "Html": {
+                        "Charset": CHARSET,
+                        "Data": BODY_HTML,
+                    },
+                    "Text": {
+                        "Charset": CHARSET,
+                        "Data": BODY_TEXT,
+                    },
+                },
+                "Subject": {
+                    "Charset": CHARSET,
+                    "Data": SUBJECT,
+                },
+            },
+            Source=SENDER,
+            # If you are not using a configuration set, comment or delete the
+            # following line
+            # ConfigurationSetName=CONFIGURATION_SET,
+        )
+    except ClientError as e:
+        print(e.response["Error"]["Message"])
+    else:
+        print("Email sent! Message ID:"),
+        print(response["MessageId"])
 
 def Delete_Backup(D_Name):
     """

@@ -2,10 +2,11 @@ import os
 from registre import insert_dynamodb_registered, verifying_Register_mail
 from scan import scan_consulate_passport_page
 from extract import extract_names_from_images
-from notify import notify_user_registered, Scan_Users
+from notify import notify_user_registered, Scan_Users, amazone_ses_mail_registration
 import sentry_sdk
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 from sentry_sdk import capture_exception
+import boto3
 
 # Configure Sentry SDK
 sentry_dns=os.environ["SENTRY_DNS"]
@@ -16,10 +17,11 @@ sentry_sdk.init(
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
     # We recommend adjusting this value in production.
-    traces_sample_rate=1.0
+    traces_sample_rate=1.0,
+    environment=os.environ["ENV"]
 )
 
-# aaaa
+
 def register_handler(event, context):
 
     import json
@@ -31,10 +33,10 @@ def register_handler(event, context):
         name = body["name"]
     
         if "email" in body:
+            
             email = body["email"]
-    
             insert_dynamodb_registered(name, email)
-            verifying_Register_mail(email)
+            amazone_ses_mail_registration(name, email)
     
             # headers for CORS in proxy mode: https://frama.link/vY7ESUz4
             return {

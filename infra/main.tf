@@ -1,9 +1,9 @@
 resource "aws_s3_bucket" "images" {
   bucket = (terraform.workspace == "default") ? var.IMAGES_BUCKET_NAME : "${terraform.workspace}-${var.IMAGES_BUCKET_NAME}"
 
-  tags = {
-    Name = "images"
-  }
+  tags = merge({
+    "Name" = "images"
+  }, local.terratag_added_main)
 
   force_destroy = true
 }
@@ -29,9 +29,9 @@ resource "aws_s3_bucket" "website" {
   acl    = "public-read"
 
   force_destroy = true
-  tags = {
-    Name = "Website"
-  }
+  tags = merge({
+    "Name" = "Website"
+  }, local.terratag_added_main)
 
   cors_rule {
     allowed_headers = ["*"]
@@ -62,6 +62,7 @@ resource "aws_dynamodb_table" "Users" {
     name = "UserName"
     type = "S"
   }
+  tags = local.terratag_added_main
 }
 
 resource "aws_dynamodb_table" "Link_table" {
@@ -79,6 +80,7 @@ resource "aws_dynamodb_table" "Link_table" {
     name = "link"
     type = "S"
   }
+  tags = local.terratag_added_main
 }
 
 resource "aws_dynamodb_table" "Register" {
@@ -96,6 +98,7 @@ resource "aws_dynamodb_table" "Register" {
     name = "Name"
     type = "S"
   }
+  tags = local.terratag_added_main
 }
 
 data "aws_iam_role" "role" {
@@ -122,7 +125,6 @@ resource "aws_lambda_permission" "apigw_lambda" {
   source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.method.http_method}${aws_api_gateway_resource.resource.path}"
 }
 
-
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = (terraform.workspace == "default") ? "user_registration_consulcam" : "${terraform.workspace}-user_registration_consulcam"
@@ -133,7 +135,7 @@ resource "aws_lambda_function" "lambda" {
   timeout          = 10
 
   environment {
-    
+
     variables = {
       REGION          = var.region
       BUCKET_NAME     = (terraform.workspace == "default") ? var.IMAGES_BUCKET_NAME : "${terraform.workspace}-${var.IMAGES_BUCKET_NAME}"
@@ -141,11 +143,13 @@ resource "aws_lambda_function" "lambda" {
       LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
-      API_KEY = var.API_KEY 
-      SENTRY_DNS = var.SENTRY_DNS
+      API_KEY         = var.API_KEY
+      SENTRY_DNS      = var.SENTRY_DNS
+      ENV             = (terraform.workspace == "default") ? "production" : "${terraform.workspace}"
     }
   }
 
+  tags = local.terratag_added_main
 }
 
 resource "aws_lambda_function" "scan" {
@@ -165,11 +169,14 @@ resource "aws_lambda_function" "scan" {
       LINKS_TABLE     = (terraform.workspace == "default") ? var.table_links : "${terraform.workspace}-${var.table_links}"
       REGISTERS_TABLE = (terraform.workspace == "default") ? var.table_registers : "${terraform.workspace}-${var.table_registers}"
       MAINTAINER_MAIL = var.MAINTAINER_MAIL
-      API_KEY = var.API_KEY
-      SENTRY_DNS = var.SENTRY_DNS
+      API_KEY         = var.API_KEY
+      SENTRY_DNS      = var.SENTRY_DNS
+      ENV             = (terraform.workspace == "default") ? "production" : "${terraform.workspace}"
+
     }
   }
 
+  tags = local.terratag_added_main
 }
 
 //resource "aws_lambda_function" "extract" {
@@ -204,6 +211,7 @@ resource "aws_api_gateway_rest_api" "api" {
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+  tags = local.terratag_added_main
 }
 
 
@@ -290,6 +298,7 @@ resource "aws_cloudwatch_event_rule" "scheduler" {
   name                = (terraform.workspace == "default") ? "trigger_user_scan" : "${terraform.workspace}-trigger_user_scan"
   description         = "extract image - verify passport is out - send notifications"
   schedule_expression = "cron(0 8 ? * MON-FRI *)" #https://crontab.guru/#0_8_*_*_1-5
+  tags                = local.terratag_added_main
 }
 
 resource "aws_cloudwatch_event_target" "target" {
@@ -304,4 +313,8 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_check_foo" {
   function_name = aws_lambda_function.scan.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.scheduler.arn
+}
+
+locals {
+  terratag_added_main = { "environment" = "master", "project" = "mtchoun-mouh" }
 }
