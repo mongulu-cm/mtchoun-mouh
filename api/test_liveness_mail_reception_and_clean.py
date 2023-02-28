@@ -25,6 +25,6 @@ class TestLivenessNonUi():
     
     # A GET request to the API
     response = requests.get(url)
-    # Print the response
     response_json = response.json()
+    # we should have at leat one mail receive with in 3 past minutes
     assert response_json['count'] > 0
