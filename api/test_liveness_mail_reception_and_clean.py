@@ -1,5 +1,6 @@
 
 import pytest
+import os
 import time
 import json
 import requests
@@ -16,7 +17,11 @@ class TestLivenessNonUi():
     date= datetime.utcnow()+timedelta( minutes = -3) - datetime(1970, 1, 1)
     milliseconds = round(date.total_seconds()*1000)
     
-    url = "https://api.testmail.app/api/json?apikey=89d25786-0bbb-465a-b1d7-bc0a1d90e05b&namespace=hsk6n&pretty=true&timestamp_from={}".format(milliseconds)
+    API_KEY_TEST_MAIL = os.environ["API_KEY_TEST_MAIL"]
+    
+    TEST_MAIL_NAMESPACE = os.environ["TEST_MAIL_NAMESPACE"]
+    
+    url = "https://api.testmail.app/api/json?apikey={}&namespace={}&pretty=true&timestamp_from={}".format(API_KEY_TEST_MAIL, TEST_MAIL_NAMESPACE, milliseconds)
     
     # A GET request to the API
     response = requests.get(url)
