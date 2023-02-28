@@ -81,7 +81,6 @@ jobs:
           tfcmt apply -- terraform apply -auto-approve -no-color
       - name: Website URL
         id: websiteUrl
-        if: github.ref_name != 'master'
         run: |
           cd infra
           echo "website_url=$(terraform output -json website_url | jq -r .)" >> $GITHUB_ENV
