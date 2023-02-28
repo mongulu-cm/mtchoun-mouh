@@ -22,6 +22,6 @@ jobs:
       - name: Install software
         run: sudo apt-get install -y chromium-browser
       - name: Install the necessary packages
-        run: pip install requests webdriver-manager selenium pytest
+        run: pip install requests webdriver-manager selenium pytest requests
       - name: Run the PytTest script
         run: pytest api/test_liveness_mtchoun-mouh.py api/test_liveness_mail_reception_and_clean.py
