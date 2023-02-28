@@ -27,6 +27,5 @@ jobs:
         run: 
               export API_KEY_TEST_MAIL=$API_KEY_TEST_MAIL 
               export TEST_MAIL_NAMESPACE=$TEST_MAIL_NAMESPACE
-        
       - name: Run the PytTest script
         run: pytest api/test_liveness_mtchoun-mouh.py api/test_liveness_mail_reception_and_clean.py
