@@ -7,7 +7,6 @@ from datetime import datetime,timedelta
  
 class TestLivenessNonUi():
   def setup_method(self, method):
-
     self.vars = {}
   
   def test_check_mail_reception(self):
