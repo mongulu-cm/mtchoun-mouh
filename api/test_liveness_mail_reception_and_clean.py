@@ -15,8 +15,7 @@ class TestLivenessNonUi():
     date= datetime.utcnow()+timedelta( minutes = -3) - datetime(1970, 1, 1)
     milliseconds = round(date.total_seconds()*1000)
     
-    API_KEY_TEST_MAIL = os.environ["API_KEY_TEST_MAIL"]
-    
+    API_KEY_TEST_MAIL = os.environ["API_KEY_TEST_MAIL"]   
     TEST_MAIL_NAMESPACE = os.environ["TEST_MAIL_NAMESPACE"]
     
     url = "https://api.testmail.app/api/json?apikey={}&namespace={}&pretty=true&timestamp_from={}".format(API_KEY_TEST_MAIL, TEST_MAIL_NAMESPACE, milliseconds)
