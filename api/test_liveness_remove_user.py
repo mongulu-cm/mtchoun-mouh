@@ -1,10 +1,7 @@
 import boto3
  
 class TestLivenesRmoveLivenessUser():
-  def setup_method(self, method):
 
-    self.vars = {}
-  
   
   def test_remove_liveness_user(self):
     """
