@@ -7,7 +7,7 @@ class TestLivenessRmoveLivenessUser():
     """
     remove user previously created from the liveness check
     """
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='eu-central-1')
 
     LIVENESS_USER="mongulu liveness"
     TABLE="Register" 
