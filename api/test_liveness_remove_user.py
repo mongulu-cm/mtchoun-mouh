@@ -1,6 +1,6 @@
 import boto3
  
-class TestLivenesRmoveLivenessUser():
+class TestLivenessRmoveLivenessUser():
 
   
   def test_remove_liveness_user(self):
