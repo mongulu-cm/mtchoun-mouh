@@ -21,5 +21,5 @@ class TestLivenessRmoveLivenessUser():
     )
     
     status_code = response['ResponseMetadata']['HTTPStatusCode']
-    assert 200 == str(status_code)
+    assert "200" == str(status_code)
 	
