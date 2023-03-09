@@ -179,31 +179,6 @@ resource "aws_lambda_function" "scan" {
   tags = local.terratag_added_main
 }
 
-//resource "aws_lambda_function" "extract" {
-//  filename         = "api/lambda.zip"
-//  function_name    = "extract_usernames"
-//  role             = data.aws_iam_role.role.arn
-//  handler          = "lambda.extract_handler"
-//  source_code_hash = base64sha256(filebase64("api/lambda.zip"))
-//  runtime          = "python3.8"
-//  timeout = 300
-//}
-
-//output "demo_page" {
-//  value = local.demo_page
-//}
-//
-//resource "null_resource" "pretend_demo_page" {
-//  triggers = {
-//    policy = local.demo_page
-//  }
-//
-//  provisioner "local-exec" {
-//    command = "echo ${local.demo_page}"
-//  }
-//}
-
-
 resource "aws_api_gateway_rest_api" "api" {
   name        = (terraform.workspace == "default") ? "user registration" : "${terraform.workspace}-user registration"
   description = "Allow to register user for sending notifications later"
