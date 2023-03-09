@@ -21,7 +21,7 @@ with Diagram("architecture", show=False):
             Route53(
                 "redirige le trafic \n de mtchou-mouh.mongulu.cm \n vers le bucket S3 de meme nom"
             )
-            >> S3("3 PAGES WEB :\n-index.html\n-demo.html\n-error.html")
+            >> S3("3 PAGES WEB :\n-index.html\n-error.html")
             >> APIGateway(
                 "-OPTIONS:résout\nproblèmeCORS\n-POST:donne les\n informations à LAMBDA"
             )
