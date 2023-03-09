@@ -262,21 +262,11 @@ locals {
 
   url = join("/", [aws_api_gateway_deployment.test.invoke_url, aws_api_gateway_resource.resource.path_part])
 
-  demo_page = templatefile("templates/demo.tmpl", {
-    url     = local.url
-    contact = var.MAINTAINER_MAIL
-  })
-
   index_page = templatefile("templates/index.tmpl", {
     url     = local.url
     contact = var.MAINTAINER_MAIL
   })
 
-}
-
-resource "local_file" "demo_page" {
-  content  = local.demo_page
-  filename = "../html/demo.html"
 }
 
 resource "local_file" "index_page" {
