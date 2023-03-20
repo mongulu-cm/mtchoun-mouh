@@ -28,8 +28,7 @@ class TestLiveness():
     WEBSITE_URL_MAIL_NAMESPACE =  os.environ["WEBSITE_URL_MAIL_NAMESPACE"]
 
     # Test name: liveness
-    # Step # | name | target | value | comment
-    
+    # Step # | name | target | value | comment 
     # 1 | open | / |  | 
     self.driver.get(WEBSITE_URL_MAIL_NAMESPACE)
     # 2 | setWindowSize | 976x1016 |  | 
