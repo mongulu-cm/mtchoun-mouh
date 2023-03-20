@@ -24,10 +24,11 @@ class TestLiveness():
     self.driver.quit()
   
   def test_liveness(self):
+    WEBSITE_URL_MAIL_NAMESPACE =  os.environ["WEBSITE_URL_MAIL_NAMESPACE"]  
     # Test name: liveness
     # Step # | name | target | value | comment
     # 1 | open | / |  | 
-    self.driver.get("https://mtchoun-mouh.mongulu.cm/")
+    self.driver.get(WEBSITE_URL_MAIL_NAMESPACE)
     # 2 | setWindowSize | 976x1016 |  | 
     self.driver.set_window_size(976, 1016)
     # 3 | click | id=name-input |  | 
