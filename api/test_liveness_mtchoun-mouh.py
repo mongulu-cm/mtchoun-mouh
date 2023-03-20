@@ -25,7 +25,8 @@ class TestLiveness():
     self.driver.quit()
   
   def test_liveness(self):
-    WEBSITE_URL_MAIL_NAMESPACE =  os.environ["WEBSITE_URL_MAIL_NAMESPACE"]  
+    WEBSITE_URL_MAIL_NAMESPACE =  os.environ["WEBSITE_URL_MAIL_NAMESPACE"]
+
     # Test name: liveness
     # Step # | name | target | value | comment
     # 1 | open | / |  | 
