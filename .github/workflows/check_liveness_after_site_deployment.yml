@@ -16,7 +16,8 @@ on:
       - '**.tf'
       - 'html/**'
       - 'api/**'
-      - 'infra/templates/**' 
+      - 'infra/templates/**'
+      - '.github/workflows/check_liveness_after_site_deployment.yml' 
 jobs:
   checkLivenessAfterSiteDeployment:
     runs-on: ubuntu-latest
