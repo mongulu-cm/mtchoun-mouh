@@ -8,7 +8,7 @@ env:
    
    API_KEY_TEST_MAIL: ${{secrets.API_KEY_TEST_MAIL}}
    TEST_MAIL_NAMESPACE: ${{secrets.TEST_MAIL_NAMESPACE}}
-   WEBSITE_URL_MAIL_NAMESPACE: https:${GITHUB_REF_NAME}mtchoun-mouh.mongulu.cm
+   WEBSITE_URL_MAIL_NAMESPACE: "https:${GITHUB_REF_NAME}mtchoun-mouh.mongulu.cm"
    
 on:
   push:
