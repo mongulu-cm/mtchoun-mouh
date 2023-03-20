@@ -29,6 +29,7 @@ class TestLiveness():
 
     # Test name: liveness
     # Step # | name | target | value | comment
+    
     # 1 | open | / |  | 
     self.driver.get(WEBSITE_URL_MAIL_NAMESPACE)
     # 2 | setWindowSize | 976x1016 |  | 
