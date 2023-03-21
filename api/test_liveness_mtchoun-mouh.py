@@ -43,7 +43,7 @@ class TestLiveness():
     self.driver.find_element(By.CSS_SELECTOR, ".btn-primary").click()
     # 7 | click | css=.col-4 |  | 
     self.driver.find_element(By.CSS_SELECTOR, ".col-4").click()
-    time.sleep(5)
+    time.sleep(10)
   
 
 
