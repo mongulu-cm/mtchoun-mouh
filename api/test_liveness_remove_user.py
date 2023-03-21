@@ -9,7 +9,7 @@ class TestLivenessRmoveLivenessUser():
     remove user previously created from the liveness check
     """
     AWS_REGION = os.environ["AWS_REGION"]
-    TABLE = os.envrion["REGISTRATION_TABLE"]	
+    TABLE = os.environ["REGISTRATION_TABLE"]	
     dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
 
     LIVENESS_USER="mongulu liveness" 
