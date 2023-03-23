@@ -44,4 +44,41 @@ class TestLiveness():
     time.sleep(10)
   
 
+  def test_check_mail_reception(self):
 
+    print("Current date:",datetime.utcnow())
+    date= datetime.utcnow()+timedelta( minutes = -3) - datetime(1970, 1, 1)
+    milliseconds = round(date.total_seconds()*1000)
+
+    API_KEY_TEST_MAIL = os.environ["API_KEY_TEST_MAIL"]   
+    TEST_MAIL_NAMESPACE = os.environ["TEST_MAIL_NAMESPACE"]
+
+    url = "https://api.testmail.app/api/json?apikey={}&namespace={}&pretty=true&timestamp_from={}".format(API_KEY_TEST_MAIL, TEST_MAIL_NAMESPACE, milliseconds)
+
+    # A GET request to the API
+    response = requests.get(url)
+    response_json = response.json()
+    # we should have at leat one mail receive with in 3 past minutes
+    assert response_json['count'] > 0
+
+
+  def test_remove_liveness_user(self):
+    """
+    remove user previously created from the liveness check
+    """
+    AWS_REGION = os.environ["AWS_REGION"]
+    TABLE = os.environ["REGISTRATION_TABLE"]	
+    dynamodb = boto3.resource('dynamodb', region_name=AWS_REGION)
+
+    LIVENESS_USER="mongulu liveness" 
+
+    table = dynamodb.Table(TABLE)
+
+    response = table.delete_item(
+        Key={
+            'Name':LIVENESS_USER
+        }
+    )
+
+    status_code = response['ResponseMetadata']['HTTPStatusCode']
+    assert "200" == str(status_code)
