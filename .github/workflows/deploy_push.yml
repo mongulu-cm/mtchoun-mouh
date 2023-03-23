@@ -33,8 +33,6 @@ jobs:
         uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791 # ratchet:actions/checkout@v2
       - name: Install tarraform
         uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
-        with:
-          terraform_wrapper: false
       - name: Install tfcmt
         uses: shmokmt/actions-setup-tfcmt@v2
       - name: Install github-comments
@@ -82,12 +80,10 @@ jobs:
           cd infra
           tfcmt apply -- terraform apply -auto-approve -no-color
       - name: Website URL
-        id: websiteUrl
+        if: github.ref_name != 'master'
         run: |
           cd infra
-          echo "website_url=$(terraform output -json website_url | jq -r .)" >> $GITHUB_ENV
-      - name: Test
-        run: echo "$website_url"
+          terraform output website_url
       - name: Copy Site files
         if: github.ref_name == 'master'
         run: |
@@ -105,6 +101,19 @@ jobs:
           responseCode: 200
           timeout: 2000
           interval: 500
+      - name: Set up Python
+        uses: actions/setup-python@7f80679172b057fc5e90d70d197929d454754a5a # ratchet:actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r api/requirements.txt
+      - name: test functions
+        run: "\ncoverage run -m pytest api/test_extract.py api/test_notify.py \ncoverage report -m\n"
+      - name: "website: check liveness"
+        run:  "pytest api/test_liveness_mtchoun-mouh.py"
+
   add-coverage-badge:
     runs-on: ubuntu-latest
     if: github.ref_name == 'master'
