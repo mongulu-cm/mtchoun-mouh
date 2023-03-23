@@ -19,6 +19,8 @@ jobs:
       TF_VAR_IMAGES_BUCKET_NAME: "djansang"
       TF_VAR_API_KEY: ${{ secrets.TF_VAR_API_KEY }}
       TF_VAR_SENTRY_DNS: ${{ secrets.TF_VAR_SENTRY_DNS}}
+      API_KEY_TEST_MAIL: ${{secrets.API_KEY_TEST_MAIL}}
+      TEST_MAIL_NAMESPACE: ${{secrets.TEST_MAIL_NAMESPACE}}    
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - name: Configure AWS credentials
@@ -124,6 +126,8 @@ jobs:
         uses: tj-actions/coverage-badge-py@c3a0870495183a1848c89d568db7a4e7954fee71 # ratchet:tj-actions/coverage-badge-py@v1.8
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@c09bcad97929b17bacf737670bee312af98be94f # ratchet:tj-actions/verify-changed-files@v9
+      - name: "website: check liveness"
+        run:  "pytest api/test_liveness_mtchoun-mouh.py"      
         id: changed_files
         with:
           files: coverage.svg
