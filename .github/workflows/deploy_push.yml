@@ -7,6 +7,7 @@ on:
       - 'api/**'
       - 'infra/templates/**'
       - '.github/workflows/deploy_push.yml'
+      - 'requirements.txt'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -33,6 +34,8 @@ jobs:
         uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791 # ratchet:actions/checkout@v2
       - name: Install tarraform
         uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
+        with:
+          terraform_wrapper: false
       - name: Install tfcmt
         uses: shmokmt/actions-setup-tfcmt@v2
       - name: Install github-comments
@@ -80,10 +83,12 @@ jobs:
           cd infra
           tfcmt apply -- terraform apply -auto-approve -no-color
       - name: Website URL
-        if: github.ref_name != 'master'
+        id: websiteUrl
         run: |
           cd infra
-          terraform output website_url
+          echo "website_url=$(terraform output -json website_url | jq -r .)" >> $GITHUB_ENV
+      - name: Test
+        run: echo "$website_url"
       - name: Copy Site files
         if: github.ref_name == 'master'
         run: |
