@@ -7,6 +7,7 @@ on:
       - 'api/**'
       - 'infra/templates/**'
       - '.github/workflows/deploy_push.yml'
+      - 'requirements.txt'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,6 +20,8 @@ jobs:
       TF_VAR_IMAGES_BUCKET_NAME: "djansang"
       TF_VAR_API_KEY: ${{ secrets.TF_VAR_API_KEY }}
       TF_VAR_SENTRY_DNS: ${{ secrets.TF_VAR_SENTRY_DNS}}
+      API_KEY_TEST_MAIL: ${{secrets.API_KEY_TEST_MAIL}}
+      TEST_MAIL_NAMESPACE: ${{secrets.TEST_MAIL_NAMESPACE}}    
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
       - name: Configure AWS credentials
@@ -84,8 +87,9 @@ jobs:
         run: |
           cd infra
           echo "website_url=$(terraform output -json website_url | jq -r .)" >> $GITHUB_ENV
+          echo "register_table=$(terraform output -json register_table | jq -r .)" >> $GITHUB_ENV
       - name: Test
-        run: echo "$website_url"
+        run: echo "$website_url" && echo "$register_table"
       - name: Copy Site files
         if: github.ref_name == 'master'
         run: |
@@ -103,6 +107,24 @@ jobs:
           responseCode: 200
           timeout: 2000
           interval: 500
+      - name: Set up Python
+        uses: actions/setup-python@7f80679172b057fc5e90d70d197929d454754a5a # ratchet:actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Install software
+        run: sudo apt-get install -y chromium-browser
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r api/requirements.txt
+      - name: test functions
+        run: "\ncoverage run -m pytest api/test_extract.py api/test_notify.py \ncoverage report -m\n"
+      - name: "website: check liveness"
+        env:
+          WEBSITE_URL_MAIL_NAMESPACE: ${{ env.website_url }}
+          REGISTERS_TABLE: ${{ env.register_table }}
+        run:  "pytest api/test_liveness_mtchoun-mouh.py"
+      
   add-coverage-badge:
     runs-on: ubuntu-latest
     if: github.ref_name == 'master'
@@ -120,10 +142,12 @@ jobs:
           pip install -r api/requirements.txt
       - name: test functions
         run: "\ncoverage run -m pytest api/test_extract.py api/test_notify.py \ncoverage report -m\n"
+      - name: "website: check liveness"
+        run:  "pytest api/test_liveness_mtchoun-mouh.py"        
       - name: Coverage Badge
         uses: tj-actions/coverage-badge-py@c3a0870495183a1848c89d568db7a4e7954fee71 # ratchet:tj-actions/coverage-badge-py@v1.8
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@c09bcad97929b17bacf737670bee312af98be94f # ratchet:tj-actions/verify-changed-files@v9
+        uses: tj-actions/verify-changed-files@c09bcad97929b17bacf737670bee312af98be94f # ratchet:tj-actions/verify-changed-files@v9     
         id: changed_files
         with:
           files: coverage.svg
