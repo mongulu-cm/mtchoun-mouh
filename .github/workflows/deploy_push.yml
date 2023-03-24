@@ -113,7 +113,7 @@ jobs:
         run: "\ncoverage run -m pytest api/test_extract.py api/test_notify.py \ncoverage report -m\n"
       - name: "website: check liveness"
         run:  "pytest api/test_liveness_mtchoun-mouh.py"
-        
+      
   add-coverage-badge:
     runs-on: ubuntu-latest
     if: github.ref_name == 'master'
