@@ -54,3 +54,8 @@ variable "stage_name" {
   type    = string
   default = "dev"
 }
+
+variable "TFC_WORKSPACE_NAME" {
+  type = string
+  default = ""
+}

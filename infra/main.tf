@@ -242,6 +242,10 @@ locals {
     contact = var.MAINTAINER_MAIL
   })
 
+  # If your backend is not Terraform Cloud, the value is ${terraform.workspace}
+  # otherwise the value retrieved is that of the TFC_WORKSPACE_NAME with trimprefix
+  workspace = var.TFC_WORKSPACE_NAME != "" ? trimprefix("${var.TFC_WORKSPACE_NAME}", "mtchoun-mouh-") : "${terraform.workspace}"
+
 }
 
 resource "local_file" "index_page" {
