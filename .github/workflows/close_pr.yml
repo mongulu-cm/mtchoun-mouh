@@ -15,6 +15,7 @@ jobs:
       TF_VAR_IMAGES_BUCKET_NAME: "djansang"
       TF_VAR_SENTRY_DNS: ${{ secrets.TF_VAR_SENTRY_DNS}}
       TF_VAR_API_KEY: ${{ secrets.TF_VAR_API_KEY }}
+      TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
       AWS_REGION: "eu-central-1"
     steps:
       - name: Configure AWS credentials
@@ -25,11 +26,11 @@ jobs:
           aws-region: eu-central-1
       - name: Checkout
         uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
-      - name: Install tarraform
+      - name: Install terraform
         uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
       - name: Checkout
         uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # ratchet:actions/checkout@v2
-      - name: Install tarraform
+      - name: Install terraform
         uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
       - name: Terraform fmt
         id: fmt
