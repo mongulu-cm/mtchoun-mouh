@@ -21,7 +21,6 @@ terraform {
     workspaces {
 
        prefix = "mtchoun-mouh-"
-       //tags = ["mtchoun-mouh", "aws"]
 
     }
   }
