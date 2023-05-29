@@ -23,7 +23,7 @@ jobs:
       API_KEY_TEST_MAIL: ${{secrets.API_KEY_TEST_MAIL}}
       TEST_MAIL_NAMESPACE: ${{secrets.TEST_MAIL_NAMESPACE}}    
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+      TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # ratchet:aws-actions/configure-aws-credentials@v1
@@ -49,7 +49,7 @@ jobs:
         id: init
         run: |
           cd infra
-          terraform init
+          terraform init -backend-config="token=$TFE_TOKEN"
       - name: setup workspace
         id: workspace
         if: github.ref_name != 'master'
