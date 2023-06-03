@@ -49,6 +49,7 @@ jobs:
         id: init
         run: |
           cd infra
+          export TF_WORKSPACE=$GITHUB_REF_NAME
           terraform init -backend-config="token=$TFE_TOKEN"
       - name: setup workspace
         id: workspace

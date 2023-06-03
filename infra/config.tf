@@ -19,9 +19,7 @@ terraform {
     organization = "tfc-mongulu-cm"
 
     workspaces {
-
        prefix = "mtchoun-mouh-"
-
     }
   }
 
