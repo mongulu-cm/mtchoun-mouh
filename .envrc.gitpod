@@ -38,7 +38,7 @@ then
     sudo mv ./bin/act /usr/local/bin/
 fi
 
-WORKPLACE="/workspace/mtchoun-mouh/"
+WORKPLACE="/workspace/mtchoun-mouh"
 if ! command -v aws &> /dev/null
 then
     pushd /tmp || exit
