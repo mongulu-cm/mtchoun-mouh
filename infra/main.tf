@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "override" {
 # Use https://registry.terraform.io/modules/cloudmaniac/static-website/aws/0.9.2 when we will buy domain name
 resource "aws_s3_bucket" "website" {
   bucket = (terraform.workspace == "default") ? var.WEBSITE_BUCKET_NAME : "${terraform.workspace}-${var.WEBSITE_BUCKET_NAME}"
-  acl    = "public-read"
+  #acl    = "public-read"
 
   force_destroy = true
   tags = merge({
