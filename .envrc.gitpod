@@ -17,6 +17,15 @@ then
     echo "exec < /dev/tty && node_modules/.bin/cz --hook || true" >> .git/hooks/prepare-commit-msg
 fi
 
+if ! command -v secretsfoundry &> /dev/null
+then
+    cd /tmp &&\
+    wget https://github.com/truefoundry/secretsfoundry/releases/download/v0.1.16/secretsfoundry-0.1.16-linux-x64 &&\
+    mv secretsfoundry-0.1.16-linux-x64 secretsfoundry &&\
+    chmod u+x secretsfoundry &&\
+    sudo mv secretsfoundry /usr/local/bin
+fi
+
 if ! command -v driftctl &> /dev/null
 then
     curl -L https://github.com/snyk/driftctl/releases/latest/download/driftctl_linux_amd64 -o driftctl
@@ -35,12 +44,14 @@ then
     pushd /tmp || exit
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip && sudo ./aws/install && rm awscliv2.zip && rm -rf aws/ &&\
-    mkdir $WORKPLACE/.aws  && touch $WORKPLACE/.aws/credentials && touch $WORKPLACE/.aws/config &&\
-    export AWS_SHARED_CREDENTIALS_FILE=$WORKPLACE/.aws/credentials &&\
-    export AWS_CONFIG_FILE=$WORKPLACE/.aws/config &&\
+    mkdir "$WORKPLACE"/.aws  && touch "$WORKPLACE"/.aws/credentials && touch "$WORKPLACE"/.aws/config &&\
+    echo "export AWS_SHARED_CREDENTIALS_FILE=$WORKPLACE/.aws/credentials"
+    echo "export AWS_CONFIG_FILE=$WORKPLACE/.aws/config"
+    echo "export AWS_SDK_LOAD_CONFIG=1"
     aws configure
     popd || exit
 fi
 
-export AWS_SHARED_CREDENTIALS_FILE=$WORKPLACE/.aws/credentials
-export AWS_CONFIG_FILE=$WORKPLACE/.aws/config
+echo "export AWS_SHARED_CREDENTIALS_FILE=$WORKPLACE/.aws/credentials" >> ~/.bashrc
+echo "export AWS_CONFIG_FILE=$WORKPLACE/.aws/config" >> ~/.bashrc
+echo "export AWS_SDK_LOAD_CONFIG=1" >> ~/.bashrc
