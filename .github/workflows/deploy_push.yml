@@ -118,14 +118,12 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
-          pip install -r api/requirements.txt
-      - name: test functions
-        run: "\ncoverage run -m pytest api/test_extract.py api/test_notify.py \ncoverage report -m\n"
+          pip install -r infra/api/requirements.txt
       - name: "website: check liveness"
         env:
           WEBSITE_URL_MAIL_NAMESPACE: ${{ env.website_url }}
           REGISTERS_TABLE: ${{ env.register_table }}
-        run:  "pytest api/test_liveness_mtchoun-mouh.py"
+        run:  "pytest infra/api/test_liveness_mtchoun-mouh.py"
       
   add-coverage-badge:
     runs-on: ubuntu-latest
