@@ -38,7 +38,8 @@ jobs:
         id: init
         run: |
           cd infra
-          terraform init
+          export TF_WORKSPACE=$GITHUB_HEAD_REF
+          terraform init -backend-config="token=$TFE_TOKEN"
       - name: setup workspace
         id: workspace
         run: |
@@ -49,5 +50,5 @@ jobs:
         run: |
           cd infra
           terraform destroy -auto-approve
-          terraform workspace select default
+          terraform workspace select master
           terraform workspace delete $GITHUB_HEAD_REF
