@@ -15,11 +15,7 @@ jobs:
       id-token: write
       contents: read
     env:
-      TF_VAR_MAINTAINER_MAIL: ${{ secrets.TF_VAR_MAINTAINER_MAIL }}
-      TF_VAR_WEBSITE_BUCKET_NAME: "mtchoun-mouh.mongulu.cm"
-      TF_VAR_IMAGES_BUCKET_NAME: "djansang"
-      TF_VAR_API_KEY: ${{ secrets.TF_VAR_API_KEY }}
-      TF_VAR_SENTRY_DNS: ${{ secrets.TF_VAR_SENTRY_DNS}}
+      # All TF variables are define din Terraform Cloud
       API_KEY_TEST_MAIL: ${{secrets.API_KEY_TEST_MAIL}}
       TEST_MAIL_NAMESPACE: ${{secrets.TEST_MAIL_NAMESPACE}}    
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -124,7 +120,7 @@ jobs:
         if: github.ref_name == 'master'
         run: |
           cd infra
-          aws s3 sync ../html s3://${TF_VAR_WEBSITE_BUCKET_NAME} --exclude "index.html" --delete
+          aws s3 sync ../html s3://mtchoun-mouh.mongulu.cm --exclude "index.html" --delete
       - name: Copy Site files
         if: github.ref_name != 'master'
         run: |
