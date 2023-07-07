@@ -45,6 +45,36 @@ jobs:
         id: fmt
         run: terraform fmt -check
         continue-on-error: false
+      - name: Create Terraform Workspace
+        run: |
+          PAYLOAD=$(cat <<EOF
+          {
+            "data": {
+              "type": "workspaces",
+              "attributes": {
+                "name": "mtchoun-mouh-$GITHUB_REF_NAME",
+                "auto-apply": false
+              },
+              "relationships": {
+                "project": {
+                  "data": {
+                    "type": "projects",
+                    "id": "prj-85RQA1k2XSPQiwqJ"
+                  }
+                }
+              }
+            }
+          }
+          EOF
+          )
+          curl \
+            --header "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
+            --header "Content-Type: application/vnd.api+json" \
+            --request POST \
+            --data "$PAYLOAD" \
+            https://app.terraform.io/api/v2/organizations/tfc-mongulu-cm/workspaces
+        env:
+          TF_API_TOKEN: ${{ secrets.TFE_TOKEN }}
       - name: Terraform Init
         id: init
         run: |
@@ -53,12 +83,10 @@ jobs:
           terraform init -backend-config="token=$TFE_TOKEN"
       - name: setup workspace
         id: workspace
-        if: github.ref_name != 'master'
         run: |
           cd infra
           terraform workspace new $GITHUB_REF_NAME || terraform workspace select $GITHUB_REF_NAME
       - name: List workspace
-        if: github.ref_name != 'master'
         run: |
           cd infra
           terraform workspace list
