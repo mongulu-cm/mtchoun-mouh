@@ -96,13 +96,12 @@ jobs:
         if: github.ref_name == 'master'
         run: |
           cd infra
-          aws s3 sync ../html s3://${TF_VAR_WEBSITE_BUCKET_NAME} --delete
+          aws s3 sync ../html s3://${TF_VAR_WEBSITE_BUCKET_NAME} --exclude "index.html" --delete
       - name: Copy Site files
         if: github.ref_name != 'master'
         run: |
           cd infra   
-          echo "aws s3 sync ../html s3://${TF_VAR_WEBSITE_BUCKET_NAME}-$GITHUB_REF_NAME --delete"
-          aws s3 sync ../html s3://mtchoun-mouh-$GITHUB_REF_NAME-mtchoun-mouh --delete
+          aws s3 sync ../html s3://mtchoun-mouh-$GITHUB_REF_NAME-mtchoun-mouh --exclude "index.html" --delete
       - name: "website: check readiness"
         uses: APina03/wait_for_response@master
         with:

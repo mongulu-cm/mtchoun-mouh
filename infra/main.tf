@@ -268,10 +268,9 @@ resource "local_file" "index_page" {
 resource "aws_s3_bucket_object" "example_file" {
   bucket = aws_s3_bucket.website.id
   key    = "index.html"
-
   source = "../html/index.html"
-
   content_type = "text/html"
+  
   depends_on = [ local_file.index_page ]
 }
 
