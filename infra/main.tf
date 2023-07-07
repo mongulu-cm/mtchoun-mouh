@@ -8,26 +8,9 @@ resource "aws_s3_bucket" "images" {
   force_destroy = true
 }
 
-data "aws_iam_policy_document" "override" {
-  statement {
-    sid = "PublicReadForGetBucketObjects"
-    principals {
-      identifiers = ["AWS"]
-      type        = "*"
-    }
-
-    actions = ["s3:GetObject"]
-    resources = [(terraform.workspace == "default") ? "arn:aws:s3:::${var.WEBSITE_BUCKET_NAME}/*" : "arn:aws:s3:::${terraform.workspace}-${var.WEBSITE_BUCKET_NAME}/*"
-    ]
-  }
-}
-
-
 # Use https://registry.terraform.io/modules/cloudmaniac/static-website/aws/0.9.2 when we will buy domain name
 resource "aws_s3_bucket" "website" {
   bucket = (terraform.workspace == "default") ? var.WEBSITE_BUCKET_NAME : "${terraform.workspace}-${var.WEBSITE_BUCKET_NAME}"
-  acl    = "public-read"
-
   force_destroy = true
   tags = merge({
     "Name" = "Website"
@@ -39,13 +22,42 @@ resource "aws_s3_bucket" "website" {
     allowed_origins = ["*"]
   }
 
-  policy = data.aws_iam_policy_document.override.json
-
   website {
     index_document = "index.html"
     error_document = "error.html"
   }
 }
+
+resource "aws_s3_bucket_public_access_block" "website" {
+  bucket = aws_s3_bucket.website.id
+  block_public_acls   = false
+  block_public_policy = false
+  ignore_public_acls  = false
+  restrict_public_buckets = false
+
+  depends_on = [ aws_s3_bucket.website ]
+}
+
+
+resource "aws_s3_bucket_policy" "website" {
+  bucket = aws_s3_bucket.website.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = ["s3:GetObject"]
+        Resource  = ["arn:aws:s3:::${aws_s3_bucket.website.id}/*"]
+      },
+    ]
+  })
+
+  depends_on = [ aws_s3_bucket_public_access_block.website ]
+}
+
 
 resource "aws_dynamodb_table" "Users" {
   name           = (terraform.workspace == "default") ? var.table_user : "${terraform.workspace}-${var.table_user}"
@@ -111,7 +123,7 @@ data "aws_caller_identity" "current" {}
 data "archive_file" "lambda_zip" {
   type        = "zip"
   output_path = "api/lambda.zip"
-  source_dir  = "../api/"
+  source_dir  = "api/"
 }
 
 
@@ -242,6 +254,10 @@ locals {
     contact = var.MAINTAINER_MAIL
   })
 
+  # If your backend is not Terraform Cloud, the value is ${terraform.workspace}
+  # otherwise the value retrieved is that of the TFC_WORKSPACE_NAME with trimprefix
+  workspace = var.TFC_WORKSPACE_NAME != "" ? trimprefix("${var.TFC_WORKSPACE_NAME}", "mtchoun-mouh-") : "${terraform.workspace}"
+
 }
 
 resource "local_file" "index_page" {
@@ -249,6 +265,15 @@ resource "local_file" "index_page" {
   filename = "../html/index.html"
 }
 
+// Terraform cloud have the file but the CI no so we upload it from terraform cloud 
+resource "aws_s3_bucket_object" "example_file" {
+  bucket = aws_s3_bucket.website.id
+  key    = "index.html"
+  source = "../html/index.html"
+  content_type = "text/html"
+
+  depends_on = [ local_file.index_page ]
+}
 
 # Inspired from https://frama.link/GFCHrjEL
 module "cors" {

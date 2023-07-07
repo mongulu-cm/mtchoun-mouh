@@ -14,10 +14,19 @@ provider "aws" {
 terraform {
   required_version = ">= 0.15"
 
-  backend "s3" {
-    bucket = "terraform-state-mongulu"
-    key    = "mtchoun-mouh/terraform.tfstate"
-    region = "eu-central-1"
-    //encrypt = true
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "tfc-mongulu-cm"
+
+    workspaces {
+       prefix = "mtchoun-mouh-"
+    }
   }
+
+  //backend "s3" {
+    //bucket = "terraform-state-mongulu"
+    //key    = "mtchoun-mouh/terraform.tfstate"
+    //region = "eu-central-1"
+    //encrypt = true
+  //}
 }

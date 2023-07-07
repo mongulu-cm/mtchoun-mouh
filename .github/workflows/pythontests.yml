@@ -23,10 +23,10 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
-          pip install -r api/requirements.txt
+          pip install -r infra/api/requirements.txt
       - name: test functions
         run: | 
-          cd api &&  pytest test_extract.py &&\
+          cd infra/api &&  pytest test_extract.py &&\
           pytest test_notify.py
           coverage run -m pytest test_extract.py test_notify.py 
           coverage report -m
