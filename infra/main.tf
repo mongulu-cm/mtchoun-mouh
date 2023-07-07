@@ -265,6 +265,15 @@ resource "local_file" "index_page" {
   filename = "../html/index.html"
 }
 
+resource "aws_s3_bucket_object" "example_file" {
+  bucket = aws_s3_bucket.website.id
+  key    = "index.html"
+
+  source = "../html/index.html"
+
+  content_type = "text/html"
+  depends_on = [ local_file.index_page ]
+}
 
 # Inspired from https://frama.link/GFCHrjEL
 module "cors" {
