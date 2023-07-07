@@ -23,6 +23,7 @@ jobs:
       API_KEY_TEST_MAIL: ${{secrets.API_KEY_TEST_MAIL}}
       TEST_MAIL_NAMESPACE: ${{secrets.TEST_MAIL_NAMESPACE}}    
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # ratchet:aws-actions/configure-aws-credentials@v1
@@ -32,7 +33,7 @@ jobs:
           aws-region: eu-central-1
       - name: Checkout
         uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791 # ratchet:actions/checkout@v2
-      - name: Install tarraform
+      - name: Install terraform
         uses: hashicorp/setup-terraform@d22444889af304a44b997011fbabb81ff705a7b4 # ratchet:hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
@@ -48,7 +49,8 @@ jobs:
         id: init
         run: |
           cd infra
-          terraform init
+          export TF_WORKSPACE=$GITHUB_REF_NAME
+          terraform init -backend-config="token=$TFE_TOKEN"
       - name: setup workspace
         id: workspace
         if: github.ref_name != 'master'
@@ -94,12 +96,12 @@ jobs:
         if: github.ref_name == 'master'
         run: |
           cd infra
-          aws s3 sync ../html s3://${TF_VAR_WEBSITE_BUCKET_NAME} --delete
+          aws s3 sync ../html s3://${TF_VAR_WEBSITE_BUCKET_NAME} --exclude "index.html" --delete
       - name: Copy Site files
         if: github.ref_name != 'master'
         run: |
-          cd infra
-          aws s3 sync ../html s3://$GITHUB_REF_NAME-${TF_VAR_WEBSITE_BUCKET_NAME} --delete
+          cd infra   
+          aws s3 sync ../html s3://mtchoun-mouh-$GITHUB_REF_NAME-mtchoun-mouh --exclude "index.html" --delete
       - name: "website: check readiness"
         uses: APina03/wait_for_response@master
         with:
@@ -116,14 +118,12 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
-          pip install -r api/requirements.txt
-      - name: test functions
-        run: "\ncoverage run -m pytest api/test_extract.py api/test_notify.py \ncoverage report -m\n"
+          pip install -r infra/api/requirements.txt
       - name: "website: check liveness"
         env:
           WEBSITE_URL_MAIL_NAMESPACE: ${{ env.website_url }}
           REGISTERS_TABLE: ${{ env.register_table }}
-        run:  "pytest api/test_liveness_mtchoun-mouh.py"
+        run:  "pytest infra/api/test_liveness_mtchoun-mouh.py"
       
   add-coverage-badge:
     runs-on: ubuntu-latest
