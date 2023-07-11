@@ -184,7 +184,7 @@ resource "aws_lambda_function" "scan" {
       API_KEY         = var.API_KEY
       SENTRY_DNS      = var.SENTRY_DNS
       ENV             = (terraform.workspace == "mtchoun-mouh-master") ? "production" : "${terraform.workspace}"
-
+      PROXY_URL       = var.PROXY_URL
     }
   }
 
