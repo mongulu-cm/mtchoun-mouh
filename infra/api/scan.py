@@ -48,7 +48,10 @@ def get_source_code(link):
     :param link: the link of the web page you want to scrape
     :return: the source code of the web page
     """
-    r = requests.get(link)
+    proxy_url = os.environ["PROXY_URL"]
+    proxies = {"http": proxy_url, "https": proxy_url}
+    
+    r = requests.get(link,proxies=proxies, verify=False)
     r.raise_for_status()
     return soup(r.text)
 
