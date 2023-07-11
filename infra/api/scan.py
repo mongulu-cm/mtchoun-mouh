@@ -49,10 +49,8 @@ def get_source_code(link):
     :return: the source code of the web page
     """
     r = requests.get(link)
-    if r.status_code == 200:
-        return soup(r.text)
-    else:
-        sys.exit("invalid")
+    r.raise_for_status()
+    return soup(r.text)
 
 
 def filter(code_source_html):

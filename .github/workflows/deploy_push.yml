@@ -3,8 +3,8 @@ on:
   push:
     paths:
       - '**.tf'
+      - 'infra/api/**'
       - 'html/**'
-      - 'api/**'
       - 'infra/templates/**'
       - '.github/workflows/deploy_push.yml'
       - 'requirements.txt'
