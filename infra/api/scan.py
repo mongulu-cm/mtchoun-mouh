@@ -1,5 +1,5 @@
 import sys
-
+import shutil
 sys.path.insert(0, "./package")
 import requests
 import urllib.request
@@ -13,6 +13,9 @@ from notify import amazone_ses_mail
 bucket_name = os.environ["BUCKET_NAME"]
 Table_Links = os.environ["LINKS_TABLE"]
 maintainer_mail = os.environ["MAINTAINER_MAIL"]
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"
+}
 
 
 def S3_bucket_pictures(Picture_image, bucket_name):
@@ -37,7 +40,12 @@ def dowload_image(url):
     """
     name = url.split("/")[-1]
     real_image = f"/tmp/{str(name)}"  # image in jpg version ( only /tmp is writable in aws lambda)
-    urllib.request.urlretrieve(url, real_image)
+    r = requests.get(url,stream=True,headers=headers)
+    r.raw.decode_content = True
+    r.raise_for_status()
+
+    with open( real_image, 'wb') as f:
+        shutil.copyfileobj(r.raw, f)
     return real_image
 
 
@@ -48,12 +56,9 @@ def get_source_code(link):
     :param link: the link of the web page you want to scrape
     :return: the source code of the web page
     """
-    proxy_url = os.environ["PROXY_URL"]
-    proxies = {"http": proxy_url, "https": proxy_url}
-    
-    r = requests.get(link,proxies=proxies, verify=False)
+    r = requests.get(link,headers=headers)
     r.raise_for_status()
-    return soup(r.text)
+    return soup(r.text,features="html.parser")
 
 
 def filter(code_source_html):
