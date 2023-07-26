@@ -1,0 +1,6 @@
+region: eu-central-1
+
+function_name: my_lambda_function
+handler: lambda.register_handler
+runtime: python3.8
+# role: lambda_basic_execution
