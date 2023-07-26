@@ -59,7 +59,3 @@ variable "TFC_WORKSPACE_NAME" {
   type = string
   default = ""
 }
-
-variable "PROXY_URL" {
-  type = string
-}
