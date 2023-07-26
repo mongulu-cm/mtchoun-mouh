@@ -58,7 +58,7 @@ If you are here, it means that you are interested in an in-house deployment of t
 
 
 * Run the following commands:
-  ```
+  ```bash
     cd infra/
     terraform init
     secretsfoundry run --script "terraform apply"
@@ -69,8 +69,8 @@ If you are here, it means that you are interested in an in-house deployment of t
 ### Pyramid test
 
 #### Unit tests
-  ```
-    cd api/
+  ```bash
+    cd infra/api/
     pytest test_extract.py
     pytest test_notify.py
   ```
@@ -78,18 +78,35 @@ If you are here, it means that you are interested in an in-house deployment of t
 #### Integration tests
 
 To launch integration tests locally :
-  ```
+  ```bash
     act -j <job_name> --secret-file .env
+  ```
+
+To invoke register handler locally (lambda function):
+  ```bash
+    cd infra/api
+    secretsfoundry run -p ../ --script "lambda invoke -v --config-file config-register.yaml"
+  ```
+To invoke scan handler locally (lambda function):
+  ```bash
+    cd infra/api
+    secretsfoundry run -p ../ --script "lambda invoke -v --config-file config-scan.yaml"
   ```
 
 #### End to end
 
-
+```bash
+sudo apt-get install -y chromium-browser
+pip install -r requirements.txt
+pip install -r infra/api/requirements.txt
+pytest infra/api/test_liveness_mtchoun-mouh.py
+```
 
 ### Application monitoring
 
 The API Gateway and Lambda services save logs in CloudWatch.   
 The tracking of the visits on the website is done with https://fr.matomo.org/ (opensource alternative to Google Analytics).
+Sentry is used to detection and tracking of errors (UI+backend)
 
 ### Application performance
 
