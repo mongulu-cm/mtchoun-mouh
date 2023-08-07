@@ -1,5 +1,5 @@
 tasks:
-  - init: |      
+  - init: |
       pip install -r requirements.txt && pip install -r api/requirements.txt
       pre-commit install
     command: |
@@ -9,3 +9,5 @@ tasks:
 vscode:
   extensions:
     - vivaxy.vscode-conventional-commits
+    - sourcegraph.cody-ai
+    - donjayamanne.githistory
