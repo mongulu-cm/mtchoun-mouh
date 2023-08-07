@@ -49,6 +49,7 @@ If you are here, it means that you are interested in an in-house deployment of t
 ### Prerequisites
 
 * Have a minimum of competence on the AWS and Terraform cloud
+* Create a Sourcegraph account and get credentials to use [CodyAI](https://www.youtube.com/watch?v=_csyHcEcxDA)
 * Install all tools locally (just run the `init` and `command` scripts in the [.gitpod.yml] file (.gitpod.yml) **or** use a ready-made development environment on gitpod :
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/mongulu-cm/mtchoun-mouh)

@@ -6,11 +6,13 @@ import zulip
 
 
 def Images_in_Bucket(Bucket_Name):
-    """
-    This function takes in a bucket name and returns a list of all the images in that bucket
+    """Gets a list of all image names in an S3 bucket.
 
-    :param Bucket_Name: The name of the bucket you want to list the images from
-    :return: A list of all the images in the bucket.
+    Args:
+        Bucket_Name (str): The name of the S3 bucket
+
+    Returns:
+        list: A list containing all the image names in the given S3 bucket
     """
     s3 = client("s3")
     Image_List = []
@@ -23,10 +25,21 @@ def Images_in_Bucket(Bucket_Name):
 
 
 def Empty_Bucket(Bucket_Name):
-    """
-    It takes a bucket name as an argument, and then deletes all the objects in that bucket.
+    """Deletes all objects in an S3 bucket.
 
-    :param Bucket_Name: The name of the bucket you want to empty
+    This function takes the name of an S3 bucket, connects to the S3 service
+    using boto3, gets a bucket resource object for the specified bucket,
+    and calls delete() on all objects in the bucket to empty it.
+
+    Args:
+        Bucket_Name (str): The name of the S3 bucket to empty
+
+    Returns:
+        None
+
+    Raises:
+        Any exceptions raised by boto3 calls
+
     """
     s3 = boto3.resource("s3")
     bucket = s3.Bucket(Bucket_Name)
@@ -34,22 +47,36 @@ def Empty_Bucket(Bucket_Name):
 
 
 def Delete_Image(Bucket_Name, ImageName):
-    """
-    This function deletes an image from an S3 bucket
+    """Deletes an image from an S3 bucket.
 
-    :param Bucket_Name: The name of the bucket you want to upload the image to
-    :param ImageName: The name of the image you want to delete
+    Args:
+        Bucket_Name (str): The name of the S3 bucket.
+        ImageName (str): The key name of the image file to delete.
+
+    Returns:
+        None
+
+    Raises:
+        Any exceptions raised by boto3 delete_object call.
+
     """
     s3 = client("s3")
     s3.delete_object(Bucket=Bucket_Name, Key=ImageName)
 
 
 def insert_dynamodb(User, ImageName):
-    """
-    > It takes the user name and the image name as input, and then it inserts a new item into the DynamoDB table
+    """Inserts a new item into a DynamoDB table.
 
-    :param User: The user name of the person who uploaded the image
-    :param ImageName: The name of the image that was uploaded to S3
+    Args:
+        User (str): The user name of the person who uploaded the image.
+        ImageName (str): The name of the image that was uploaded to S3.
+
+    Returns:
+        None
+
+    Raises:
+        Any exceptions raised by boto3 put_item call.
+
     """
     region = os.environ["REGION"]
     Table_Users = os.environ["USERS_TABLE"]
@@ -61,12 +88,14 @@ def insert_dynamodb(User, ImageName):
 
 
 def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
-    """
-    It takes an image name and an S3 bucket name as input, and then uses Amazon Textract to extract the names of the people
-    in the image
+    """Extracts user information from an image in an S3 bucket.
 
-    :param s3BucketName: The name of the S3 bucket that contains the image
-    :param ImageName: The name of the image file that you want to extract text from
+    Args:
+        s3BucketName (str): The name of the S3 bucket containing the image.
+        ImageName (str): The name of the image file in the S3 bucket.
+
+    Returns:
+        list: A list of extracted user information dicts.
     """
     region = os.environ["REGION"]
     textract = boto3.client("textract", region_name=region)
@@ -162,10 +191,11 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
 
 def extract_names_from_images():
     """
-    > It takes all the images in the bucket, extracts the names of the people in the images, and then deletes the images
-    from the bucket
-    """
+    Extracts names from images using OCR.
 
+    Returns:
+        list: A list of names extracted from the images.
+    """
     zulip_client = zulip.Client(
         email="errorbot-bot@mongulu.zulipchat.com",
         api_key=os.environ["API_KEY"],
