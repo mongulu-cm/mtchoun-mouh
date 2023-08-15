@@ -11,3 +11,4 @@ vscode:
     - vivaxy.vscode-conventional-commits
     - sourcegraph.cody-ai
     - donjayamanne.githistory
+    - amazonwebservices.aws-toolkit-vscode
