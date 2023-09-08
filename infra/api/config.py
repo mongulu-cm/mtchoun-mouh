@@ -4,7 +4,7 @@ import os
 stopWords = [
     "Phone",
     "Cours Pierre",
-    "Tel.",
+    "Tel",
     "www.consulacam-marseille.fr",
     "REPUBLIQUE",
     "Paix",
