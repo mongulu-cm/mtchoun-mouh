@@ -10,7 +10,7 @@ resource "aws_s3_bucket" "images" {
 
 # Use https://registry.terraform.io/modules/cloudmaniac/static-website/aws/0.9.2 when we will buy domain name
 resource "aws_s3_bucket" "website" {
-  bucket = (terraform.workspace == "mtchoun-mouh-master") ? var.WEBSITE_BUCKET_NAME : "${terraform.workspace}-${var.WEBSITE_BUCKET_NAME}"
+  bucket        = (terraform.workspace == "mtchoun-mouh-master") ? var.WEBSITE_BUCKET_NAME : "${terraform.workspace}-${var.WEBSITE_BUCKET_NAME}"
   force_destroy = true
   tags = merge({
     "Name" = "Website"
@@ -29,13 +29,13 @@ resource "aws_s3_bucket" "website" {
 }
 
 resource "aws_s3_bucket_public_access_block" "website" {
-  bucket = aws_s3_bucket.website.id
-  block_public_acls   = false
-  block_public_policy = false
-  ignore_public_acls  = false
+  bucket                  = aws_s3_bucket.website.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
   restrict_public_buckets = false
 
-  depends_on = [ aws_s3_bucket.website ]
+  depends_on = [aws_s3_bucket.website]
 }
 
 
@@ -55,7 +55,7 @@ resource "aws_s3_bucket_policy" "website" {
     ]
   })
 
-  depends_on = [ aws_s3_bucket_public_access_block.website ]
+  depends_on = [aws_s3_bucket_public_access_block.website]
 }
 
 
@@ -136,6 +136,34 @@ resource "aws_lambda_permission" "apigw_lambda" {
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
   source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.method.http_method}${aws_api_gateway_resource.resource.path}"
 }
+# create zip file from requirements.txt. Triggers only when the file is updated
+# resource "null_resource" "lambda_layer" {
+#   triggers = {
+#     requirements = filesha1(local.requirements_path)
+#   }
+#   # the command to install python and dependencies to the machine and zips
+#   provisioner "local-exec" {
+#     command = <<EOT
+#       set -e
+#       apt-get update
+#       apt install python3 python3-pip zip -y
+#       rm -rf python
+#       mkdir python
+#       pip3 install -r ${local.requirements_path} -t python/
+#       zip -r ${local.layer_zip_path} python/
+#     EOT
+#   }
+# }
+
+
+# ======================================> HERE
+# resource "aws_lambda_layer_version" "lambda_layer" {
+#   filename   = "lambda_layer_payload.zip"
+#   layer_name = "lambda_layer_name"
+
+#   compatible_runtimes = ["nodejs16.x"]
+#   depends_on = [null_resource.resource_name]
+# }
 
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
@@ -145,6 +173,8 @@ resource "aws_lambda_function" "lambda" {
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime          = "python3.8"
   timeout          = 10
+  # layers = [aws_lambda_layer_version.lambda_layer_name.arn] //lambda_layer here is the name
+  #depends_on = [aws_lambda_layer_version.lambda_layer]
 
   environment {
 
@@ -265,14 +295,14 @@ resource "local_file" "index_page" {
   filename = "../html/index.html"
 }
 
-// Terraform cloud have the file but the CI no so we upload it from terraform cloud 
+// Terraform cloud have the file but the CI no so we upload it from terraform cloud
 resource "aws_s3_bucket_object" "example_file" {
-  bucket = aws_s3_bucket.website.id
-  key    = "index.html"
-  source = "../html/index.html"
+  bucket       = aws_s3_bucket.website.id
+  key          = "index.html"
+  source       = "../html/index.html"
   content_type = "text/html"
 
-  depends_on = [ local_file.index_page ]
+  depends_on = [local_file.index_page]
 }
 
 # Inspired from https://frama.link/GFCHrjEL
