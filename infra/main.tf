@@ -162,7 +162,7 @@ resource "aws_lambda_layer_version" "test_lambda_layer" {
   layer_name = "test_lambda_layer"
 
   compatible_runtimes = ["python3.8"]
-  //depends_on = [null_resource.resource_name]
+  #depends_on = [null_resource.resource_name]
 }
 
 resource "aws_lambda_function" "lambda" {
