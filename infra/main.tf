@@ -157,13 +157,13 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 
 # ======================================> HERE
-# resource "aws_lambda_layer_version" "lambda_layer" {
-#   filename   = "lambda_layer_payload.zip"
-#   layer_name = "lambda_layer_name"
+resource "aws_lambda_layer_version" "test_lambda_layer" {
+  filename   = "test_lambda_layer_payload.zip"
+  layer_name = "test_lambda_layer"
 
-#   compatible_runtimes = ["nodejs16.x"]
-#   depends_on = [null_resource.resource_name]
-# }
+  compatible_runtimes = ["python3.8"]
+  #depends_on = [null_resource.resource_name]
+}
 
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
@@ -173,8 +173,8 @@ resource "aws_lambda_function" "lambda" {
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime          = "python3.8"
   timeout          = 10
-  # layers = [aws_lambda_layer_version.lambda_layer_name.arn] //lambda_layer here is the name
-  #depends_on = [aws_lambda_layer_version.lambda_layer]
+  layers           = [aws_lambda_layer_version.test_lambda_layer.arn] //lambda_layer here is the name
+  #depends_on       = [aws_lambda_layer_version.test_lambda_layer]
 
   environment {
 
