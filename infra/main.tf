@@ -157,12 +157,14 @@ resource "aws_lambda_permission" "apigw_lambda" {
 
 
 # ======================================> HERE
-resource "aws_lambda_layer_version" "test_lambda_layer" {
-  filename   = "python.zip"
-  layer_name = "test_lambda_layer"
 
+
+
+resource "aws_lambda_layer_version" "test_lambda_layer" {
+  filename            = "python.zip"
+  layer_name          = "test_lambda_layer"
   compatible_runtimes = ["python3.8"]
-  #depends_on = [null_resource.resource_name]
+  #depends_on          = [null_resource.test_lamdazip]
 }
 
 resource "aws_lambda_function" "lambda" {
