@@ -136,7 +136,9 @@ resource "aws_lambda_permission" "apigw_lambda" {
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
   source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.method.http_method}${aws_api_gateway_resource.resource.path}"
 }
-# create zip file from requirements.txt. Triggers only when the file is updated
+# ======================================> HERE
+
+# # create zip file from requirements.txt. Triggers only when the file is updated
 # resource "null_resource" "lambda_layer" {
 #   triggers = {
 #     requirements = filesha1(local.requirements_path)
@@ -156,15 +158,46 @@ resource "aws_lambda_permission" "apigw_lambda" {
 # }
 
 
+# create zip file from requirements.txt. Triggers only when the file is updated
+resource "null_resource" "lambda_layer" {
+  triggers = {
+    requirements = filesha1(local.requirements_path)
+  }
+  # the command to install python and dependencies to the machine and zips
+  provisioner "local-exec" {
+    command = <<EOT
+        /bin/bash
+        container_name=lambda_docker
+        docker_image=aws_lambda_builder_image
+
+        docker build --tag $container_name .
+
+        docker run -td --name=$container_name $docker_image
+        docker cp ./requirements.txt $container_name:/
+
+        docker exec -i $container_name /bin/bash < ./docker_install.sh
+        docker cp $container_name:/python.zip python.zip
+        docker stop $container_name
+        docker rm $container_name
+
+    EOT
+  }
+}
+
 # ======================================> HERE
 
+# resource "null_resource" "test_lamdazip" {
+#  provisioner "local-exec" {
 
+#     command = "/bin/bash make_lambda_layer/docker_install.sh"
+#   }
+# }
 
 resource "aws_lambda_layer_version" "test_lambda_layer" {
   filename            = "python.zip"
   layer_name          = "test_lambda_layer"
   compatible_runtimes = ["python3.8"]
-  #depends_on          = [null_resource.test_lamdazip]
+  #    depends_on          = [null_resource.test_lamdazip]
 }
 
 resource "aws_lambda_function" "lambda" {
