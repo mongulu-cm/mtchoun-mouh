@@ -196,7 +196,7 @@ resource "null_resource" "lambda_layer" {
 resource "aws_lambda_layer_version" "test_lambda_layer" {
   filename            = "python.zip"
   layer_name          = "test_lambda_layer"
-  compatible_runtimes = ["python3.8"]
+  compatible_runtimes = ["python3.8", "python3.7"]
   #    depends_on          = [null_resource.test_lamdazip]
 }
 
