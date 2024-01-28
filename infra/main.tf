@@ -169,12 +169,12 @@ resource "null_resource" "lambda_layer" {
         /bin/bash
 
         pip install virtualenv &&\
-        virtualenv --python=/usr/bin/python3.8  test_lambda_layer &&\
+        virtualenv --python=/usr/bin/python3.8 python &&\
         source python/bin/active
         pip install -r api/requirements.txt -t python/lib/python3.8/site-pakages &&\
-        ls test_lambda_layer &&\
+        ls python &&\
         wget https://mongulu-files.s3.eu-central-1.amazonaws.com/7zz && chmod u+x 7zz &&\
-        ./7zz a python.zip test_lambda_layer &&\
+        ./7zz a python.zip python/ &&\
         ./7zz l python.zip
     EOT
   }
