@@ -158,27 +158,27 @@ resource "aws_lambda_permission" "apigw_lambda" {
 # }
 
 
-# create zip file from requirements.txt. Triggers only when the file is updated
-resource "null_resource" "lambda_layer" {
-  # triggers = {
-  #   requirements = filesha1(local.requirements_path)
-  # }
-  # the command to install python and dependencies to the machine and zips
-  provisioner "local-exec" {
-    command = <<EOT
-        /bin/bash
+# # create zip file from requirements.txt. Triggers only when the file is updated
+# resource "null_resource" "lambda_layer" {
+#   # triggers = {
+#   #   requirements = filesha1(local.requirements_path)
+#   # }
+#   # the command to install python and dependencies to the machine and zips
+#   provisioner "local-exec" {
+#     command = <<EOT
+#         /bin/bash
 
-        pip install virtualenv &&\
-        virtualenv --python=/usr/bin/python3.8 python &&\
-        source python/bin/active
-        pip install -r api/requirements.txt -t python/lib/python3.8/site-pakages &&\
-        ls python &&\
-        wget https://mongulu-files.s3.eu-central-1.amazonaws.com/7zz && chmod u+x 7zz &&\
-        ./7zz a python.zip python/ &&\
-        ./7zz l python.zip
-    EOT
-  }
-}
+#         pip install virtualenv &&\
+#         virtualenv --python=/usr/bin/python3.8 python &&\
+#         source python/bin/active
+#         pip install -r api/requirements.txt -t python/lib/python3.8/site-pakages &&\
+#         ls python &&\
+#         wget https://mongulu-files.s3.eu-central-1.amazonaws.com/7zz && chmod u+x 7zz &&\
+#         ./7zz a python.zip python/ &&\
+#         ./7zz l python.zip
+#     EOT
+#   }
+# }
 # Archive a single file.
 
 # data "archive_file" "test_zip" {
@@ -192,7 +192,6 @@ resource "aws_lambda_layer_version" "test_lambda_layer" {
   filename            = "python.zip"
   layer_name          = "test_lambda_layer"
   compatible_runtimes = ["python3.8", "python3.7"]
-  depends_on          = [null_resource.lambda_layer]
 }
 
 resource "aws_lambda_function" "lambda" {

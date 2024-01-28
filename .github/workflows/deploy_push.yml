@@ -96,6 +96,14 @@ jobs:
           curl -O -L https://github.com/env0/terratag/releases/download/v0.1.48/terratag_0.1.48_linux_amd64.tar.gz
           tar -xvf terratag_0.1.48_linux_amd64.tar.gz
           ./terratag -tags="project=mtchoun-mouh,environment=$GITHUB_REF_NAME" -dir=infra/ -rename=false
+
+      - name: Build python lambda layer
+        id: plan
+        run: |
+          cd make_lamnda_layer
+          chmod +x runner.sh
+          ./runner.sh
+
       - name: Terraform Plan
         id: plan
         run: |
