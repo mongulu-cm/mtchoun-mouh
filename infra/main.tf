@@ -167,31 +167,16 @@ resource "null_resource" "lambda_layer" {
   provisioner "local-exec" {
     command = <<EOT
         /bin/bash
-        container_name=lambda_docker
-        docker_image=aws_lambda_builder_image
+        apt install zip
+        apt instal python venv
+        python3 -m venv test_lambda_layer #Python is the name of de layer
+        soure python/bin/active
+        pip install -r api/requirements.txt -t python/lib/python3.8/site-pakages
 
-        docker build --tag $container_name .
-
-        docker run -td --name=$container_name $docker_image
-        docker cp ./requirements.txt $container_name:/
-
-        docker exec -i $container_name /bin/bash < ./docker_install.sh
-        docker cp $container_name:/python.zip python.zip
-        docker stop $container_name
-        docker rm $container_name
-
+        zip -r python.zip test_lambda_layer
     EOT
   }
 }
-
-# ======================================> HERE
-
-# resource "null_resource" "test_lamdazip" {
-#  provisioner "local-exec" {
-
-#     command = "/bin/bash make_lambda_layer/docker_install.sh"
-#   }
-# }
 
 resource "aws_lambda_layer_version" "test_lambda_layer" {
   filename            = "python.zip"

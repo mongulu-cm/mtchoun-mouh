@@ -17,7 +17,7 @@ jobs:
     env:
       # All TF variables are define din Terraform Cloud
       API_KEY_TEST_MAIL: ${{secrets.API_KEY_TEST_MAIL}}
-      TEST_MAIL_NAMESPACE: ${{secrets.TEST_MAIL_NAMESPACE}}    
+      TEST_MAIL_NAMESPACE: ${{secrets.TEST_MAIL_NAMESPACE}}
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
     steps:

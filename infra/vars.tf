@@ -62,7 +62,7 @@ variable "TFC_WORKSPACE_NAME" {
 
 # ==== Anne Lise ADDS
 locals {
-  requirements_path = "../make_lamda_layer/requirements.txt"
+  requirements_path = "api/requirements.txt"
 }
 # variable "container_name" {
 #   default = "lambda_docker"
