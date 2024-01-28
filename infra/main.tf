@@ -167,15 +167,22 @@ resource "null_resource" "lambda_layer" {
   provisioner "local-exec" {
     command = <<EOT
         /bin/bash
-        apt install zip
-        apt instal python venv
+
         python3 -m venv test_lambda_layer #Python is the name of de layer
         soure python/bin/active
         pip install -r api/requirements.txt -t python/lib/python3.8/site-pakages
 
-        zip -r python.zip test_lambda_layer
+        #zip -r python.zip test_lambda_layer
     EOT
   }
+}
+# Archive a single file.
+
+data "archive_file" "test_zip" {
+  type        = "zip"
+  source_dir  = "test_lambda_layer"
+  output_path = "python.zip"
+  depends_on  = [null_resource.lambda_layer]
 }
 
 resource "aws_lambda_layer_version" "test_lambda_layer" {
