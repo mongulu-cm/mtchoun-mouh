@@ -56,6 +56,17 @@ variable "stage_name" {
 }
 
 variable "TFC_WORKSPACE_NAME" {
-  type = string
+  type    = string
   default = ""
 }
+
+# ==== Anne Lise ADDS
+locals {
+  requirements_path = "api/requirements.txt"
+}
+# variable "container_name" {
+#   default = "lambda_docker"
+# }
+# variable "docker_image" {
+#   default = "aws_lambda_builder_image"
+# }

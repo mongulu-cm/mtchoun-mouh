@@ -15,18 +15,18 @@ terraform {
   required_version = ">= 0.15"
 
   backend "remote" {
-    hostname = "app.terraform.io"
+    hostname     = "app.terraform.io"
     organization = "tfc-mongulu-cm"
 
     workspaces {
-       prefix = "mtchoun-mouh-"
+      prefix = "mtchoun-mouh-"
     }
   }
 
   //backend "s3" {
-    //bucket = "terraform-state-mongulu"
-    //key    = "mtchoun-mouh/terraform.tfstate"
-    //region = "eu-central-1"
-    //encrypt = true
+  //bucket = "terraform-state-mongulu"
+  //key    = "mtchoun-mouh/terraform.tfstate"
+  //region = "eu-central-1"
+  //encrypt = true
   //}
 }
