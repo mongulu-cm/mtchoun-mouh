@@ -1,3 +1,7 @@
+locals {
+  requirements_path = "api/requirements.txt"
+}
+
 resource "aws_s3_bucket" "images" {
   bucket = (terraform.workspace == "mtchoun-mouh-master") ? var.IMAGES_BUCKET_NAME : "${terraform.workspace}-${var.IMAGES_BUCKET_NAME}"
 
