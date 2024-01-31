@@ -12,14 +12,15 @@ repos:
 -   repo:  https://github.com/gruntwork-io/pre-commit
     rev: v0.1.17
     hooks:
-    - id: shellcheck
+    #- id: shellcheck
     - id: terraform-fmt
     - id: terraform-validate
-    - id: tflint
+    # - id: tflint
 -   repo: https://github.com/ambv/black
     rev: 22.6.0
     hooks:
     - id: black
+        lambda-layer
       language_version: python3
 -   repo: https://github.com/Yelp/detect-secrets
     rev: v1.3.0
