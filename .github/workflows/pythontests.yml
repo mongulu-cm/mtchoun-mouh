@@ -2,7 +2,7 @@ name: Python tests
 on:
   push:
     paths:
-      - 'api/**'
+      - 'infra/api/**'
 jobs:
   unittest:
     runs-on: 'ubuntu-latest'
