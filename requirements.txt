@@ -8,7 +8,9 @@ detect-secrets==1.1.0
 moto==3.1.4
 pytest==7.1.1
 coverage==6.4.1
-selenium==3.141.0
+selenium==4.15.1
 selenium-wire==4.2.0
 certifi>=2023.7.22 # not directly required, pinned by Snyk to avoid a vulnerability
 requests>=2.31.0 # not directly required, pinned by Snyk to avoid a vulnerability
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
+werkzeug>=2.3.8 # not directly required, pinned by Snyk to avoid a vulnerability
