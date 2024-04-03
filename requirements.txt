@@ -10,3 +10,5 @@ pytest==7.1.1
 coverage==6.4.1
 selenium==3.141.0
 selenium-wire==4.2.0
+certifi>=2023.7.22 # not directly required, pinned by Snyk to avoid a vulnerability
+requests>=2.31.0 # not directly required, pinned by Snyk to avoid a vulnerability
