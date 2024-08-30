@@ -28,6 +28,8 @@ stopWords = [
     "2025",
     "s'agit",
     "recepisse",
+    "ouvrables",
+    "communiqué"
 ]
 
 # consulat
