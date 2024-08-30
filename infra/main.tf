@@ -140,49 +140,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
   source_arn = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.method.http_method}${aws_api_gateway_resource.resource.path}"
 }
-# ======================================> HERE
 
-# # create zip file from requirements.txt. Triggers only when the file is updated
-# resource "null_resource" "lambda_layer" {
-#   triggers = {
-#     requirements = filesha1(local.requirements_path)
-#   }
-#   # the command to install python and dependencies to the machine and zips
-#   provisioner "local-exec" {
-#     command = <<EOT
-#       set -e
-#       apt-get update
-#       apt install python3 python3-pip zip -y
-#       rm -rf python
-#       mkdir python
-#       pip3 install -r ${local.requirements_path} -t python/
-#       zip -r ${local.layer_zip_path} python/
-#     EOT
-#   }
-# }
-
-
-# # create zip file from requirements.txt. Triggers only when the file is updated
-resource "null_resource" "lambda_layer" {
-  # triggers = {
-  #   requirements = filesha1(local.requirements_path)
-  # }
-  # the command to install python and dependencies to the machine and zips
-  provisioner "local-exec" {
-    command = <<EOT
-        /bin/bash
-
-        pip install virtualenv &&\
-        virtualenv --python=/usr/bin/python3.8 python &&\
-        . python/bin/activate &&\
-        pip install -r api/requirements.txt -t python/lib/python3.8/site-packages &&\
-        ls python &&\
-        wget https://mongulu-files.s3.eu-central-1.amazonaws.com/7zz && chmod u+x 7zz &&\
-        ./7zz a python.zip python/ &&\
-        ./7zz l python.zip
-    EOT
-  }
-}
 # Archive a single file.
 
 # data "archive_file" "test_zip" {
@@ -193,7 +151,7 @@ resource "null_resource" "lambda_layer" {
 # }
 
 resource "aws_lambda_layer_version" "test_lambda_layer" {
-  filename            = "python.zip"
+  filename            = "make_lamda_layer/python.zip"
   layer_name          = "test_lambda_layer"
   compatible_runtimes = ["python3.8", "python3.7"]
 }
