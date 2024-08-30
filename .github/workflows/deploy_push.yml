@@ -2,7 +2,7 @@ name: Deploy cases
 on:
   push:
     paths:
-      - 'infra/**'
+      - 'infra/api/**.py'
       - 'html/**'
       - '.github/workflows/deploy_push.yml'
       - 'requirements.txt'
