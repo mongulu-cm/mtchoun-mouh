@@ -99,15 +99,17 @@ jobs:
       - name: Build python lambda layer
         id: build
         run: |
-          cd make_lamnda_layer
+          cd infra/make_lamda_layer
           chmod +x runner.sh
           ./runner.sh
+
 
       - name: Terraform Plan
         id: plan
         run: |
           cd infra
           tfcmt plan -- terraform plan -no-color
+
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
