@@ -96,7 +96,7 @@ jobs:
           ./terratag -tags="project=mtchoun-mouh,environment=$GITHUB_REF_NAME" -dir=infra/ -rename=false
 
       - name: Build python lambda layer
-        id: plan
+        id: build
         run: |
           cd make_lamnda_layer
           chmod +x runner.sh
