@@ -34,7 +34,7 @@ def amazone_ses_mail(NAME, RECIPIENT, URL_IMAGE, maintainer=False):
     """
     maintainer_mail = os.environ["MAINTAINER_MAIL"]
     NAME = NAME.upper()
-    SENDER = f"Collectif mongulu <{maintainer_mail}>"
+    SENDER = f"Collectif mongulu <relay@mongulu.cm>"
     AWS_REGION = "eu-central-1"
 
     if not maintainer:

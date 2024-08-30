@@ -111,7 +111,6 @@ def scan_consulate_passport_page():
     notify_maintainer = False
 
     for src in srcs:
-        src.split("..")
         link_image_initial = src.split("..")[1]
         real_link = f"https://www.consulacam-marseille.fr{link_image_initial}"
         Scan_reponse_link = Scan_Link(real_link)
