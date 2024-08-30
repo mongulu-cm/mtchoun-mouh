@@ -54,15 +54,15 @@ def register_handler(event, context):
             }
     except Exception as e:
          capture_exception(e)
+         raise
          
 
 def scan_handler(event, context):    
     try:
-
-        print(event)
         scan_consulate_passport_page()
         extract_names_from_images()
         notify_user_registered()
 
     except Exception as e:
          capture_exception(e)
+         raise
