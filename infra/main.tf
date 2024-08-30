@@ -228,7 +228,6 @@ resource "aws_lambda_function" "lambda" {
 }
 
 resource "aws_lambda_function" "scan" {
-  count            = terraform.workspace == "mtchoun-mouh-master" ? 1 : 0
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = (terraform.workspace == "mtchoun-mouh-master") ? "scan_user_consulcam" : "${terraform.workspace}-scan_user_consulcam"
   role             = data.aws_iam_role.role.arn
