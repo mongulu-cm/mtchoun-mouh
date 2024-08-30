@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'infra/api/**.py'
+      - 'infra/**.tf'
       - 'html/**'
       - '.github/workflows/deploy_push.yml'
       - 'requirements.txt'
@@ -114,6 +115,11 @@ jobs:
         run: |
           cd infra
           tfcmt apply -- terraform apply -auto-approve -no-color
+          if [ "$(terraform workspace show)" == "default" ]; then
+            echo "Deleting aws_lambda_function.scan resource as workspace is default"
+            terraform destroy --target aws_lambda_function.scan
+            terraform destroy --target aws_cloudwatch_event_target.target
+          fi
       - name: Website URL
         id: websiteUrl
         run: |
