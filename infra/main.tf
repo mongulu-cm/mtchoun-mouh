@@ -83,8 +83,8 @@ resource "aws_dynamodb_table" "Users" {
 
 resource "aws_dynamodb_table" "Link_table" {
   name           = (terraform.workspace == "mtchoun-mouh-master") ? var.table_links : "${terraform.workspace}-${var.table_links}"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = 1
+  billing_mode   = "PAY_PER_REQUEST"
+  read_capacity  = 3
   write_capacity = 1
   hash_key       = "link"
 
@@ -300,7 +300,6 @@ resource "aws_s3_bucket_object" "example_file" {
 module "cors" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
-
   api_id          = aws_api_gateway_rest_api.api.id
   api_resource_id = aws_api_gateway_resource.resource.id
 }
