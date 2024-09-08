@@ -153,7 +153,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 resource "aws_lambda_layer_version" "test_lambda_layer" {
   filename            = "make_lamda_layer/python.zip"
   layer_name          = "test_lambda_layer"
-  compatible_runtimes = ["python3.8", "python3.7"]
+  compatible_runtimes = ["python3.11", "python3.7"]
 }
 
 resource "aws_lambda_function" "lambda" {
@@ -162,7 +162,7 @@ resource "aws_lambda_function" "lambda" {
   role             = data.aws_iam_role.role.arn
   handler          = "lambda.register_handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-  runtime          = "python3.8"
+  runtime          = "python3.11"
   timeout          = 10
   layers           = [aws_lambda_layer_version.test_lambda_layer.arn] //lambda_layer here is the name
   depends_on       = [aws_lambda_layer_version.test_lambda_layer]
@@ -191,7 +191,7 @@ resource "aws_lambda_function" "scan" {
   role             = data.aws_iam_role.role.arn
   handler          = "lambda.scan_handler"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-  runtime          = "python3.8"
+  runtime          = "python3.11"
   timeout          = 900
 
   environment {
