@@ -4,6 +4,7 @@ from config import stopWords, images_url_path
 import os
 import zulip
 from textractor import Textractor
+from PIL import UnidentifiedImageError
 
 def Images_in_Bucket(Bucket_Name):
     """Gets a list of all image names in an S3 bucket.
@@ -98,23 +99,30 @@ def Extract_Users(s3BucketName, ImageName):  # sourcery no-metrics
         list: A list of extracted user information dicts.
     """
     region = os.environ["REGION"]
-    extractor = Textractor(region_name=os.environ["REGION"])
-    document = extractor.detect_document_text(file_source=f"s3://{s3BucketName}/{ImageName}")
-    filtered_lines = []
+    extractor = Textractor(region_name=region)
     errors_tab = []
+    filtered_lines = []
+
+    try:
+        # Try to detect document text, catch UnidentifiedImageError if occurs
+        document = extractor.detect_document_text(file_source=f"s3://{s3BucketName}/{ImageName}")
+    except UnidentifiedImageError as e:
+        print(f"UnidentifiedImageError: {str(e)} - Image: {ImageName}")
+        errors_tab.append({"error": str(e), "image": ImageName})
+        return errors_tab
+
     for line in document.lines:
         # Vérifie si aucun mot de stop_words n'est présent dans la ligne
         if not any(stop_word in str(line) for stop_word in stopWords):
             filtered_lines.append(str(line))
+    
     for line in filtered_lines:
-
         try:
             UserName = line.split(". ")[1:] if "." in line else line
             if isinstance(UserName, list):
                 UserName = ". ".join(UserName)
             if UserName != "":
-                # We choosed to save all the names in lower former instead of upper because of the DU stopWord
-                # Indeed if upper names , all persons DU like DURAND in their names will not be detected.
+                # We choose to save all names in lower case to avoid issues with stop words like 'DU'
                 print(f"Username={UserName.lower()}")
                 insert_dynamodb(UserName.lower(), ImageName)
         except Exception as e:
