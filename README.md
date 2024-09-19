@@ -13,7 +13,7 @@ If you want to see what it looks like, go to: https://mtchoun-mouh.mongulu.cm/
 
 ### Current behavior
 
-When a user goes to the Cameroonian Consulate in Marseille to apply for a passport, he is reminded that in order to know if his passport has been issued, he must regularly look at a page on the [consulate] website (https://www.consulacam-marseille.fr/index.php?p=consulat-cameroun-passeports). This page contains all the passport arrival notices in chronological order, beginning with the mention **Passport arrival notice of the dd month year** .
+When a user goes to the Cameroonian Consulate in Marseille to apply for a passport, he is reminded that in order to know if his passport has been issued, he must regularly look at a page on the [consulate website](https://www.consulacam-marseille.fr/index.php?p=consulat-cameroun-passeports). This page contains all the passport arrival notices in chronological order, beginning with the mention **Passport arrival notice of the dd month year** .  
 You have to scroll through this page from the beginning to a release date later than the filing date. The reason is that these are images and not published text; it is therefore impossible to use the browser's search function.
 
 ### Problem

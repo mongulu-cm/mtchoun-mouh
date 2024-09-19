@@ -148,7 +148,6 @@ def extract_names_from_images():
 
     bucket_name = os.environ["BUCKET_NAME"]
     Image_List = Images_in_Bucket(bucket_name)
-    # Image_List = ["communique-071218-A.jpg"]
     for image in Image_List:
         print(f"-------> Image name: {image}")
         # TODO : recuperer le tableau d'erreurs et envoyer le mail
@@ -165,9 +164,7 @@ def extract_names_from_images():
             result = zulip_client.send_message(request)
         print(errors_tab)
 
-        Delete_Image(
-            bucket_name, image
-        )  # so that if it executed 2 times extracted images will not be there
+        Delete_Image(bucket_name, image)
     Empty_Bucket(bucket_name)
 
 
