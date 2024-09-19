@@ -52,7 +52,6 @@ def register_handler(event, context):
                     }
                 ),
             }
-            
         else:
 
             os.environ['LINKS_TABLE'] = "Links"
