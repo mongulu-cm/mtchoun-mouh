@@ -278,7 +278,7 @@ locals {
   # If your backend is not Terraform Cloud, the value is ${terraform.workspace}
   # otherwise the value retrieved is that of the TFC_WORKSPACE_NAME with trimprefix
   workspace_name = var.TFC_WORKSPACE_NAME != "" ? trimprefix("${var.TFC_WORKSPACE_NAME}", "mtchoun-mouh-") : "${terraform.workspace}"
-  workspace = substr(local.workspace_name, 0, 64)
+  workspace = substr(local.workspace_name, 0, 45)
 }
 
 resource "local_file" "index_page" {
