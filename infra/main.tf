@@ -206,7 +206,6 @@ resource "aws_lambda_function" "scan" {
 
     }
   }
-
   tags = local.terratag_added_main
 }
 
