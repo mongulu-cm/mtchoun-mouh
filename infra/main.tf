@@ -282,21 +282,6 @@ resource "aws_api_gateway_deployment" "test" {
   stage_name  = (terraform.workspace == "mtchoun-mouh-master") ? var.stage_name : "${terraform.workspace}-${var.stage_name}"
 }
 
-locals {
-
-  url = join("/", [aws_api_gateway_deployment.test.invoke_url, aws_api_gateway_resource.resource.path_part])
-
-  index_page = templatefile("templates/index.tmpl", {
-    url     = local.url
-    contact = var.MAINTAINER_MAIL
-  })
-
-  # If your backend is not Terraform Cloud, the value is ${terraform.workspace}
-  # otherwise the value retrieved is that of the TFC_WORKSPACE_NAME with trimprefix
-  workspace_name = var.TFC_WORKSPACE_NAME != "" ? trimprefix("${var.TFC_WORKSPACE_NAME}", "mtchoun-mouh-") : "${terraform.workspace}"
-  workspace = substr(local.url, 0, 64)
-}
-
 resource "local_file" "index_page" {
   content  = local.index_page
   filename = "../html/index.html"
