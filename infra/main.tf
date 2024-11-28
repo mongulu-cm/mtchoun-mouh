@@ -59,10 +59,8 @@ resource "aws_s3_bucket_public_access_block" "website" {
   depends_on = [aws_s3_bucket.website]
 }
 
-
 resource "aws_s3_bucket_policy" "website" {
   bucket = aws_s3_bucket.website.id
-
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -170,7 +168,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 resource "aws_lambda_layer_version" "test_lambda_layer" {
   filename            = "make_lamda_layer/python.zip"
   layer_name          = "test_lambda_layer"
-  compatible_runtimes = ["python3.8", "python3.7"]
+  compatible_runtimes = ["python3.8"]
 }
 
 resource "aws_lambda_function" "lambda" {
@@ -227,7 +225,6 @@ resource "aws_lambda_function" "scan" {
 
     }
   }
-
   tags = local.terratag_added_main
 }
 
