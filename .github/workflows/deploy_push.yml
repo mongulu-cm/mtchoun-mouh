@@ -139,7 +139,7 @@ jobs:
         if: github.ref_name != 'master'
         run: |
           cd infra
-          aws s3 sync ../html s3://mtchoun-mouh-$GITHUB_REF_NAME-mtchoun-mouh.mongulu.cm --exclude "index.html" --delete
+          aws s3 sync ../html s3://mtchoun-mouh-$GITHUB_REF_NAME-mtchoun-mouh.mongulu.cm --exclude "index.html" --exclude "demo.html" --delete
       - name: "website: check readiness"
         uses: APina03/wait_for_response@master
         with:
