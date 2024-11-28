@@ -282,6 +282,11 @@ resource "aws_api_gateway_deployment" "test" {
   stage_name  = (terraform.workspace == "mtchoun-mouh-master") ? var.stage_name : "${terraform.workspace}-${var.stage_name}"
 }
 
+resource "local_file" "demo_page" {
+  content  = local.demo_page
+  filename = "../html/demo.html"
+}
+
 resource "local_file" "index_page" {
   content  = local.index_page
   filename = "../html/index.html"
