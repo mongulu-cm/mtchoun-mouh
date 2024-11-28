@@ -52,6 +52,26 @@ def register_handler(event, context):
                     }
                 ),
             }
+        else:
+
+            os.environ['LINKS_TABLE'] = "Links"
+            Scan_reponse = Scan_Users(name.lower(), "Users")
+            image_url = Scan_reponse[0]["URLImage"]
+            print(image_url)
+    
+            return {
+                "statusCode": 200,
+                "headers": {
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+                    "Access-Control-Allow-Methods": "GET,OPTIONS,POST,PUT",
+                },
+                "body": json.dumps(
+                    {
+                        "message": f" {image_url}",
+                    }
+                ),
+            }
     except Exception as e:
          capture_exception(e)
          raise

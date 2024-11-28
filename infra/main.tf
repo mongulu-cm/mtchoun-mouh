@@ -1,5 +1,22 @@
 locals {
   requirements_path = "api/requirements.txt"
+  url = join("/", [aws_api_gateway_deployment.test.invoke_url, aws_api_gateway_resource.resource.path_part])
+
+  demo_page = templatefile("templates/demo.tmpl", {
+    url     = local.url
+    contact = var.MAINTAINER_MAIL
+  })
+
+  index_page = templatefile("templates/index.tmpl", {
+    url     = local.url
+    contact = var.MAINTAINER_MAIL
+  })
+
+  terratag_added_main = { "environment" = "mtchoun-mouh-master", "project" = "mtchoun-mouh" }
+
+  # If your backend is not Terraform Cloud, the value is ${terraform.workspace}
+  # otherwise the value retrieved is that of the TFC_WORKSPACE_NAME with trimprefix
+  workspace = var.TFC_WORKSPACE_NAME != "" ? trimprefix("${var.TFC_WORKSPACE_NAME}", "mtchoun-mouh-") : "${terraform.workspace}"
 }
 
 resource "aws_s3_bucket" "images" {
@@ -42,10 +59,8 @@ resource "aws_s3_bucket_public_access_block" "website" {
   depends_on = [aws_s3_bucket.website]
 }
 
-
 resource "aws_s3_bucket_policy" "website" {
   bucket = aws_s3_bucket.website.id
-
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -83,8 +98,8 @@ resource "aws_dynamodb_table" "Users" {
 
 resource "aws_dynamodb_table" "Link_table" {
   name           = (terraform.workspace == "mtchoun-mouh-master") ? var.table_links : "${terraform.workspace}-${var.table_links}"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = 1
+  billing_mode   = "PAY_PER_REQUEST"
+  read_capacity  = 3
   write_capacity = 1
   hash_key       = "link"
 
@@ -153,7 +168,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
 resource "aws_lambda_layer_version" "test_lambda_layer" {
   filename            = "make_lamda_layer/python.zip"
   layer_name          = "test_lambda_layer"
-  compatible_runtimes = ["python3.8", "python3.7"]
+  compatible_runtimes = ["python3.8"]
 }
 
 resource "aws_lambda_function" "lambda" {
@@ -193,6 +208,8 @@ resource "aws_lambda_function" "scan" {
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   runtime          = "python3.8"
   timeout          = 900
+  layers           = [aws_lambda_layer_version.test_lambda_layer.arn] //lambda_layer here is the name
+  depends_on       = [aws_lambda_layer_version.test_lambda_layer]
 
   environment {
     variables = {
@@ -208,7 +225,6 @@ resource "aws_lambda_function" "scan" {
 
     }
   }
-
   tags = local.terratag_added_main
 }
 
@@ -287,7 +303,7 @@ resource "local_file" "index_page" {
 }
 
 // Terraform cloud have the file but the CI no so we upload it from terraform cloud
-resource "aws_s3_bucket_object" "example_file" {
+resource "aws_s3_bucket_object" "index_page" {
   bucket       = aws_s3_bucket.website.id
   key          = "index.html"
   source       = "../html/index.html"
@@ -296,11 +312,19 @@ resource "aws_s3_bucket_object" "example_file" {
   depends_on = [local_file.index_page]
 }
 
+resource "aws_s3_bucket_object" "demo_page" {
+  bucket       = aws_s3_bucket.website.id
+  key          = "demo.html"
+  source       = "../html/demo.html"
+  content_type = "text/html"
+
+  depends_on = [local_file.demo_page]
+}
+
 # Inspired from https://frama.link/GFCHrjEL
 module "cors" {
   source  = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
-
   api_id          = aws_api_gateway_rest_api.api.id
   api_resource_id = aws_api_gateway_resource.resource.id
 }
@@ -324,8 +348,4 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_check_foo" {
   function_name = aws_lambda_function.scan.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.scheduler.arn
-}
-
-locals {
-  terratag_added_main = { "environment" = "mtchoun-mouh-master", "project" = "mtchoun-mouh" }
 }
