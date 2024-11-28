@@ -339,7 +339,3 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_check_foo" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.scheduler.arn
 }
-
-locals {
-  terratag_added_main = { "environment" = "mtchoun-mouh-master", "project" = "mtchoun-mouh" }
-}
